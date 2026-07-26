@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site.config.mjs';
+
+const { email, authorBio } = SITE.contacts;
+const social = [
+  { url: SITE.social.telegram, label: 'Telegram', note: 'анонсы новых статей' },
+  { url: SITE.social.vk, label: 'ВКонтакте', note: 'пишите в личные сообщения' },
+  { url: SITE.social.pinterest, label: 'Pinterest', note: 'подборки по уходу за питомцами' },
+].filter((s) => s.url);
+---
+
+<BaseLayout
+  title="Контакты"
+  description={`Как связаться с редакцией «${SITE.name}» — почта и соцсети.`}
+>
+  <div class="container" style="padding-block: 40px;">
+    <div class="article-body">
+      <h1>Контакты</h1>
+
+      <h2>О редакции</h2>
+      <p><strong>{SITE.author}</strong></p>
+      <p>{authorBio}</p>
+
+      <h2>Почта</h2>
+      <p>
+        <a href={`mailto:${email}`}>{email}</a>
+      </p>
+      <p>
+        Пишите по любому поводу: вопрос по уходу за питомцем, замеченная ошибка в статье,
+        предложение о сотрудничестве или размещении рекламы. Обычно отвечаем в течение
+        нескольких дней.
+      </p>
+
+      {
+        social.length > 0 && (
+          <>
+            <h2>Соцсети</h2>
+            <ul>
+              {social.map((s) => (
+                <li>
+                  <a href={s.url} target="_blank" rel="noopener">
+                    {s.label}
+                  </a>{' '}
+                  — {s.note}
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+
+      <h2>Об ошибках в материалах</h2>
+      <p>
+        Каждый питомец индивидуален, и универсальных рецептов не бывает. Если вы столкнулись
+        с тем, что совет из статьи не подошёл или показался неточным — напишите. Проверим и
+        поправим материал. И напоминаем: при серьёзных или длительных проблемах со здоровьем
+        питомца статьи не заменяют визит к ветеринару.
+      </p>
+
+      <h2>Реклама и сотрудничество</h2>
+      <p>
+        На сайте есть рекламные блоки и партнёрские ссылки — как это устроено, описано
+        на странице <a href="/partnyorskaya-programma">о партнёрских ссылках</a>.
+        По вопросам прямого размещения пишите на почту выше.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

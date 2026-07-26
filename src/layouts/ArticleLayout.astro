@@ -1,0 +1,137 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AffiliateCard from '../components/AffiliateCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { SITE } from '../site.config.mjs';
+import { CATEGORIES } from '../site.config.mjs';
+import { absoluteUrl, categoryUrl } from '../lib/urls.mjs';
+
+/**
+ * @typedef {Object} Props
+ * @property {any} entry запись коллекции articles
+ * @property {Array<{depth:number, slug:string, text:string}>} headings
+ * @property {any[]} [related] похожие статьи для блока «Читайте также»
+ */
+const { entry, headings, related = [] } = Astro.props;
+const { data } = entry;
+const cat = CATEGORIES.find((c) => c.slug === data.category);
+const author = data.author ?? SITE.author;
+
+const dateFmt = (d) =>
+  new Date(d).toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// Оглавление строим только из h2.
+const toc = headings.filter((h) => h.depth === 2);
+
+// JSON-LD: Article + BreadcrumbList для богатых результатов в поиске.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  datePublished: new Date(data.publishDate).toISOString(),
+  dateModified: new Date(data.updatedDate ?? data.publishDate).toISOString(),
+  author: { '@type': 'Organization', name: author },
+  publisher: { '@type': 'Organization', name: SITE.name },
+  mainEntityOfPage: absoluteUrl(Astro.url.pathname, SITE.url),
+  ...(data.cover ? { image: absoluteUrl(data.cover, SITE.url) } : {}),
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={data.cover}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <article class="container">
+    <nav class="article-meta" aria-label="Хлебные крошки" style="margin-top: 28px;">
+      <a href="/">Главная</a> ›
+      <a href={categoryUrl(data.category)}>{cat?.title ?? data.category}</a>
+    </nav>
+
+    <h1>{data.title}</h1>
+    <p class="article-meta">
+      {author} · Опубликовано {dateFmt(data.publishDate)}
+      {data.updatedDate && <> · Обновлено {dateFmt(data.updatedDate)}</>}
+    </p>
+
+    <p class="disclosure">
+      💚 Некоторые ссылки ниже — партнёрские. Если вы что-то купите по ним, мы можем
+      получить небольшую комиссию без переплаты с вашей стороны. Советуем только то,
+      что стоит внимания.
+    </p>
+
+    {
+      toc.length > 2 && (
+        <div class="toc">
+          <strong>Содержание</strong>
+          <ol>
+            {toc.map((h) => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
+
+    {
+      data.cover && (
+        <figure class="article-cover">
+          <img src={data.cover} alt={data.coverAlt ?? data.title} loading="eager" />
+          {data.coverCredit && (
+            <figcaption>
+              Фото:{' '}
+              <a href={data.coverCredit.sourceUrl} target="_blank" rel="noopener nofollow">
+                {data.coverCredit.author}
+              </a>{' '}
+              · {data.coverCredit.license}
+            </figcaption>
+          )}
+        </figure>
+      )
+    }
+
+    <AdSlot place="top" label="Реклама" />
+
+    <div class="article-body">
+      <slot />
+    </div>
+
+    {
+      data.products.length > 0 && (
+        <section aria-label="Рекомендуемые товары">
+          <h2>Что пригодится</h2>
+          {data.products.map((p) => (
+            <AffiliateCard name={p.name} marketplaceSearch={p.marketplaceSearch} blurb={p.blurb} />
+          ))}
+        </section>
+      )
+    }
+
+    <aside class="author-box">
+      <p class="author-name">{author}</p>
+      <p class="author-bio">{SITE.contacts.authorBio}</p>
+      <p class="author-contact">
+        Есть вопрос или нашли неточность? <a href="/kontakty">Напишите нам</a>.
+      </p>
+    </aside>
+
+    {
+      related.length > 0 && (
+        <section aria-label="Похожие статьи">
+          <h2>Читайте также</h2>
+          <div class="grid">
+            {related.map((r) => (
+              <ArticleCard entry={r} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <AdSlot place="bottom" label="Реклама" />
+  </article>
+</BaseLayout>

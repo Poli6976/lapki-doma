@@ -1,0 +1,30 @@
+---
+import { MONETIZATION } from '../site.config.mjs';
+
+/**
+ * Рекламный блок Яндекс РСЯ. Пока yandexRtbBlockId пуст — показывает ненавязчивую
+ * заглушку. Когда впишешь ID блока (вид 'R-A-XXXXXXX-1') — покажется реальная реклама.
+ *
+ * @typedef {Object} Props
+ * @property {string} [place] метка места (top/bottom) — для уникального контейнера
+ * @property {string} [label]
+ */
+const { place = 'a', label = 'Реклама' } = Astro.props;
+const blockId = MONETIZATION.yandexRtbBlockId;
+const enabled = Boolean(blockId);
+const containerId = `yandex_rtb_${blockId}_${place}`;
+---
+
+{
+  enabled ? (
+    <>
+      <div id={containerId} />
+      <script
+        is:inline
+        set:html={`window.yaContextCb=window.yaContextCb||[];window.yaContextCb.push(()=>{Ya.Context.AdvManager.render({blockId:"${blockId}",renderTo:"${containerId}"})})`}
+      />
+    </>
+  ) : (
+    <div class="ad-slot" aria-hidden="true">{label} · рекламный блок</div>
+  )
+}

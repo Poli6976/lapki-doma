@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { CATEGORIES } from '../site.config.mjs';
+
+export async function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { category: c.slug }, props: { category: c } }));
+}
+
+const { category } = Astro.props;
+const all = await getCollection('articles', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+const articles = all
+  .filter((a) => a.data.category === category.slug)
+  .sort((a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate));
+---
+
+<BaseLayout title={category.title} description={category.description}>
+  <section class="hero">
+    <div class="container">
+      <h1>{category.title}</h1>
+      <p class="lead">{category.description}</p>
+    </div>
+  </section>
+
+  <div class="container container-wide" style="margin-top: 40px;">
+    {
+      articles.length === 0 ? (
+        <p style="color: var(--text-soft);">В этом разделе пока нет статей — скоро появятся.</p>
+      ) : (
+        <div class="grid">
+          {articles.map((entry) => <ArticleCard entry={entry} />)}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

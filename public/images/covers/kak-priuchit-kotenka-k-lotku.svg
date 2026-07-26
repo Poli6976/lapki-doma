@@ -1,0 +1,7 @@
+<svg viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+
+    <rect width="400" height="225" fill="#efe4d8"/>
+    <circle cx="330" cy="40" r="90" fill="#6b4226" opacity="0.16"/>
+    <circle cx="40" cy="190" r="70" fill="#6b4226" opacity="0.12"/>
+<circle cx="200" cy="145" r="55" fill="#b8916f"/><path d="M155,110 L172,58 L196,103 Z" fill="#b8916f"/><path d="M245,110 L228,58 L204,103 Z" fill="#b8916f"/><path d="M162,102 L172,74 L188,99 Z" fill="#c99f86"/><path d="M238,102 L228,74 L212,99 Z" fill="#c99f86"/><ellipse cx="182" cy="140" rx="7" ry="9" fill="#c99f86"/><ellipse cx="218" cy="140" rx="7" ry="9" fill="#c99f86"/><path d="M200,158 L191,168 L209,168 Z" fill="#c99f86"/><line x1="175" y1="172" x2="140" y2="168" stroke="#c99f86" stroke-width="1.5" stroke-linecap="round"/><line x1="175" y1="178" x2="138" y2="180" stroke="#c99f86" stroke-width="1.5" stroke-linecap="round"/><line x1="225" y1="172" x2="260" y2="168" stroke="#c99f86" stroke-width="1.5" stroke-linecap="round"/><line x1="225" y1="178" x2="262" y2="180" stroke="#c99f86" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

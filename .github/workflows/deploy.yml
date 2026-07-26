@@ -1,0 +1,39 @@
+# Сборка Astro и публикация на GitHub Pages.
+# Запускается при каждом push в main и вручную (workflow_dispatch).
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Права, нужные для деплоя на Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Не запускать параллельные деплои одновременно.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build with Astro and upload artifact
+        uses: withastro/action@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

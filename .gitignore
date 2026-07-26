@@ -1,0 +1,35 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# secrets — НИКОГДА не коммить ключи
+.env
+.env.local
+.env.*.local
+
+# logs
+npm-debug.log*
+*.log
+
+# editor / os
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# личные ресурсы-скилы и локальные материалы (НЕ часть сайта, не выкладывать)
+/Гайд со стилями/
+/Скил Дизайнер сайтов, лендингов, презентаций/
+/Скил_Генератор заголовков/
+README.pdf
+
+# черновая папка для своих фото растений — сюда складывать оригиналы,
+# я забираю их оттуда и кладу оптимизированные копии в public/images/photos
+/фото растений/

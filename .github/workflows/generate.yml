@@ -1,0 +1,59 @@
+name: Generate draft articles
+
+# «Сайт сам себя ведёт»: по расписанию генерирует новые статьи-ЧЕРНОВИКИ и коммитит их.
+# Черновики (draft: true) НЕ публикуются, пока ты их не проверишь и не поставишь draft: false.
+# Это защита от штрафов поисковика за некачественный авто-контент.
+#
+# AI-режим включается автоматически, если в Secrets репозитория задан ANTHROPIC_API_KEY.
+# Без него генерируются скелеты для ручного наполнения.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # каждый понедельник в 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'Сколько статей сгенерировать'
+        required: false
+        default: '3'
+
+# Безопасность: по умолчанию НИКАКИХ прав, права выдаём точечно в job.
+permissions: {}
+
+# Не запускать генерацию параллельно (защита от гонок при пуше).
+concurrency:
+  group: generate-content
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # нужно только для коммита сгенерированных черновиков
+    steps:
+      # Рекомендация по безопасности: для максимальной защиты можно закрепить
+      # экшены на полный commit-SHA вместо тега (напр. actions/checkout@<sha>).
+      # Теги ниже — компромисс между безопасностью и удобством обновлений.
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true # нужно для git push из job
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Generate articles
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GENERATE_BATCH_SIZE: ${{ github.event.inputs.count || '3' }}
+        run: npm run generate
+      - name: Commit new drafts
+        run: |
+          git config user.name "lapki-doma-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add src/content/articles
+          if git diff --staged --quiet; then
+            echo "Новых статей нет."
+          else
+            git commit -m "content: add generated draft articles"
+            git push
+          fi

@@ -1,0 +1,30 @@
+---
+import { articleUrl } from '../lib/urls.mjs';
+import { CATEGORIES } from '../site.config.mjs';
+
+/**
+ * @typedef {Object} Props
+ * @property {any} entry запись коллекции articles
+ */
+const { entry } = Astro.props;
+const url = articleUrl(entry);
+const cat = CATEGORIES.find((c) => c.slug === entry.data.category);
+const emoji =
+  {
+    koshki: '🐱',
+    sobaki: '🐶',
+    'zdorovie-i-povedenie': '⚕️',
+    sovety: '💡',
+  }[entry.data.category] ?? '🐾';
+---
+
+<article class="card">
+  <a href={url} class="thumb" aria-hidden="true" tabindex="-1">
+    {entry.data.cover ? <img src={entry.data.cover} alt={entry.data.coverAlt ?? ''} /> : <span>{emoji}</span>}
+  </a>
+  <div class="body">
+    <span class="cat">{cat?.title ?? entry.data.category}</span>
+    <h3><a href={url}>{entry.data.title}</a></h3>
+    <p>{entry.data.description}</p>
+  </div>
+</article>

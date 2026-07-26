@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { SITE, CATEGORIES } from '../site.config.mjs';
+import { categoryUrl } from '../lib/urls.mjs';
+
+const all = await getCollection('articles', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+const articles = all.sort(
+  (a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate),
+);
+const latest = articles.slice(0, 9);
+---
+
+<BaseLayout title={SITE.name} description={SITE.description}>
+  <section class="hero">
+    <div class="container">
+      <h1>{SITE.tagline}</h1>
+      <p class="lead">{SITE.description}</p>
+      <div class="chips">
+        {CATEGORIES.map((c) => <a class="chip" href={categoryUrl(c.slug)}>{c.title}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <div class="container container-wide">
+    <div class="section-title">
+      <h2>Свежие статьи</h2>
+    </div>
+
+    {
+      latest.length === 0 ? (
+        <p style="color: var(--text-soft); padding: 24px 0;">
+          Пока нет опубликованных статей. Запусти <code>npm run generate</code>, чтобы создать
+          черновики, и поставь <code>draft: false</code> после вычитки.
+        </p>
+      ) : (
+        <div class="grid">
+          {latest.map((entry) => <ArticleCard entry={entry} />)}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

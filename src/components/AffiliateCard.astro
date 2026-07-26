@@ -1,0 +1,25 @@
+---
+import { marketplaceLink } from '../lib/urls.mjs';
+
+/**
+ * Карточка партнёрского товара. Ведёт на поиск Ozon с твоей партнёрской меткой
+ * (подставляется автоматически, если она задана в site.config.mjs).
+ *
+ * @typedef {Object} Props
+ * @property {string} name
+ * @property {string} marketplaceSearch поисковый запрос на маркетплейсе
+ * @property {string} blurb короткое описание, зачем эта штука
+ */
+const { name, marketplaceSearch, blurb } = Astro.props;
+const href = marketplaceLink(marketplaceSearch);
+---
+
+<div class="aff-card">
+  <div class="info">
+    <h4>{name}</h4>
+    <p>{blurb}</p>
+  </div>
+  <a class="btn" href={href} target="_blank" rel="nofollow sponsored noopener">
+    Посмотреть на Ozon →
+  </a>
+</div>
