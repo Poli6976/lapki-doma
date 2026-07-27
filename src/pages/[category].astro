@@ -22,6 +22,14 @@ const all = await getCollection('articles', ({ data }) => import.meta.env.PROD ?
 const articles = all
   .filter((a) => a.data.category === category.slug)
   .sort((a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate));
+
+// Вкладки-подразделы. Показываем только те, что описаны в site.config.mjs,
+// и считаем, сколько статей в каждой — пустая вкладка честно говорит «скоро»,
+// а не притворяется, что там что-то есть.
+const subs = (category.subcategories ?? []).map((s) => ({
+  ...s,
+  count: articles.filter((a) => a.data.subcategory === s.slug).length,
+}));
 ---
 
 <BaseLayout title={category.title} description={category.description}>
@@ -62,13 +70,67 @@ const articles = all
 
   <div class="container container-wide" style="margin-top: 40px;">
     {
-      articles.length === 0 ? (
-        <p style="color: var(--text-soft);">В этом разделе пока нет статей — скоро появятся.</p>
-      ) : (
-        <div class="grid">
-          {articles.map((entry) => <ArticleCard entry={entry} />)}
+      subs.length > 0 && articles.length > 0 && (
+        <div class="subtabs" role="tablist" aria-label={`Подразделы: ${category.title}`}>
+          <button class="subtab" type="button" role="tab" aria-selected="true" data-sub="all">
+            Все <span class="subtab-count">{articles.length}</span>
+          </button>
+          {subs.map((s) => (
+            <button class="subtab" type="button" role="tab" aria-selected="false" data-sub={s.slug}>
+              {s.title} <span class="subtab-count">{s.count > 0 ? s.count : '—'}</span>
+            </button>
+          ))}
         </div>
       )
     }
+
+    {
+      articles.length === 0 ? (
+        <p style="color: var(--text-soft);">В этом разделе пока нет статей — скоро появятся.</p>
+      ) : (
+        <>
+          <div class="grid" id="cat-grid">
+            {articles.map((entry) => (
+              <div class="grid-item" data-sub={entry.data.subcategory ?? ''}>
+                <ArticleCard entry={entry} />
+              </div>
+            ))}
+          </div>
+          <p class="subtab-empty" hidden>В этом подразделе пока нет статей — скоро появятся.</p>
+        </>
+      )
+    }
   </div>
+
+  {/* Фильтр вкладок. Без JS вкладки скрыты (класс ставит сам скрипт), а все
+      статьи просто видны списком — страница остаётся рабочей. */}
+  <script is:inline>
+    (() => {
+      const tabs = document.querySelector('.subtabs');
+      const grid = document.getElementById('cat-grid');
+      if (!tabs || !grid) return;
+      tabs.classList.add('is-ready');
+
+      const items = Array.from(grid.querySelectorAll('.grid-item'));
+      const empty = document.querySelector('.subtab-empty');
+
+      tabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.subtab');
+        if (!btn) return;
+        const sub = btn.dataset.sub;
+
+        tabs.querySelectorAll('.subtab').forEach((b) => {
+          b.setAttribute('aria-selected', String(b === btn));
+        });
+
+        let shown = 0;
+        items.forEach((item) => {
+          const match = sub === 'all' || item.dataset.sub === sub;
+          item.hidden = !match;
+          if (match) shown++;
+        });
+        if (empty) empty.hidden = shown > 0;
+      });
+    })();
+  </script>
 </BaseLayout>

@@ -86,18 +86,29 @@ export const CATEGORIES = [
     title: 'Кошки',
     icon: '/images/icons/cat.svg',
     description: 'Уход, здоровье и поведение кошек — от котёнка до взрослого питомца.',
+    subcategories: [{ slug: 'porody', title: 'Породы' }],
   },
   {
     slug: 'sobaki',
     title: 'Собаки',
     icon: '/images/icons/dog.svg',
     description: 'Уход, воспитание и здоровье собак разных пород.',
+    // Подразделы = вкладки на странице категории. Статья попадает во вкладку
+    // через поле `subcategory` во frontmatter. Статьи без этого поля видны
+    // только на вкладке «Все» — так новая статья не пропадает, если автор
+    // забыл проставить подраздел.
+    subcategories: [
+      { slug: 'porody', title: 'Породы' },
+      { slug: 'dressirovka', title: 'Основы дрессировки' },
+      { slug: 'zakon', title: 'Закон и правила' },
+    ],
   },
   {
     slug: 'gryzuny',
     title: 'Милые грызуны',
     icon: '/images/icons/hamster.svg',
     description: 'Хомяки, морские свинки, кролики, крысы и шиншиллы: клетка, корм, приручение.',
+    subcategories: [{ slug: 'vidy', title: 'Кто есть кто' }],
   },
   {
     slug: 'zdorovie-i-povedenie',

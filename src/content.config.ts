@@ -25,6 +25,11 @@ const articles = defineCollection({
     // Ключевые слова/теги для внутренней перелинковки.
     keywords: z.array(z.string()).default([]),
 
+    // Подраздел внутри категории — вкладка на странице категории.
+    // Значение должно совпадать со slug из `subcategories` соответствующей
+    // категории в site.config.mjs. Не указан — статья видна только на «Все».
+    subcategory: z.string().optional(),
+
     // Обложка (путь в /public или внешний URL). Опционально.
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
