@@ -15,6 +15,11 @@
  *   node scripts/fetch-photos.mjs                 # только статьи без фото
  *   node scripts/fetch-photos.mjs --force         # перезагрузить все
  *   node scripts/fetch-photos.mjs slug1 slug2     # перезагрузить конкретные
+ *   node scripts/fetch-photos.mjs --sets          # галереи + ленты категорий
+ *   node scripts/fetch-photos.mjs --sets slug1    # галерея только этой статьи
+ *
+ * Обложки и наборы не пересекаются: с флагом --sets обложки не трогаются вовсе,
+ * а перечисленные слаги ограничивают набор — ленты категорий тогда пропускаются.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,6 +29,8 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ARTICLES_DIR = path.join(ROOT, 'src/content/articles');
 const OUT_DIR = path.join(ROOT, 'public/images/photos');
 const FORCE = process.argv.includes('--force');
+// --sets = режим наборов (галереи и ленты категорий), обложки при нём не трогаются.
+const SETS = process.argv.includes('--sets');
 // Явно перечисленные slug-и перезагружаем, даже если фото уже стоит.
 const ONLY = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 
@@ -47,10 +54,14 @@ const PHOTO_QUERIES = {
   // Кошки
   'kak-priuchit-kotenka-k-lotku': 'Litter box cat',
   'koshka-i-zakon-soderzhanie-samovygul': 'Domestic cat sitting in garden',
+  'koshka-deret-mebel-kak-otuchit-bez-nakazaniya': 'Cat scratching post',
+  'porody-koshek-dlya-semi-s-rebenkom': 'Cat sleeping on blanket',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
   'pravila-vygula-sobaki-po-zakonu': 'Dog walking on leash park',
+  'schenok-skulit-po-nocham-pervuyu-nedelyu-posle-pereezda': 'Beagle puppy sleeping',
+  'sobaka-dlya-kvartiry-kakie-porody-podhodyat': 'Dog sleeping on couch',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -60,6 +71,7 @@ const PHOTO_QUERIES = {
   'homyak-shumit-nochyu-pochemu-i-kak-umenshit-shum': 'Hamster running wheel',
   'kakaya-kletka-nuzhna-homyaku-razmer-napolnitel-chto-vnutri': 'Hamster cage bedding',
   'kakoy-gryzun-podoydet-rebenku-homyak-morskaya-svinka-ili-krysa': 'Guinea pig portrait',
+  'chem-kormit-morskuyu-svinku-seno-vitamin-c-i-zaprety': 'Guinea pigs eating lettuce',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -70,10 +82,13 @@ const PHOTO_QUERIES = {
   // и не пугает читателя, который и так встревожен.
   'sobaka-cheshetsya-a-bloh-net-chastye-prichiny': 'Golden Retriever portrait',
   'sobaka-otkazyvaetsya-ot-edy-kogda-eto-trevozhno': 'Dog food bowl',
+  // Спокойный кот рядом с лотком, а не сам «промах» — пугать читателя нечем.
+  'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno': 'Cat litter box',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
+  'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
@@ -104,7 +119,7 @@ const BAD_TITLE =
 // собаку и волка — на обложке статьи про зуд у питомца это прямая дезинформация
 // (реальный случай: African Wild Dog в статью «собака чешется»).
 const WILD_SPECIES =
-  /\b(lycaon|african wild dog|painted dog|wolf|wolves|coyote|jackal|dingo|\bfox\b|lynx|tiger|lion|leopard|cheetah|serval|caracal|ocelot|puma|cougar|hyena|raccoon|ferret|capybara|beaver|squirrel|marmot|vole|wild boar|zoo)\b/i;
+  /\b(lycaon|african wild dog|painted dog|wolf|wolves|coyote|jackal|dingo|\bfox\b|lynx|bobcat|tiger|lion|leopard|panther|cheetah|serval|caracal|ocelot|puma|cougar|mountain lion|wildcat|hyena|raccoon|ferret|capybara|beaver|squirrel|marmot|vole|wild boar|zoo)\b/i;
 
 // Портрет человека вместо животного — тоже частый промах поиска.
 const HUMAN_SUBJECT = /\b(family|portrait of|man|woman|children|soldier|worker|tribe|people)\b/i;
@@ -153,8 +168,18 @@ function forbiddenSubject(title) {
   return FORBIDDEN.test(title) || ARTIFACT.test(title) || DIAGRAM.test(title);
 }
 
+// Лицензии, которые НЕ требуют указывать автора: общественное достояние и CC0.
+// Владелец просил по возможности брать именно такие фото — тогда подпись под
+// снимком нужна только из вежливости, а не по требованию лицензии.
+// Мы всё равно записываем автора и источник в coverCredit: это честно и
+// страхует от ошибки в определении лицензии на стороне Commons.
+const NO_ATTRIBUTION_LICENSE = /public domain|\bCC0\b|\bPDM\b|no restrictions/i;
+
 /**
  * Ищет подходящее фото в Wikimedia Commons. Возвращает url + данные лицензии.
+ *
+ * Из всех подходящих кандидатов выбирает первый с лицензией без обязательного
+ * авторства (PD/CC0), и только если таких нет — первый по релевантности.
  *
  * allowWild отключает фильтр диких видов — он нужен ровно для волкособа:
  * это гибрид волка, он законно входит в перечень опасных пород, и общий
@@ -166,7 +191,7 @@ async function findPhoto(query, { allowWild = false } = {}) {
     generator: 'search',
     gsrsearch: `File: ${query}`,
     gsrnamespace: '6',
-    gsrlimit: '8',
+    gsrlimit: '12',
     prop: 'imageinfo',
     iiprop: 'url|extmetadata|size|mime',
     iiurlwidth: '1200',
@@ -177,6 +202,9 @@ async function findPhoto(query, { allowWild = false } = {}) {
   });
   if (!res.ok) throw new Error(`Commons ответил ${res.status}`);
   const data = await res.json();
+  // Порядок выдачи Commons — это релевантность, её терять не хочется:
+  // складываем всех подходящих кандидатов по порядку и выбираем в конце.
+  const candidates = [];
   const pages = Object.values(data?.query?.pages ?? {});
 
   for (const page of pages) {
@@ -196,15 +224,18 @@ async function findPhoto(query, { allowWild = false } = {}) {
     // Мелкие картинки на обложке 16:9 выглядят мылом.
     if ((info.width ?? 0) < 800) continue;
 
-    return {
+    candidates.push({
       url: info.thumburl || info.url,
       author,
       license: stripHtml(license) || 'CC',
       sourceUrl: info.descriptionurl || '',
       title: page.title,
-    };
+    });
   }
-  return null;
+
+  // Сначала — фото без обязательного указания авторства (PD/CC0),
+  // и только если таких не нашлось, берём лучший из остальных.
+  return candidates.find((c) => NO_ATTRIBUTION_LICENSE.test(c.license)) || candidates[0] || null;
 }
 
 /** Скачивает файл на диск. */
@@ -229,7 +260,10 @@ function yaml(s) {
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const entries = Object.entries(PHOTO_QUERIES);
+// С флагом --sets занимаемся только галереями и лентами: обложки в этот заход
+// не трогаем вовсе. Иначе «собери галерею статьям A и B» заодно перекачивало бы
+// их проверенные глазами обложки — а откатить это нечем, пока статья не в git.
+const entries = SETS ? [] : Object.entries(PHOTO_QUERIES);
 let done = 0;
 let skipped = 0;
 const failed = [];
@@ -326,6 +360,24 @@ const GALLERY_QUERIES = {
     { key: 'pitbulmastif', caption: 'Питбульмастиф', query: 'Bullmastiff dog standing' },
     { key: 'severokavkazskaya', caption: 'Северокавказская собака', query: 'Caucasian Shepherd Dog' },
   ],
+
+  // Породы для квартиры. Порядок совпадает с порядком разборов в статье.
+  'sobaka-dlya-kvartiry-kakie-porody-podhodyat': [
+    { key: 'francuzskiy-buldog', caption: 'Французский бульдог', query: 'French Bulldog' },
+    { key: 'mops', caption: 'Мопс', query: 'Pug dog' },
+    { key: 'kavaler-king-charlz', caption: 'Кавалер-кинг-чарльз-спаниель', query: 'Cavalier King Charles Spaniel' },
+    { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
+    { key: 'taksa', caption: 'Такса', query: 'Dachshund dog' },
+  ],
+
+  // Породы кошек для семьи с ребёнком.
+  'porody-koshek-dlya-semi-s-rebenkom': [
+    { key: 'meyn-kun', caption: 'Мейн-кун', query: 'Maine Coon cat' },
+    { key: 'regdoll', caption: 'Рэгдолл', query: 'Ragdoll cat' },
+    { key: 'britanskaya', caption: 'Британская короткошёрстная', query: 'British Shorthair cat' },
+    { key: 'sibirskaya', caption: 'Сибирская кошка', query: 'Siberian cat breed' },
+    { key: 'birmanskaya', caption: 'Бирманская кошка', query: 'Birman cat' },
+  ],
 };
 
 /** Лента фото на странице категории. Пишется в src/data/category-photos.json. */
@@ -380,6 +432,9 @@ if (process.argv.includes('--sets')) {
 
   console.log('\n\n=== Галереи внутри статей ===');
   for (const [slug, items] of Object.entries(GALLERY_QUERIES)) {
+    // Перечислили слаги в командной строке — трогаем только их. Иначе новая
+    // галерея тянула бы за собой перекачку уже проверенных глазами наборов.
+    if (ONLY.length > 0 && !ONLY.includes(slug)) continue;
     console.log(`\n${slug}:`);
     const file = path.join(ARTICLES_DIR, `${slug}.md`);
     if (!fs.existsSync(file)) {
@@ -413,22 +468,30 @@ if (process.argv.includes('--sets')) {
     console.log(`  → в галерее ${out.length} из ${items.length}`);
   }
 
-  console.log('\n\n=== Ленты категорий ===');
-  const CATEGORY_DIR = path.join(ROOT, 'public/images/photos/category');
-  fs.mkdirSync(CATEGORY_DIR, { recursive: true });
-  const catData = {};
-  for (const [cat, items] of Object.entries(CATEGORY_PHOTOS)) {
-    console.log(`\n${cat}:`);
-    const { out, miss } = await fetchSet(items, cat, CATEGORY_DIR, '/images/photos/category');
-    if (miss.length) allMissing.push(`категория ${cat}: ${miss.join(', ')}`);
-    catData[cat] = out;
-    console.log(`  → в ленте ${out.length} из ${items.length}`);
+  // Ленты категорий трогаем, только когда слаги статей НЕ перечислены: иначе
+  // «собери галерею вот этим двум статьям» молча перекачивало бы и ленту
+  // категории вместе с category-photos.json (проверено на практике 28.07.2026 —
+  // пришлось откатывать через git четыре фото грызунов).
+  if (ONLY.length > 0) {
+    console.log('\n\n=== Ленты категорий пропущены (указаны конкретные статьи) ===');
+  } else {
+    console.log('\n\n=== Ленты категорий ===');
+    const CATEGORY_DIR = path.join(ROOT, 'public/images/photos/category');
+    fs.mkdirSync(CATEGORY_DIR, { recursive: true });
+    const catData = {};
+    for (const [cat, items] of Object.entries(CATEGORY_PHOTOS)) {
+      console.log(`\n${cat}:`);
+      const { out, miss } = await fetchSet(items, cat, CATEGORY_DIR, '/images/photos/category');
+      if (miss.length) allMissing.push(`категория ${cat}: ${miss.join(', ')}`);
+      catData[cat] = out;
+      console.log(`  → в ленте ${out.length} из ${items.length}`);
+    }
+    fs.writeFileSync(
+      path.join(DATA_DIR, 'category-photos.json'),
+      JSON.stringify(catData, null, 2) + '\n',
+      'utf8',
+    );
   }
-  fs.writeFileSync(
-    path.join(DATA_DIR, 'category-photos.json'),
-    JSON.stringify(catData, null, 2) + '\n',
-    'utf8',
-  );
 
   if (allMissing.length) {
     console.log('\n\nНе нашлось фото:');
