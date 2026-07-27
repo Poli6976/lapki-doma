@@ -727,6 +727,38 @@ img {
   line-height: 1.3;
 }
 
+/* ─── Кликабельное фото породы или вида ───
+   Снимок ведёт на статью-портрет, если она уже написана. Ссылкой обёрнута вся
+   карточка целиком — так по ней проще попасть пальцем на телефоне, чем по одной
+   подписи. Подсказка «Подробно →» нужна, чтобы кликабельность читалась и без
+   наведения мыши: на сенсорном экране никакого hover нет. */
+.photo-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+.photo-link:hover {
+  background: var(--brand-soft);
+}
+.photo-link img {
+  transition: transform 0.35s ease;
+}
+.photo-link:hover img {
+  transform: scale(1.03);
+}
+.photo-link:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.photo-link-hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--brand-dark);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 /* ─── Атрибуция фотографий ───
    CC BY / CC BY-SA требуют указать автора, поэтому убрать подпись совсем нельзя.
    Но под каждым снимком она не нужна: собираем в один служебный блок — лицензия

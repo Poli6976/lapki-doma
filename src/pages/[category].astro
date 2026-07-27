@@ -23,6 +23,11 @@ const articles = all
   .filter((a) => a.data.category === category.slug)
   .sort((a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate));
 
+// Фото в ленте ведёт на статью-портрет вида, если она уже написана. Нет
+// статьи — снимок остаётся обычной картинкой, а не ссылкой в никуда.
+const articleLinks = new Map(all.map((e) => [e.id, `/${e.data.category}/${e.id}`]));
+const photoLink = (p) => (p.article ? articleLinks.get(p.article) : undefined);
+
 // Вкладки-подразделы. Показываем только те, что описаны в site.config.mjs,
 // и считаем, сколько статей в каждой — пустая вкладка честно говорит «скоро»,
 // а не притворяется, что там что-то есть.
@@ -46,10 +51,22 @@ const subs = (category.subcategories ?? []).map((s) => ({
         <section class="cat-photos" aria-label={`Кто живёт в разделе «${category.title}»`}>
           {photos.map((p) => (
             <figure>
-              <img src={p.src} alt={p.caption} loading="lazy" />
-              <figcaption>
-                <b>{p.caption}</b>
-              </figcaption>
+              {photoLink(p) ? (
+                <a href={photoLink(p)} class="photo-link">
+                  <img src={p.src} alt={p.caption} loading="lazy" />
+                  <figcaption>
+                    <b>{p.caption}</b>
+                    <span class="photo-link-hint">Подробно →</span>
+                  </figcaption>
+                </a>
+              ) : (
+                <>
+                  <img src={p.src} alt={p.caption} loading="lazy" />
+                  <figcaption>
+                    <b>{p.caption}</b>
+                  </figcaption>
+                </>
+              )}
             </figure>
           ))}
         </section>

@@ -56,12 +56,20 @@ const PHOTO_QUERIES = {
   'koshka-i-zakon-soderzhanie-samovygul': 'Domestic cat sitting in garden',
   'koshka-deret-mebel-kak-otuchit-bez-nakazaniya': 'Cat scratching post',
   'porody-koshek-dlya-semi-s-rebenkom': 'Cat sleeping on blanket',
+  // Портреты пород. Запрос отличается от того, что стоит в галерее подборки,
+  // иначе на обложке и в галерее оказалось бы одно и то же фото.
+  'meyn-kun-harakter-uhod-i-osobennosti-porody': 'Maine Coon cat face tufted ears',
+  'britanskaya-koshka-harakter-uhod-osobennosti': 'British Shorthair kitten',
+  'kak-priuchit-koshku-k-perenoske-bez-stressa': 'Cat in travel carrier',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
   'pravila-vygula-sobaki-po-zakonu': 'Dog walking on leash park',
   'schenok-skulit-po-nocham-pervuyu-nedelyu-posle-pereezda': 'Beagle puppy sleeping',
   'sobaka-dlya-kvartiry-kakie-porody-podhodyat': 'Dog sleeping on couch',
+  'francuzskiy-buldog-harakter-uhod-zdorovye': 'French Bulldog puppy',
+  'taksa-harakter-uhod-i-osobennosti-porody': 'Dachshund puppy',
+  'sobaka-tyanet-povodok-kak-otuchit': 'Dog pulling on leash',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -72,6 +80,9 @@ const PHOTO_QUERIES = {
   'kakaya-kletka-nuzhna-homyaku-razmer-napolnitel-chto-vnutri': 'Hamster cage bedding',
   'kakoy-gryzun-podoydet-rebenku-homyak-morskaya-svinka-ili-krysa': 'Guinea pig portrait',
   'chem-kormit-morskuyu-svinku-seno-vitamin-c-i-zaprety': 'Guinea pigs eating lettuce',
+  'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Golden hamster',
+  'morskaya-svinka-kto-eto-i-chto-ey-nuzhno': 'Guinea pig on grass',
+  'homyak-gryzet-prutya-kletki-pochemu-i-chto-delat': 'Syrian hamster cage',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -84,11 +95,13 @@ const PHOTO_QUERIES = {
   'sobaka-otkazyvaetsya-ot-edy-kogda-eto-trevozhno': 'Dog food bowl',
   // Спокойный кот рядом с лотком, а не сам «промах» — пугать читателя нечем.
   'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno': 'Cat litter box',
+  'ponos-u-sobaki-kogda-nablyudat-a-kogda-k-vrachu': 'Labrador Retriever lying on grass',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
   'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
+  'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
@@ -362,19 +375,42 @@ const GALLERY_QUERIES = {
   ],
 
   // Породы для квартиры. Порядок совпадает с порядком разборов в статье.
+  // ⚠️ Поле `article` — slug статьи-портрета про породу. Фото становится
+  // ссылкой на неё, но только если такая статья реально существует: написали
+  // портрет — допишите сюда строку и прогоните `--sets` по этой статье.
   'sobaka-dlya-kvartiry-kakie-porody-podhodyat': [
-    { key: 'francuzskiy-buldog', caption: 'Французский бульдог', query: 'French Bulldog' },
+    {
+      key: 'francuzskiy-buldog',
+      caption: 'Французский бульдог',
+      query: 'French Bulldog',
+      article: 'francuzskiy-buldog-harakter-uhod-zdorovye',
+    },
     { key: 'mops', caption: 'Мопс', query: 'Pug dog' },
     { key: 'kavaler-king-charlz', caption: 'Кавалер-кинг-чарльз-спаниель', query: 'Cavalier King Charles Spaniel' },
     { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
-    { key: 'taksa', caption: 'Такса', query: 'Dachshund dog' },
+    {
+      key: 'taksa',
+      caption: 'Такса',
+      query: 'Dachshund dog',
+      article: 'taksa-harakter-uhod-i-osobennosti-porody',
+    },
   ],
 
   // Породы кошек для семьи с ребёнком.
   'porody-koshek-dlya-semi-s-rebenkom': [
-    { key: 'meyn-kun', caption: 'Мейн-кун', query: 'Maine Coon cat' },
+    {
+      key: 'meyn-kun',
+      caption: 'Мейн-кун',
+      query: 'Maine Coon cat',
+      article: 'meyn-kun-harakter-uhod-i-osobennosti-porody',
+    },
     { key: 'regdoll', caption: 'Рэгдолл', query: 'Ragdoll cat' },
-    { key: 'britanskaya', caption: 'Британская короткошёрстная', query: 'British Shorthair cat' },
+    {
+      key: 'britanskaya',
+      caption: 'Британская короткошёрстная',
+      query: 'British Shorthair cat',
+      article: 'britanskaya-koshka-harakter-uhod-osobennosti',
+    },
     { key: 'sibirskaya', caption: 'Сибирская кошка', query: 'Siberian cat breed' },
     { key: 'birmanskaya', caption: 'Бирманская кошка', query: 'Birman cat' },
   ],
@@ -386,8 +422,18 @@ const CATEGORY_PHOTOS = {
     { key: 'krolik', caption: 'Кролик', query: 'Domestic rabbit' },
     { key: 'krysa', caption: 'Декоративная крыса', query: 'Fancy rat pet' },
     { key: 'shinshilla', caption: 'Шиншилла', query: 'Chinchilla pet' },
-    { key: 'homyak', caption: 'Хомяк', query: 'Syrian hamster' },
-    { key: 'morskaya-svinka', caption: 'Морская свинка', query: 'Guinea pig' },
+    {
+      key: 'homyak',
+      caption: 'Хомяк',
+      query: 'Syrian hamster',
+      article: 'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno',
+    },
+    {
+      key: 'morskaya-svinka',
+      caption: 'Морская свинка',
+      query: 'Guinea pig',
+      article: 'morskaya-svinka-kto-eto-i-chto-ey-nuzhno',
+    },
   ],
 };
 
@@ -418,6 +464,8 @@ if (process.argv.includes('--sets')) {
           author: photo.author,
           license: photo.license,
           sourceUrl: photo.sourceUrl,
+          // Есть статья-портрет про эту породу — фото станет ссылкой на неё.
+          ...(item.article ? { article: item.article } : {}),
         });
         console.log(`  ✓ ${item.caption} — ${photo.license} · ${photo.author}`);
         await new Promise((r) => setTimeout(r, 400));
@@ -459,7 +507,8 @@ if (process.argv.includes('--sets')) {
         .map(
           (p) =>
             `  - src: ${yaml(p.src)}\n    alt: ${yaml(p.alt)}\n    caption: ${yaml(p.caption)}\n` +
-            `    author: ${yaml(p.author)}\n    license: ${yaml(p.license)}\n    sourceUrl: ${yaml(p.sourceUrl)}`,
+            `    author: ${yaml(p.author)}\n    license: ${yaml(p.license)}\n    sourceUrl: ${yaml(p.sourceUrl)}` +
+            (p.article ? `\n    article: ${yaml(p.article)}` : ''),
         )
         .join('\n');
       fm += `\ngallery:\n${yamlList}`;

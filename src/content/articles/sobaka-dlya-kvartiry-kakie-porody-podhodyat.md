@@ -30,6 +30,7 @@ gallery:
     author: 'The original uploader was Monoklon at Russian Wikipedia.'
     license: 'CC0'
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:French_Bulldog_ru.jpg'
+    article: 'francuzskiy-buldog-harakter-uhod-zdorovye'
   - src: '/images/photos/gallery/sobaka-dlya-kvartiry-kakie-porody-podhodyat-mops.jpg'
     alt: 'Мопс'
     caption: 'Мопс'
@@ -54,6 +55,7 @@ gallery:
     author: 'Pdpics'
     license: 'CC BY-SA 3.0'
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Dachshund_Dog_Breed.jpg'
+    article: 'taksa-harakter-uhod-i-osobennosti-porody'
 ---
 
 Если вы листаете списки «лучших пород для квартиры» и не понимаете, почему в них соседствуют огромный сенбернар и крошечный джек-рассел-терьер — это нормально: сам вопрос сформулирован неточно. Размер квартиры важен, но собаку под неё нельзя подобрать одним параметром «рост в холке».

@@ -46,6 +46,10 @@ const articles = defineCollection({
           author: z.string().optional(),
           license: z.string().optional(),
           sourceUrl: z.string().optional(),
+          // Slug статьи-портрета про эту породу или вид. Если такая статья
+          // уже написана, фото в галерее становится ссылкой на неё; если ещё
+          // нет — остаётся обычной картинкой, битых ссылок не появляется.
+          article: z.string().optional(),
         }),
       )
       .default([]),

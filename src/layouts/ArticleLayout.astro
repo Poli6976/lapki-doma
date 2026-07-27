@@ -7,9 +7,10 @@ import CalmIntro from '../components/CalmIntro.astro';
 import VetAlert from '../components/VetAlert.astro';
 import VetDisclaimer from '../components/VetDisclaimer.astro';
 import LegalDisclaimer from '../components/LegalDisclaimer.astro';
+import { getCollection } from 'astro:content';
 import { SITE } from '../site.config.mjs';
 import { CATEGORIES } from '../site.config.mjs';
-import { absoluteUrl, categoryUrl } from '../lib/urls.mjs';
+import { absoluteUrl, articleUrl, categoryUrl } from '../lib/urls.mjs';
 
 /**
  * @typedef {Object} Props
@@ -27,6 +28,17 @@ const dateFmt = (d) =>
 
 // Оглавление строим только из h2.
 const toc = headings.filter((h) => h.depth === 2);
+
+/**
+ * Куда ведёт фото породы в галерее. Ссылка появляется, только если статья-
+ * портрет про эту породу уже существует: подборка пород живёт дольше, чем
+ * пишутся портреты, и мёртвая ссылка «скоро будет» хуже обычной картинки.
+ */
+const publishedArticles = await getCollection('articles', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true,
+);
+const articleLinks = new Map(publishedArticles.map((e) => [e.id, articleUrl(e)]));
+const galleryLink = (p) => (p.article ? articleLinks.get(p.article) : undefined);
 
 /**
  * Источники фотографий одним списком в конце статьи.
@@ -117,10 +129,22 @@ const jsonLd = {
         <section class="photo-gallery" aria-label="Фотографии по теме статьи">
           {data.gallery.map((p) => (
             <figure>
-              <img src={p.src} alt={p.alt} loading="lazy" />
-              <figcaption>
-                <b>{p.caption ?? p.alt}</b>
-              </figcaption>
+              {galleryLink(p) ? (
+                <a href={galleryLink(p)} class="photo-link">
+                  <img src={p.src} alt={p.alt} loading="lazy" />
+                  <figcaption>
+                    <b>{p.caption ?? p.alt}</b>
+                    <span class="photo-link-hint">Подробно о породе →</span>
+                  </figcaption>
+                </a>
+              ) : (
+                <>
+                  <img src={p.src} alt={p.alt} loading="lazy" />
+                  <figcaption>
+                    <b>{p.caption ?? p.alt}</b>
+                  </figcaption>
+                </>
+              )}
             </figure>
           ))}
         </section>
