@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Хомяк">
+  <defs>
+    <radialGradient id="fur" cx="36%" cy="26%" r="82%">
+      <stop offset="0%" stop-color="#ffe6b8"/>
+      <stop offset="48%" stop-color="#f0c17e"/>
+      <stop offset="100%" stop-color="#bd8a45"/>
+    </radialGradient>
+    <radialGradient id="ear" cx="45%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#e6b283"/>
+      <stop offset="100%" stop-color="#a9713e"/>
+    </radialGradient>
+    <radialGradient id="earIn" cx="50%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#f2b6a6"/>
+      <stop offset="100%" stop-color="#c9806e"/>
+    </radialGradient>
+    <radialGradient id="cheek" cx="42%" cy="30%" r="78%">
+      <stop offset="0%" stop-color="#fff2d6"/>
+      <stop offset="100%" stop-color="#e2b878"/>
+    </radialGradient>
+    <radialGradient id="gloss" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity=".75"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="occl" cx="50%" cy="32%" r="64%">
+      <stop offset="60%" stop-color="#7a5217" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#7a5217" stop-opacity=".4"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="32" cy="57" rx="17" ry="3.4" fill="#8a6023" opacity=".24" filter="url(#soft)"/>
+
+  <g>
+    <circle cx="17.5" cy="21" r="7.5" fill="url(#ear)"/>
+    <circle cx="46.5" cy="21" r="7.5" fill="url(#ear)"/>
+    <circle cx="17.5" cy="21.5" r="4.2" fill="url(#earIn)"/>
+    <circle cx="46.5" cy="21.5" r="4.2" fill="url(#earIn)"/>
+  </g>
+
+  <ellipse cx="32" cy="35" rx="19" ry="17" fill="url(#fur)"/>
+  <ellipse cx="32" cy="35" rx="19" ry="17" fill="url(#occl)"/>
+  <ellipse cx="24.5" cy="26" rx="8.5" ry="5.6" fill="url(#gloss)"/>
+
+  <ellipse cx="18.5" cy="40" rx="6.5" ry="5.4" fill="url(#cheek)"/>
+  <ellipse cx="45.5" cy="40" rx="6.5" ry="5.4" fill="url(#cheek)"/>
+
+  <g>
+    <ellipse cx="25" cy="33" rx="3.2" ry="3.6" fill="#2e2115"/>
+    <ellipse cx="39" cy="33" rx="3.2" ry="3.6" fill="#2e2115"/>
+    <circle cx="23.8" cy="31.5" r="1.2" fill="#fff" opacity=".92"/>
+    <circle cx="37.8" cy="31.5" r="1.2" fill="#fff" opacity=".92"/>
+  </g>
+
+  <ellipse cx="32" cy="40" rx="2.6" ry="2" fill="#c47f6d"/>
+  <ellipse cx="31.2" cy="39.3" rx=".9" ry=".6" fill="#f0b3a4" opacity=".85"/>
+
+  <path d="M32 42.2 v2 M32 44.2 q-2.4 2.2-4.6 .4 M32 44.2 q2.4 2.2 4.6 .4"
+        fill="none" stroke="#8a5f2c" stroke-width="1.4" stroke-linecap="round"/>
+
+  <g fill="#fffaf0" stroke="#c9a15c" stroke-width=".5">
+    <rect x="29.7" y="46" width="2" height="3.4" rx=".9"/>
+    <rect x="32.3" y="46" width="2" height="3.4" rx=".9"/>
+  </g>
+
+  <g stroke="#a9773a" stroke-width="1.1" stroke-linecap="round" opacity=".75">
+    <path d="M25 42.5 L13.5 41.5"/><path d="M39 42.5 L50.5 41.5"/>
+  </g>
+</svg>

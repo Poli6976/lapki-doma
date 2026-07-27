@@ -5,21 +5,69 @@ import { marketplaceLink } from '../lib/urls.mjs';
  * Карточка партнёрского товара. Ведёт на поиск Ozon с твоей партнёрской меткой
  * (подставляется автоматически, если она задана в site.config.mjs).
  *
+ * ⚠️ Маркировка рекламы. С 01.09.2022 ст. 18.1 ФЗ «О рекламе» № 38-ФЗ требует, чтобы
+ *    интернет-реклама сопровождалась пометкой «Реклама», сведениями о рекламодателе и
+ *    идентификатором рекламы (токен erid), полученным у ОРД.
+ *    - пометка «Реклама» показывается всегда;
+ *    - строка с рекламодателем и токеном — только если эти данные переданы в пропсах
+ *      (токен выдаётся под конкретную креативную единицу, выдумывать его нельзя).
+ *
  * @typedef {Object} Props
  * @property {string} name
  * @property {string} marketplaceSearch поисковый запрос на маркетплейсе
  * @property {string} blurb короткое описание, зачем эта штука
+ * @property {string} [erid] идентификатор рекламы от ОРД (вид '2Vfnxxxxxxx')
+ * @property {string} [advertiser] наименование рекламодателя + ИНН, как указано в договоре
  */
-const { name, marketplaceSearch, blurb } = Astro.props;
+const { name, marketplaceSearch, blurb, erid, advertiser } = Astro.props;
 const href = marketplaceLink(marketplaceSearch);
+
+// Собираем строку маркировки только из тех частей, которые реально переданы.
+const disclosureParts = ['Реклама.'];
+if (advertiser) disclosureParts.push(`Рекламодатель: ${advertiser}.`);
+if (erid) disclosureParts.push(`erid: ${erid}`);
+const disclosure = advertiser || erid ? disclosureParts.join(' ') : null;
 ---
 
-<div class="aff-card">
-  <div class="info">
-    <h4>{name}</h4>
-    <p>{blurb}</p>
+<div class="aff-wrap">
+  <div class="aff-card">
+    <div class="info">
+      <span class="aff-adlabel">Реклама</span>
+      <h4>{name}</h4>
+      <p>{blurb}</p>
+    </div>
+    <a class="btn" href={href} target="_blank" rel="nofollow sponsored noopener">
+      Посмотреть на Ozon →
+    </a>
   </div>
-  <a class="btn" href={href} target="_blank" rel="nofollow sponsored noopener">
-    Посмотреть на Ozon →
-  </a>
+  {disclosure && <p class="aff-disclosure">{disclosure}</p>}
 </div>
+
+<style>
+  /* Обёртка забирает внешние отступы карточки, чтобы строка маркировки
+     прижималась к ней вплотную, а не висела в 20px под низом. */
+  .aff-wrap {
+    margin: 20px 0;
+  }
+  .aff-wrap .aff-card {
+    margin: 0;
+  }
+
+  .aff-adlabel {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--text-soft);
+    font-size: 0.7rem;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .aff-disclosure {
+    margin: 6px 2px 0;
+    color: var(--text-soft);
+    font-size: 0.72rem;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+</style>

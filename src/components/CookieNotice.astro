@@ -1,0 +1,138 @@
+---
+/**
+ * Уведомление об использовании файлов cookie.
+ *
+ * Не модалка и не оверлей: узкая полоса, прижатая к низу экрана, контент под ней
+ * остаётся кликабельным. Согласие пишется в localStorage (ключ 'ld-cookie-ok'),
+ * при повторном визите полоса не показывается.
+ *
+ * Подключается один раз в BaseLayout, перед закрывающим </body>.
+ *
+ * ⚠️ XSS-правило проекта: скрипт ниже НЕ использует innerHTML / eval / new Function —
+ *    весь текст задан в разметке, JS только переключает видимость.
+ */
+---
+
+<div id="ld-cookie-notice" class="ld-cookie" role="region" aria-label="Уведомление о файлах cookie" hidden>
+  <p class="ld-cookie__text">
+    Мы используем файлы cookie, чтобы собирать обезличенную статистику посещений.
+    Продолжая пользоваться сайтом, вы соглашаетесь с этим —
+    <a href="/politika-konfidencialnosti">политика конфиденциальности</a>.
+  </p>
+  <button type="button" id="ld-cookie-ok-btn" class="ld-cookie__btn">Понятно</button>
+</div>
+
+<style>
+  .ld-cookie {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .ld-cookie[hidden] {
+    display: none;
+  }
+
+  .ld-cookie__text {
+    margin: 0;
+    max-width: 720px;
+    color: var(--text-soft);
+  }
+
+  .ld-cookie__text a {
+    color: var(--brand);
+    text-decoration: underline;
+  }
+
+  .ld-cookie__btn {
+    flex: 0 0 auto;
+    padding: 7px 20px;
+    border: 1px solid var(--brand);
+    border-radius: var(--radius);
+    background: var(--brand);
+    color: var(--surface);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .ld-cookie__btn:hover,
+  .ld-cookie__btn:focus-visible {
+    opacity: 0.88;
+  }
+
+  @media (max-width: 560px) {
+    .ld-cookie {
+      justify-content: space-between;
+      text-align: left;
+    }
+    .ld-cookie__btn {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ld-cookie {
+      animation: ld-cookie-in 0.25s ease-out both;
+    }
+  }
+
+  @keyframes ld-cookie-in {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var KEY = 'ld-cookie-ok';
+    var bar = document.getElementById('ld-cookie-notice');
+    var btn = document.getElementById('ld-cookie-ok-btn');
+    if (!bar || !btn) return;
+
+    // localStorage может быть недоступен (приватный режим, запрет хранилища).
+    function read() {
+      try {
+        return window.localStorage.getItem(KEY);
+      } catch (e) {
+        return null;
+      }
+    }
+    function write() {
+      try {
+        window.localStorage.setItem(KEY, '1');
+      } catch (e) {
+        /* не смогли запомнить — покажем полосу в следующий раз, это не ошибка */
+      }
+    }
+
+    if (read() === '1') return; // согласие уже есть — полоса остаётся скрытой
+    bar.hidden = false;
+
+    btn.addEventListener('click', function () {
+      write();
+      bar.hidden = true;
+    });
+  })();
+</script>

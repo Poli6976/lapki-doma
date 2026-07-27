@@ -84,6 +84,30 @@ function archetypeDog(seed) {
   return out;
 }
 
+/** Силуэт грызуна: круглая голова, круглые уши, щёки, мелкие лапки. */
+function archetypeRodent(seed) {
+  const fur = pick(FUR, seed, 2);
+  const earFur = pick(FUR, seed, 0);
+  const inner = pick(ACCENT, seed, 1);
+  let out = '';
+  // круглые уши — главный признак, по которому грызун читается с ходу
+  out += `<circle cx="163" cy="106" r="24" fill="${earFur}"/>`;
+  out += `<circle cx="237" cy="106" r="24" fill="${earFur}"/>`;
+  out += `<circle cx="163" cy="106" r="13" fill="${inner}" opacity="0.5"/>`;
+  out += `<circle cx="237" cy="106" r="13" fill="${inner}" opacity="0.5"/>`;
+  out += `<ellipse cx="200" cy="148" rx="56" ry="48" fill="${fur}"/>`;
+  // защёчные мешки
+  out += `<ellipse cx="158" cy="162" rx="20" ry="17" fill="${fur}"/>`;
+  out += `<ellipse cx="242" cy="162" rx="20" ry="17" fill="${fur}"/>`;
+  out += `<ellipse cx="184" cy="140" rx="6" ry="8" fill="${inner}"/>`;
+  out += `<ellipse cx="216" cy="140" rx="6" ry="8" fill="${inner}"/>`;
+  out += `<ellipse cx="200" cy="163" rx="7" ry="5" fill="${inner}"/>`;
+  // передние лапки
+  out += `<ellipse cx="188" cy="188" rx="8" ry="6" fill="${inner}" opacity="0.7"/>`;
+  out += `<ellipse cx="212" cy="188" rx="8" ry="6" fill="${inner}" opacity="0.7"/>`;
+  return out;
+}
+
 /** Отпечаток лапы — универсальная нейтральная иллюстрация. */
 function archetypePaw(seed) {
   const fur = pick(FUR, seed, 3);
@@ -99,8 +123,10 @@ function pickArchetype(entry) {
   const hay = `${entry.title} ${(entry.keywords || []).join(' ')}`.toLowerCase();
   if (entry.category === 'koshki') return archetypeCat;
   if (entry.category === 'sobaki') return archetypeDog;
+  if (entry.category === 'gryzuny') return archetypeRodent;
   if (/кошк|кот[аеу]?\b|котён|котят/.test(hay)) return archetypeCat;
   if (/собак|пёс|щен/.test(hay)) return archetypeDog;
+  if (/хомяк|свинк|кролик|шиншилл|крыс|грызун/.test(hay)) return archetypeRodent;
   return archetypePaw;
 }
 

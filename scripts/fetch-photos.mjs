@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Загружает настоящие фотографии растений с Wikimedia Commons и подставляет их
+ * Загружает настоящие фотографии животных с Wikimedia Commons и подставляет их
  * как обложки статей вместо нарисованных SVG-заглушек.
  *
  * Почему именно Commons: там у каждого файла указана лицензия и автор, которые
@@ -33,12 +33,47 @@ const ONLY = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const UA = 'LapkiDomaBot/1.0 (https://lapki-doma.ru; lapkidoma@yandex.com)';
 
 /**
- * Какое фото искать для какой статьи. Латинские названия дают точный результат:
- * по русским запросам Commons часто возвращает случайные снимки.
+ * Какое фото искать для какой статьи. Запросы — по-английски: по русским
+ * Commons часто возвращает случайные снимки.
+ *
+ * ⚠️ Запрос описывает СПОКОЙНУЮ сцену, а не симптом. Читатель приходит
+ * встревоженным, и фото рвоты или расчёсанной до крови кожи пугает вместо
+ * того, чтобы помочь (правило «ничего пугающего» из CLAUDE.md). Поэтому
+ * для статьи про рвоту ищем осмотр у ветеринара, для зуда — обычную собаку.
+ *
+ * Добавил статью — допиши сюда строку и прогони скрипт.
  */
 const PHOTO_QUERIES = {
-  // Пока пусто — заполняется по мере написания статей про кошек/собак.
-  // Пример на будущее: 'kak-priuchit-kotyonka-k-lotku': 'Kitten litter box',
+  // Кошки
+  'kak-priuchit-kotenka-k-lotku': 'Litter box cat',
+  'koshka-i-zakon-soderzhanie-samovygul': 'Domestic cat sitting in garden',
+
+  // Собаки
+  'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
+  'pravila-vygula-sobaki-po-zakonu': 'Dog walking on leash park',
+
+  // Грызуны
+  // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
+  // самой статье — она как раз про то, чего давать нельзя.
+  'chem-kormit-homyaka-chto-mozhno-i-chto-nelzya': 'Vegetables carrot cucumber broccoli',
+  'homyak-kusaetsya-kogda-beresh-na-ruki-pochemu-i-chto-delat': 'Hamster in human hands',
+  'homyak-shumit-nochyu-pochemu-i-kak-umenshit-shum': 'Hamster running wheel',
+  'kakaya-kletka-nuzhna-homyaku-razmer-napolnitel-chto-vnutri': 'Hamster cage bedding',
+  'kakoy-gryzun-podoydet-rebenku-homyak-morskaya-svinka-ili-krysa': 'Guinea pig portrait',
+
+  // Здоровье и поведение
+  'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
+  'pitomec-silno-linyaet-gde-norma-a-gde-povod-nastorozhitsya': 'Grooming dog with brush',
+  'rvota-u-koshki-kogda-ponablyudat-a-kogda-k-vrachu': 'Cat resting on floor',
+  'sobaka-boitsya-grozy-i-salyutov-kak-pomoch': 'Dog lying under chair',
+  // Обложка не обязана показывать сам симптом: спокойная собака уместнее
+  // и не пугает читателя, который и так встревожен.
+  'sobaka-cheshetsya-a-bloh-net-chastye-prichiny': 'Golden Retriever portrait',
+  'sobaka-otkazyvaetsya-ot-edy-kogda-eto-trevozhno': 'Dog food bowl',
+
+  // Советы
+  'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
+  'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
@@ -52,23 +87,80 @@ function stripHtml(s) {
 // В Commons много исторических материалов: сканы книг, гравюры, картины,
 // чёрно-белые архивные снимки. Для современного сайта они не годятся —
 // выглядят как низкокачественный контент. Отсекаем их.
-const BAD_AUTHORS = /internet archive book images|biodiversity heritage/i;
+//
+// ⚠️ Проверено на практике 27.07.2026: одной EXIF-даты МАЛО. У сканов её просто
+// нет, и в обложки прошли фото 1913 и 1929 года (в том числе портрет семьи
+// инупиатов Эдварда Кёртиса — в статью про линьку питомцев). Поэтому год теперь
+// ищется ещё и в названии файла, и отсекаются архивные коллекции по автору.
+// Военные фотослужбы США — крупный источник public domain на Commons, и их
+// снимки лезут в выдачу по любому бытовому запросу. Проверено: по «Dog eating
+// from bowl» первым пришло фото сержанта и солдата (Sgt. 1st Class Chantell Black).
+const BAD_AUTHORS =
+  /internet archive book images|biodiversity heritage|edward s\.? curtis|department of (labor|the interior|defense)|library of congress|national archives|nationaal archief|bundesarchiv|state library|museum|dpla|\b(sgt|sergeant|cpl|corporal|pfc|petty officer|airman|u\.?s\.? (army|navy|air force|marine))\b/i;
 const BAD_TITLE =
-  /\(page|bookplate|illustration|drawing|painting|sketch|engraving|lithograph|botanical art|herbarium|\bplate\b|title page/i;
+  /\(page|bookplate|illustration|drawing|painting|sketch|engraving|lithograph|botanical art|herbarium|\bplate\b|title page|\bdpla\b|\barchive\b|postcard|\bstereograph\b/i;
+
+// Сайт про ДОМАШНИХ животных. Commons по запросу "dog" охотно отдаёт гиеновидную
+// собаку и волка — на обложке статьи про зуд у питомца это прямая дезинформация
+// (реальный случай: African Wild Dog в статью «собака чешется»).
+const WILD_SPECIES =
+  /\b(lycaon|african wild dog|painted dog|wolf|wolves|coyote|jackal|dingo|\bfox\b|lynx|tiger|lion|leopard|cheetah|serval|caracal|ocelot|puma|cougar|hyena|raccoon|ferret|capybara|beaver|squirrel|marmot|vole|wild boar|zoo)\b/i;
+
+// Портрет человека вместо животного — тоже частый промах поиска.
+const HUMAN_SUBJECT = /\b(family|portrait of|man|woman|children|soldier|worker|tribe|people)\b/i;
+
+// ⚠️ САМЫЙ ВАЖНЫЙ ФИЛЬТР. Проверено 27.07.2026: по запросу «Dog eating dog food»
+// Commons вернул фото ТУШ ЗАБИТЫХ СОБАК на мясном рынке, а по «Dog scratching» —
+// доколумбову керамическую фигурку из музея. На сайте про уход за питомцами
+// первое недопустимо, второе бессмысленно. Ни один автофильтр не заменяет
+// просмотр глазами, но эти две категории отсекаем жёстко.
+const FORBIDDEN =
+  /\b(meat|butcher|slaughter|carcass|carcase|dead|killed|kill|hunting|hunted|trophy|taxidermy|skull|skeleton|bones|roast|cooked|market stall|street food|corpse|euthan|autopsy|dissect|specimen)\b/i;
+
+// Музейные экспонаты: керамика, статуэтки, чучела — не живые животные.
+const ARTIFACT =
+  /\b(ceramic|figurine|sculpture|statue|statuette|pottery|terracotta|artifact|artefact|effigy|vessel|ancient|pre-columbian|colima|mosaic|fresco|relief|carving|bronze|marble|toy|plush|stuffed)\b/i;
+
+// Схемы и инфографика: по «Bandog» Commons отдал анатомический чертёж
+// с английскими подписями вместо фотографии собаки.
+const DIAGRAM =
+  /\b(diagram|anatomy|anatomical|chart|labell?ed|infographic|scheme|schematic|map|logo|icon|silhouette|clipart|poster|sign)\b/i;
 
 /** Отсеивает исторические материалы: сканы, рисунки, дореволюционные фото. */
 function looksHistorical(title, author, meta) {
   if (BAD_AUTHORS.test(author)) return true;
   if (BAD_TITLE.test(title)) return true;
-  // Дата съёмки: всё старше 1990 отбраковываем — обычно это архив и ч/б.
+  // Год ищем и в EXIF, и в названии файла: у сканов EXIF-даты обычно нет.
   const date = stripHtml(meta.DateTimeOriginal?.value || meta.DateTime?.value || '');
-  const year = Number((date.match(/\b(1[6-9]\d{2}|20\d{2})\b/) || [])[1]);
-  if (year && year < 1990) return true;
+  const exifYear = Number((date.match(/\b(1[6-9]\d{2}|20\d{2})\b/) || [])[1]);
+  if (exifYear && exifYear < 1990) return true;
+  const titleYear = Number((String(title).match(/\b(1[6-9]\d{2})\b/) || [])[1]);
+  if (titleYear && titleYear < 1990) return true;
   return false;
 }
 
-/** Ищет подходящее фото в Wikimedia Commons. Возвращает url + данные лицензии. */
-async function findPhoto(query) {
+/** Не тот вид: дикий зверь или человек вместо домашнего питомца. */
+function wrongSubject(title) {
+  return WILD_SPECIES.test(title) || HUMAN_SUBJECT.test(title);
+}
+
+/**
+ * Кадр, которого на сайте про уход за питомцами быть не должно ни при каких
+ * настройках: мясо, туши, охотничьи трофеи, чучела, музейные статуэтки.
+ * В отличие от wrongSubject этот фильтр НЕ отключается флагом allowWild.
+ */
+function forbiddenSubject(title) {
+  return FORBIDDEN.test(title) || ARTIFACT.test(title) || DIAGRAM.test(title);
+}
+
+/**
+ * Ищет подходящее фото в Wikimedia Commons. Возвращает url + данные лицензии.
+ *
+ * allowWild отключает фильтр диких видов — он нужен ровно для волкособа:
+ * это гибрид волка, он законно входит в перечень опасных пород, и общий
+ * запрет на слово «wolf» здесь ложно срабатывает.
+ */
+async function findPhoto(query, { allowWild = false } = {}) {
   const params = new URLSearchParams({
     action: 'query',
     generator: 'search',
@@ -99,6 +191,10 @@ async function findPhoto(query) {
 
     const author = stripHtml(meta.Artist?.value) || 'Wikimedia Commons';
     if (looksHistorical(page.title, author, meta)) continue;
+    if (forbiddenSubject(page.title)) continue;
+    if (!allowWild && wrongSubject(page.title)) continue;
+    // Мелкие картинки на обложке 16:9 выглядят мылом.
+    if ((info.width ?? 0) < 800) continue;
 
     return {
       url: info.thumburl || info.url,
@@ -200,4 +296,142 @@ console.log(`\nГотово: загружено ${done}, пропущено ${sk
 if (failed.length) {
   console.log('\nНе получилось:');
   failed.forEach((f) => console.log('  ' + f));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ГАЛЕРЕИ ВНУТРИ СТАТЕЙ и ЛЕНТЫ КАТЕГОРИЙ
+   ═══════════════════════════════════════════════════════════════════════
+   Оба режима запускаются флагом --sets, отдельно от обложек: наборов
+   немного, а обложки трогать при этом не нужно.
+
+       node scripts/fetch-photos.mjs --sets
+*/
+
+/** Несколько фото внутрь одной статьи. Пишутся в поле gallery во frontmatter. */
+const GALLERY_QUERIES = {
+  // Перечень из Постановления Правительства РФ № 974. Породы редкие, и на
+  // Commons есть далеко не все — чего не нашлось, скрипт честно перечислит.
+  'potencialno-opasnye-porody-sobak': [
+    { key: 'akbash', caption: 'Акбаш', query: 'Akbash dog' },
+    { key: 'amerikanskiy-bandog', caption: 'Американский бандог', query: 'American Bandogge' },
+    { key: 'ambuldog', caption: 'Амбульдог', query: 'American Bulldog' },
+    { key: 'brazilskiy-buldog', caption: 'Бразильский бульдог', query: 'Buldogue Campeiro' },
+    { key: 'bulli-kutta', caption: 'Булли кутта', query: 'Bully Kutta' },
+    { key: 'alapahskiy-buldog', caption: 'Бульдог алапахский чистокровный (отто)', query: 'Alapaha Blue Blood Bulldog' },
+    { key: 'bendog', caption: 'Бэндог', query: 'Bandogge dog breed' },
+    { key: 'volkosob', caption: 'Волкособ (гибрид волка)', query: 'Wolfdog', allowWild: true },
+    // «Gull Dong» по-английски совпадает с gull (чайка) — Commons отдавал
+    // фото чайки. Ищем по второму названию породы.
+    { key: 'gul-dog', caption: 'Гуль дог', query: 'Gull Terrier Pakistani dog' },
+    { key: 'pitbulmastif', caption: 'Питбульмастиф', query: 'Bullmastiff dog standing' },
+    { key: 'severokavkazskaya', caption: 'Северокавказская собака', query: 'Caucasian Shepherd Dog' },
+  ],
+};
+
+/** Лента фото на странице категории. Пишется в src/data/category-photos.json. */
+const CATEGORY_PHOTOS = {
+  gryzuny: [
+    { key: 'krolik', caption: 'Кролик', query: 'Domestic rabbit' },
+    { key: 'krysa', caption: 'Декоративная крыса', query: 'Fancy rat pet' },
+    { key: 'shinshilla', caption: 'Шиншилла', query: 'Chinchilla pet' },
+    { key: 'homyak', caption: 'Хомяк', query: 'Syrian hamster' },
+    { key: 'morskaya-svinka', caption: 'Морская свинка', query: 'Guinea pig' },
+  ],
+};
+
+if (process.argv.includes('--sets')) {
+  const GALLERY_DIR = path.join(ROOT, 'public/images/photos/gallery');
+  const DATA_DIR = path.join(ROOT, 'src/data');
+  fs.mkdirSync(GALLERY_DIR, { recursive: true });
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+
+  /** Скачивает набор фото. Возвращает только то, что реально нашлось. */
+  async function fetchSet(items, prefix, dir, publicBase) {
+    const out = [];
+    const miss = [];
+    for (const item of items) {
+      try {
+        const photo = await findPhoto(item.query, { allowWild: item.allowWild });
+        if (!photo) {
+          miss.push(item.caption);
+          continue;
+        }
+        const ext = photo.url.toLowerCase().includes('.png') ? 'png' : 'jpg';
+        const filename = `${prefix}-${item.key}.${ext}`;
+        await download(photo.url, path.join(dir, filename));
+        out.push({
+          src: `${publicBase}/${filename}`,
+          alt: item.caption,
+          caption: item.caption,
+          author: photo.author,
+          license: photo.license,
+          sourceUrl: photo.sourceUrl,
+        });
+        console.log(`  ✓ ${item.caption} — ${photo.license} · ${photo.author}`);
+        await new Promise((r) => setTimeout(r, 400));
+      } catch (err) {
+        miss.push(`${item.caption} (${err.message})`);
+      }
+    }
+    return { out, miss };
+  }
+
+  const allMissing = [];
+
+  console.log('\n\n=== Галереи внутри статей ===');
+  for (const [slug, items] of Object.entries(GALLERY_QUERIES)) {
+    console.log(`\n${slug}:`);
+    const file = path.join(ARTICLES_DIR, `${slug}.md`);
+    if (!fs.existsSync(file)) {
+      console.log('  ✗ нет такой статьи');
+      continue;
+    }
+    const raw = fs.readFileSync(file, 'utf8');
+    const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!m) {
+      console.log('  ✗ битый frontmatter');
+      continue;
+    }
+    let [, fm, body] = m;
+
+    const { out, miss } = await fetchSet(items, slug, GALLERY_DIR, '/images/photos/gallery');
+    if (miss.length) allMissing.push(`${slug}: ${miss.join(', ')}`);
+
+    // Старую галерею вырезаем целиком: ключ + все строки с отступом под ним.
+    fm = fm.replace(/^gallery:[ \t]*\r?\n(?:[ \t]+\S.*\r?\n?)*/m, '').trimEnd();
+    if (out.length) {
+      const yamlList = out
+        .map(
+          (p) =>
+            `  - src: ${yaml(p.src)}\n    alt: ${yaml(p.alt)}\n    caption: ${yaml(p.caption)}\n` +
+            `    author: ${yaml(p.author)}\n    license: ${yaml(p.license)}\n    sourceUrl: ${yaml(p.sourceUrl)}`,
+        )
+        .join('\n');
+      fm += `\ngallery:\n${yamlList}`;
+    }
+    fs.writeFileSync(file, `---\n${fm}\n---\n${body}`, 'utf8');
+    console.log(`  → в галерее ${out.length} из ${items.length}`);
+  }
+
+  console.log('\n\n=== Ленты категорий ===');
+  const CATEGORY_DIR = path.join(ROOT, 'public/images/photos/category');
+  fs.mkdirSync(CATEGORY_DIR, { recursive: true });
+  const catData = {};
+  for (const [cat, items] of Object.entries(CATEGORY_PHOTOS)) {
+    console.log(`\n${cat}:`);
+    const { out, miss } = await fetchSet(items, cat, CATEGORY_DIR, '/images/photos/category');
+    if (miss.length) allMissing.push(`категория ${cat}: ${miss.join(', ')}`);
+    catData[cat] = out;
+    console.log(`  → в ленте ${out.length} из ${items.length}`);
+  }
+  fs.writeFileSync(
+    path.join(DATA_DIR, 'category-photos.json'),
+    JSON.stringify(catData, null, 2) + '\n',
+    'utf8',
+  );
+
+  if (allMissing.length) {
+    console.log('\n\nНе нашлось фото:');
+    allMissing.forEach((x) => console.log('  ' + x));
+  }
 }

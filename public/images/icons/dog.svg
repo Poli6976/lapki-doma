@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Собака">
+  <defs>
+    <radialGradient id="fur" cx="36%" cy="26%" r="82%">
+      <stop offset="0%" stop-color="#e8c39a"/>
+      <stop offset="48%" stop-color="#c79a68"/>
+      <stop offset="100%" stop-color="#8c6238"/>
+    </radialGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#9c6c3f"/>
+      <stop offset="55%" stop-color="#7d5430"/>
+      <stop offset="100%" stop-color="#5c3c20"/>
+    </linearGradient>
+    <radialGradient id="snout" cx="45%" cy="28%" r="80%">
+      <stop offset="0%" stop-color="#f6e0c2"/>
+      <stop offset="100%" stop-color="#d3ab7d"/>
+    </radialGradient>
+    <radialGradient id="gloss" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity=".68"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="occl" cx="50%" cy="32%" r="64%">
+      <stop offset="60%" stop-color="#4d3113" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#4d3113" stop-opacity=".45"/>
+    </radialGradient>
+    <radialGradient id="nose" cx="38%" cy="28%" r="78%">
+      <stop offset="0%" stop-color="#6b5a52"/>
+      <stop offset="55%" stop-color="#3a2c26"/>
+      <stop offset="100%" stop-color="#1c1310"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="32" cy="57" rx="17" ry="3.4" fill="#5c3c20" opacity=".26" filter="url(#soft)"/>
+
+  <g>
+    <path d="M18 22 q-9 1-9.5 12 q-.4 10 6 12.5 q5 1.8 6.5-3.5 Z" fill="url(#ear)"/>
+    <path d="M46 22 q9 1 9.5 12 q.4 10-6 12.5 q-5 1.8-6.5-3.5 Z" fill="url(#ear)"/>
+  </g>
+
+  <circle cx="32" cy="33" r="17.5" fill="url(#fur)"/>
+  <circle cx="32" cy="33" r="17.5" fill="url(#occl)"/>
+  <ellipse cx="25" cy="24" rx="8.5" ry="6" fill="url(#gloss)"/>
+
+  <ellipse cx="32" cy="41.5" rx="10.5" ry="8" fill="url(#snout)"/>
+  <ellipse cx="29" cy="38.5" rx="4.5" ry="2.8" fill="#fff" opacity=".3"/>
+
+  <g>
+    <ellipse cx="25" cy="30.5" rx="3" ry="3.4" fill="#2c2019"/>
+    <ellipse cx="39" cy="30.5" rx="3" ry="3.4" fill="#2c2019"/>
+    <circle cx="23.9" cy="29.1" r="1.1" fill="#fff" opacity=".9"/>
+    <circle cx="37.9" cy="29.1" r="1.1" fill="#fff" opacity=".9"/>
+  </g>
+
+  <ellipse cx="32" cy="38.5" rx="4.2" ry="3.2" fill="url(#nose)"/>
+  <ellipse cx="30.6" cy="37.3" rx="1.4" ry=".9" fill="#fff" opacity=".55"/>
+
+  <path d="M32 41.8 v2.6 M32 44.4 q-3 2.6-5.6 .5 M32 44.4 q3 2.6 5.6 .5"
+        fill="none" stroke="#6d4a29" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

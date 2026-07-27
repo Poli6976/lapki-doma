@@ -3,6 +3,10 @@ import BaseLayout from './BaseLayout.astro';
 import AdSlot from '../components/AdSlot.astro';
 import AffiliateCard from '../components/AffiliateCard.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import CalmIntro from '../components/CalmIntro.astro';
+import VetAlert from '../components/VetAlert.astro';
+import VetDisclaimer from '../components/VetDisclaimer.astro';
+import LegalDisclaimer from '../components/LegalDisclaimer.astro';
 import { SITE } from '../site.config.mjs';
 import { CATEGORIES } from '../site.config.mjs';
 import { absoluteUrl, categoryUrl } from '../lib/urls.mjs';
@@ -23,6 +27,21 @@ const dateFmt = (d) =>
 
 // Оглавление строим только из h2.
 const toc = headings.filter((h) => h.depth === 2);
+
+/**
+ * Источники фотографий одним списком в конце статьи.
+ *
+ * Лицензии CC BY / CC BY-SA ТРЕБУЮТ указания автора — убрать подпись совсем
+ * нельзя, это условие использования снимка. Но она не обязана висеть под каждым
+ * фото: собранный внизу блок «Источники фото» лицензию соблюдает и при этом не
+ * засоряет вёрстку. Public domain и CC0 атрибуции не требуют — такие снимки
+ * в список не попадают.
+ */
+const needsCredit = (lic) => !/public domain|^cc0/i.test(String(lic ?? ''));
+const photoCredits = [
+  data.coverCredit && { ...data.coverCredit, caption: 'Обложка' },
+  ...data.gallery.map((p) => p.author && { ...p, caption: p.caption ?? p.alt }),
+].filter((p) => p && p.author && needsCredit(p.license));
 
 // JSON-LD: Article + BreadcrumbList для богатых результатов в поиске.
 const jsonLd = {
@@ -58,11 +77,16 @@ const jsonLd = {
       {data.updatedDate && <> · Обновлено {dateFmt(data.updatedDate)}</>}
     </p>
 
-    <p class="disclosure">
-      💚 Некоторые ссылки ниже — партнёрские. Если вы что-то купите по ним, мы можем
-      получить небольшую комиссию без переплаты с вашей стороны. Советуем только то,
-      что стоит внимания.
-    </p>
+    <CalmIntro reassurance={data.reassurance} tldr={data.tldr} />
+
+    {
+      data.products.length > 0 && (
+        <p class="disclosure-note">
+          В статье есть партнёрские ссылки —{' '}
+          <a href="/partnyorskaya-programma">как это работает</a>.
+        </p>
+      )
+    }
 
     {
       toc.length > 2 && (
@@ -80,34 +104,62 @@ const jsonLd = {
     {
       data.cover && (
         <figure class="article-cover">
+          {/* Подпись автора не здесь, а в блоке «Источники фото» внизу страницы */}
           <img src={data.cover} alt={data.coverAlt ?? data.title} loading="eager" />
-          {data.coverCredit && (
-            <figcaption>
-              Фото:{' '}
-              <a href={data.coverCredit.sourceUrl} target="_blank" rel="noopener nofollow">
-                {data.coverCredit.author}
-              </a>{' '}
-              · {data.coverCredit.license}
-            </figcaption>
-          )}
         </figure>
       )
     }
 
     <AdSlot place="top" label="Реклама" />
 
+    {
+      data.gallery.length > 0 && (
+        <section class="photo-gallery" aria-label="Фотографии по теме статьи">
+          {data.gallery.map((p) => (
+            <figure>
+              <img src={p.src} alt={p.alt} loading="lazy" />
+              <figcaption>
+                <b>{p.caption ?? p.alt}</b>
+              </figcaption>
+            </figure>
+          ))}
+        </section>
+      )
+    }
+
     <div class="article-body">
       <slot />
     </div>
+
+    <VetAlert redFlags={data.redFlags} />
 
     {
       data.products.length > 0 && (
         <section aria-label="Рекомендуемые товары">
           <h2>Что пригодится</h2>
+          <p class="disclosure">
+            💚 Ссылки ниже — партнёрские. Если вы что-то купите по ним, мы можем получить
+            небольшую комиссию, а вы заплатите столько же, сколько заплатили бы без нас.
+            Советуем только то, что считаем нужным.
+          </p>
           {data.products.map((p) => (
-            <AffiliateCard name={p.name} marketplaceSearch={p.marketplaceSearch} blurb={p.blurb} />
+            <AffiliateCard
+              name={p.name}
+              marketplaceSearch={p.marketplaceSearch}
+              blurb={p.blurb}
+              erid={p.erid}
+              advertiser={p.advertiser}
+            />
           ))}
         </section>
+      )
+    }
+
+    {
+      data.legal ? (
+        <LegalDisclaimer updated={dateFmt(data.updatedDate ?? data.publishDate)} />
+      ) : (
+        <VetDisclaimer />
       )
     }
 
@@ -129,6 +181,24 @@ const jsonLd = {
             ))}
           </div>
         </section>
+      )
+    }
+
+    {
+      photoCredits.length > 0 && (
+        <aside class="photo-credits">
+          <h2>Источники фото</h2>
+          {/* Ссылка и лицензия стоят вплотную: перенос строки между ними
+              превращается в пробел перед запятой. */}
+          <ul>
+            {photoCredits.map((p) => (
+              <li>
+                {p.caption} —{' '}
+                <a href={p.sourceUrl} target="_blank" rel="noopener nofollow">{p.author}</a>{p.license ? `, ${p.license}` : ''}
+              </li>
+            ))}
+          </ul>
+        </aside>
       )
     }
 

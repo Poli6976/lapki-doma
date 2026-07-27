@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CookieNotice from '../components/CookieNotice.astro';
 import { SITE, MONETIZATION, ANALYTICS } from '../site.config.mjs';
 import { absoluteUrl } from '../lib/urls.mjs';
 
@@ -64,13 +65,29 @@ const ogImage = image ? absoluteUrl(image, SITE.url) : undefined;
       подставлять чужие (с rasti-doma.ru) нельзя — не пройдёт проверку.
     -->
 
-    <!-- Шрифты стиля сайта -->
+    <!--
+      Шрифты стиля Grainy Warm.
+      Vollkorn — заголовки. В оригинале стиля стоит Fraunces, но у него
+      нет кириллицы: русские заголовки падали бы на системный Georgia.
+      Vollkorn — ближайший тёплый сериф с полным кириллическим набором.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Vollkorn:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
     />
+
+    <!--
+      Разрешаем прятать элементы под анимацию входа. Стоит в <head>, до
+      отрисовки body, иначе hero успел бы мигнуть. Если JS отключён или
+      человек просит меньше движения — класс не ставится, и всё видно сразу.
+    -->
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('ld-anim');
+      }
+    </script>
 
     {
       jsonLd && (
@@ -104,5 +121,84 @@ const ogImage = image ? absoluteUrl(image, SITE.url) : undefined;
       <slot />
     </main>
     <Footer />
+    <CookieNotice />
+
+    <!--
+      Появление секций при прокрутке.
+      Прятать элементы стилями нельзя: если скрипт не выполнится, контент
+      исчезнет для читателя и для поисковика. Поэтому прячет их сам скрипт —
+      нет JS, нет и скрытия. Уважает prefers-reduced-motion.
+    -->
+    <script is:inline>
+      (function () {
+        var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /**
+         * Показать элемент жёстко, минуя переход. Переход может зависнуть на
+         * первом кадре, если вкладка не отрисовывается, и тогда элемент так и
+         * останется прозрачным. Inline-стили с transition: none этого не боятся.
+         */
+        function forceShow(el) {
+          el.classList.remove('reveal');
+          el.style.transition = 'none';
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+
+        // Вход hero: начальное состояние снимаем на следующем кадре, чтобы
+        // переход успел зацепиться, и подстраховываемся таймером — к этому
+        // моменту анимация (0.27s задержки + 0.6s хода) уже отыграла.
+        var entering = document.querySelectorAll('.enter');
+        if (entering.length) {
+          window.requestAnimationFrame(function () {
+            entering.forEach(function (el) {
+              el.classList.add('enter-in');
+            });
+          });
+          window.setTimeout(function () {
+            entering.forEach(forceShow);
+          }, 1500);
+        }
+
+        var items = document.querySelectorAll('[data-reveal]');
+        if (!items.length) return;
+        if (still || !('IntersectionObserver' in window)) return;
+
+        items.forEach(function (el) {
+          el.classList.add('reveal');
+        });
+
+        function show(el) {
+          el.classList.remove('reveal');
+          el.classList.add('reveal-in');
+        }
+
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              show(entry.target);
+              io.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '0px 0px -12% 0px' },
+        );
+
+        items.forEach(function (el) {
+          io.observe(el);
+        });
+
+        // Страховка. Наблюдатель молчит, пока вкладка не отрисовывается (открыта
+        // в фоне, свёрнутое окно), — а до тех пор секции скрыты. Если за две
+        // секунды ни одна не показалась, показываем сами: анимация — не та вещь,
+        // ради которой можно потерять текст.
+        window.setTimeout(function () {
+          document.querySelectorAll('[data-reveal].reveal').forEach(function (el) {
+            io.unobserve(el);
+            forceShow(el);
+          });
+        }, 2000);
+      })();
+    </script>
   </body>
 </html>

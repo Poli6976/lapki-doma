@@ -2,43 +2,158 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import { SITE, CATEGORIES } from '../site.config.mjs';
-import { categoryUrl } from '../lib/urls.mjs';
+import { SITE, CATEGORIES, CATEGORY_FALLBACK_ICON } from '../site.config.mjs';
+import { categoryUrl, articleUrl } from '../lib/urls.mjs';
 
-const all = await getCollection('articles', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+const all = await getCollection('articles', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true,
+);
 const articles = all.sort(
   (a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate),
 );
 const latest = articles.slice(0, 9);
+
+/**
+ * Вход на сайт — через проблему читателя, а не через рассказ о себе.
+ * Человек приходит из поиска с конкретной бедой («кошка не ест»), и первое,
+ * что он должен увидеть, — свою ситуацию, а не слоган.
+ *
+ * Каждая ситуация ведёт на статью, если такая уже написана, и на категорию,
+ * пока не написана. Подбор идёт по ключевым словам и заголовку: как только
+ * появится подходящий материал, чип начнёт вести на него сам.
+ *
+ * ⚠️ Ключи в `match` должны быть узкими. Одиночное «ночью» однажды увело чип
+ *    «Скулит по ночам» на статью про хомяка, который шумит в колесе. Для
+ *    ситуаций, привязанных к виду животного, дополнительно указывается `only` —
+ *    список категорий, где вообще допустимо искать.
+ */
+const SITUATIONS = [
+  { label: 'Не ест', match: ['не ест', 'отказывается от еды', 'потерял аппетит'], category: 'zdorovie-i-povedenie' },
+  { label: 'Скулит по ночам', match: ['скулит', 'щенок плачет'], category: 'sobaki', only: ['sobaki'] },
+  { label: 'Чешется', match: ['чешется', 'зуд', 'блохи'], category: 'zdorovie-i-povedenie' },
+  { label: 'Метит в доме', match: ['метит', 'метки'], category: 'koshki', only: ['koshki'] },
+  { label: 'Боится грозы и салютов', match: ['боится грозы', 'гроза', 'салют', 'фейерверк'], category: 'zdorovie-i-povedenie' },
+  { label: 'Рвота', match: ['рвота', 'тошнит', 'срыгивает'], category: 'zdorovie-i-povedenie' },
+  { label: 'Сильно линяет', match: ['линька', 'линяет'], category: 'sovety' },
+  { label: 'Мимо лотка', match: ['лоток', 'туалет'], category: 'koshki', only: ['koshki'] },
+  { label: 'Хомяк кусается', match: ['хомяк кусается', 'кусается'], category: 'gryzuny', only: ['gryzuny'] },
+  { label: 'Шумит ночью в клетке', match: ['шумит ночью', 'колесо'], category: 'gryzuny', only: ['gryzuny'] },
+];
+
+const situations = SITUATIONS.map((s) => {
+  const pool = s.only ? articles.filter((a) => s.only.includes(a.data.category)) : articles;
+  const hit = pool.find((entry) => {
+    const haystack = [entry.data.title, ...(entry.data.keywords ?? [])].join(' ').toLowerCase();
+    return s.match.some((needle) => haystack.includes(needle.toLowerCase()));
+  });
+  return { label: s.label, href: hit ? articleUrl(hit) : categoryUrl(s.category) };
+});
+
+/** Сколько статей уже есть в категории — показываем честно, как есть. */
+const countIn = (slug) => articles.filter((a) => a.data.category === slug).length;
+
+const plural = (n) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return 'статей';
+  if (mod10 === 1) return 'статья';
+  if (mod10 >= 2 && mod10 <= 4) return 'статьи';
+  return 'статей';
+};
 ---
 
 <BaseLayout title={SITE.name} description={SITE.description}>
   <section class="hero">
     <div class="container">
-      <h1>{SITE.tagline}</h1>
-      <p class="lead">{SITE.description}</p>
-      <div class="chips">
-        {CATEGORIES.map((c) => <a class="chip" href={categoryUrl(c.slug)}>{c.title}</a>)}
-      </div>
+      <span class="eyebrow enter enter-1">Кошки и собаки</span>
+      {/* Неразрывные пробелы: короткий предлог не должен оставаться в конце строки */}
+      <h1 class="enter enter-2">Что случилось у&nbsp;питомца?</h1>
+      <p class="lead enter enter-3">
+        Разбираем частые ситуации спокойно и&nbsp;по&nbsp;делу: что происходит, что можно
+        сделать сегодня и&nbsp;когда пора к&nbsp;ветеринару.
+      </p>
+      <nav class="situations enter enter-3" aria-label="Частые ситуации">
+        {situations.map((s) => <a class="situation" href={s.href}>{s.label}</a>)}
+      </nav>
     </div>
   </section>
 
   <div class="container container-wide">
-    <div class="section-title">
-      <h2>Свежие статьи</h2>
-    </div>
+    <section aria-labelledby="cats-title" data-reveal>
+      <div class="section-title">
+        <h2 id="cats-title">Куда смотреть</h2>
+      </div>
+      <div class="bento">
+        {
+          CATEGORIES.map((c, i) => {
+            const n = countIn(c.slug);
+            return (
+              <a class={`bento-cell${i === 0 ? ' is-lead' : ''}`} href={categoryUrl(c.slug)}>
+                <span class="bento-icon" aria-hidden="true">
+                  <img src={c.icon ?? CATEGORY_FALLBACK_ICON} alt="" width="64" height="64" loading="lazy" />
+                </span>
+                <div>
+                  <h3>{c.title}</h3>
+                  <p>{c.description}</p>
+                </div>
+                <span class="bento-count">{n > 0 ? `${n} ${plural(n)}` : 'скоро'}</span>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
 
-    {
-      latest.length === 0 ? (
-        <p style="color: var(--text-soft); padding: 24px 0;">
-          Пока нет опубликованных статей. Запусти <code>npm run generate</code>, чтобы создать
-          черновики, и поставь <code>draft: false</code> после вычитки.
-        </p>
-      ) : (
-        <div class="grid">
-          {latest.map((entry) => <ArticleCard entry={entry} />)}
+    <section aria-labelledby="latest-title" data-reveal>
+      <div class="section-title">
+        <h2 id="latest-title">Свежие статьи</h2>
+      </div>
+
+      {
+        latest.length === 0 ? (
+          <p style="color: var(--text-soft); padding: 24px 0;">
+            Пока нет опубликованных статей. Запусти <code>npm run generate</code>, чтобы создать
+            черновики, и поставь <code>draft: false</code> после вычитки.
+          </p>
+        ) : (
+          <div class="grid">
+            {latest.map((entry) => (
+              <ArticleCard entry={entry} />
+            ))}
+          </div>
+        )
+      }
+    </section>
+
+    <!--
+      Блок доверия. Закрывает два вопроса сразу: читателю — почему нам можно
+      верить, поисковику — кто и по каким правилам ведёт сайт (E-E-A-T).
+    -->
+    <section class="trust" aria-labelledby="trust-title" data-reveal>
+      <h2 id="trust-title">Как мы пишем</h2>
+      <div class="trust-items">
+        <div class="trust-item">
+          <h3>Не ставим диагнозы</h3>
+          <p>
+            Рассказываем о частых причинах и о том, что можно сделать дома. Что именно
+            происходит с вашим питомцем, определяет врач, который его осмотрел.
+          </p>
         </div>
-      )
-    }
+        <div class="trust-item">
+          <h3>Говорим, когда нужен врач</h3>
+          <p>
+            В статьях о симптомах есть отдельный список признаков, при которых ждать нельзя.
+            Лучше зря съездить в клинику, чем упустить время.
+          </p>
+        </div>
+        <div class="trust-item">
+          <h3>Не обвиняем хозяина</h3>
+          <p>
+            С питомцем может случиться что угодно, и это не значит, что вы плохо о нём
+            заботитесь. Мы объясняем, а не отчитываем.
+          </p>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>

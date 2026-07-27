@@ -1,38 +1,121 @@
-/* ─── Стиль: Mocha Earth (земляной минимализм 2026) ───
-   Тёплая палитра кофе/карамель/беж, серифные заголовки (DM Serif Display),
-   тело — Inter. Чтобы сменить стиль — поменяй эти переменные и шрифт в BaseLayout. */
+/* ═══════════════════════════════════════════════════════════════════
+   «Лапки Дома» — дизайн-система Grainy Warm (приглушённая)
+   ═══════════════════════════════════════════════════════════════════
+   Тёплый персиково-кремовый фон с плёночным зерном, заголовки —
+   Vollkorn (тёплый сериф с кириллицей), тело — Inter.
+
+   ⚠️ Про шрифты: в оригинале стиля Grainy Warm заголовки набраны
+   Fraunces, но у него НЕТ кириллицы — русские заголовки падали бы
+   на Georgia. Vollkorn — ближайший по характеру сериф с кириллицей.
+   То же касается DM Serif Display (был здесь раньше) — тоже латиница.
+
+   Смена стиля целиком = поменять токены в :root и шрифт в BaseLayout.
+   ─────────────────────────────────────────────────────────────────── */
+
 :root {
-  --bg: #f3ece2;
-  --bg-soft: #ebe0d3;
-  --surface: #ffffff;
-  --border: #e2d4c6;
-  --text: #3c2f2a;
-  --text-soft: #9b8a7e;
-  --brand: #a47764;
-  --brand-dark: #8a5c46;
-  --brand-soft: #efe4d8;
-  --accent: #cdb8a0;
-  --radius: 12px;
+  /* ─── Палитра. Доминанта — тёплый нейтральный, акцент точечный ─── */
+  --bg-base: #fbf3ea;
+  --bg-glow: #ffe2cc; /* персиковый подсвет вверху страницы */
+  --bg-soft: #f5e9dc;
+  --surface: #fffaf3;
+  --border: #ecdccc;
+  --text: #33261d;
+  /* Приглушённый текст затемнён относительно палитры гайда (#8a6f5c):
+     на тёплом фоне тот вариант давал контраст 4.09 — ниже нормы WCAG AA. */
+  --text-soft: #786052;
+
+  /* Бренд — терракот. Приглушён относительно #ff6a3d из гайда:
+     чистый оранжевый утомляет глаз на длинных статьях. */
+  --brand: #d85a2e;
+  --brand-dark: #b6431d;
+  --brand-soft: #fdeade;
+
+  /* Семантика тревоги. НЕ второй бренд-цвет: красный появляется
+     на странице ровно один раз — в блоке «когда к ветеринару». */
+  --alert: #c0392b;
+  --alert-soft: #fbeae7;
+
+  /* ─── Форма ─── */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-btn: 22px;
   --maxw: 720px;
   --maxw-wide: 1080px;
-  --shadow: 0 8px 24px rgba(164, 119, 100, 0.14);
+
+  /* ─── Объёмные («нажимаемые») поверхности ───
+     Толщина кнопки — это НЕ размытая тень, а сплошная полоса снизу
+     (`0 Npx 0 цвет`): она читается как торец физической клавиши. Плюс две
+     внутренние тени — светлая сверху и тёмная снизу — дают сферичность.
+     Цвет торца темнее поверхности на два шага, иначе объём не виден. */
+  --btn-face: radial-gradient(ellipse at 50% 28%, #fffdfa 0%, #fdf6ed 55%, #f4e6d5 100%);
+  --btn-face-hover: radial-gradient(ellipse at 50% 28%, #fffefc 0%, #fffaf3 55%, #f8ecdd 100%);
+  --btn-edge: #e3cdb5;
+  --btn-edge-dark: #d3b795;
+  --btn-inner-light: rgba(255, 255, 255, 0.85);
+  --btn-inner-dark: rgba(122, 76, 34, 0.09);
+  --btn-cast: rgba(58, 42, 30, 0.16);
+  /* Дальний конец градиента ведущей плитки — отдельным токеном, иначе
+     светлый хвост градиента остаётся белым в тёмной теме. */
+  --btn-lead-face: #fffaf3;
+  --btn-lead-hover: #fffdf9;
+
+  /* Слоёная тень: одна плотная у поверхности + одна рассеянная */
+  --shadow: 0 1px 2px rgba(58, 42, 30, 0.07), 0 8px 24px rgba(216, 90, 46, 0.09);
+  --shadow-lift: 0 2px 4px rgba(58, 42, 30, 0.09), 0 16px 36px rgba(216, 90, 46, 0.16);
+
+  /* ─── Шкала отступов. Ритм строится на БОЛЬШИХ скачках между
+         секциями и мелких внутри блока — равномерная сетка читается
+         как «шаблон». ─── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --font-heading: 'Vollkorn', Georgia, 'Times New Roman', serif;
+
+  /* Шрифт логотипа отдельно от заголовков: у названия своя задача — цеплять
+     взгляд, а не обслуживать длинный текст. Смена стиля логотипа = правка
+     этих трёх строк (и подключения шрифта в BaseLayout).
+     Альтернатива, которую примеряли: 'Yeseva One', normal, вес 400. */
+  --font-logo: 'Playfair Display', Georgia, serif;
+  --font-logo-style: italic;
+  --font-logo-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #211a16;
-    --bg-soft: #2a221d;
-    --surface: #2a221d;
-    --border: #3a2f28;
-    --text: #ede3d8;
-    --text-soft: #b6a596;
-    --brand: #c99f86;
-    --brand-dark: #d8b49e;
-    --brand-soft: #2f251f;
-    --accent: #cdb8a0;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --bg-base: #211710;
+    --bg-glow: #35211a;
+    --bg-soft: #2a1e16;
+    --surface: #2c1f18;
+    --border: #3d2c22;
+    --text: #f0e4d8;
+    --text-soft: #b39d8b;
+    --brand: #f08055;
+    --brand-dark: #f79c77;
+    --brand-soft: #3a251b;
+    --alert: #e57368;
+    --alert-soft: #3a201c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px rgba(0, 0, 0, 0.45);
+
+    /* Тот же объём в тёмной теме: свет по-прежнему сверху, но блик
+       приглушён — яркая белая кромка на тёмном фоне выглядит грязно. */
+    --btn-face: radial-gradient(ellipse at 50% 28%, #3a2a20 0%, #33241b 55%, #281c15 100%);
+    --btn-face-hover: radial-gradient(ellipse at 50% 28%, #43301f 0%, #3a2a1e 55%, #2e2118 100%);
+    --btn-edge: #1c130e;
+    --btn-edge-dark: #150e0a;
+    --btn-inner-light: rgba(255, 226, 196, 0.11);
+    --btn-inner-dark: rgba(0, 0, 0, 0.4);
+    --btn-cast: rgba(0, 0, 0, 0.5);
+    --btn-lead-face: #33241b;
+    --btn-lead-hover: #3d2b1f;
   }
 }
 
@@ -49,11 +132,37 @@ html {
 body {
   margin: 0;
   font-family: var(--font);
-  background: var(--bg);
   color: var(--text);
   line-height: 1.65;
   font-size: 18px;
   -webkit-font-smoothing: antialiased;
+
+  /* Фон никогда не плоский: тёплый off-white + персиковый подсвет
+     вверху, где стоит hero. Ниже по странице переходит в ровный тон. */
+  background-color: var(--bg-base);
+  background-image: radial-gradient(ellipse 90% 46% at 50% -8%, var(--bg-glow) 0%, transparent 72%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* ─── Плёночное зерно — подпись стиля Grainy Warm ───
+   В гайде opacity .35, здесь .12: на страницах с длинным текстом
+   плотное зерно превращается в шум и мешает читать. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  body::after {
+    opacity: 0.07;
+  }
 }
 
 .container {
@@ -81,27 +190,42 @@ a:hover {
   }
 }
 
+/* ─── Типографика. Иерархия строится не только на размере, но и на
+       весе, цвете, трекинге и регистре одновременно. ─── */
 h1,
 h2,
 h3 {
-  line-height: 1.2;
-  font-weight: 400;
+  line-height: 1.18;
+  font-weight: 600;
   font-family: var(--font-heading);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--text);
 }
 
 h1 {
-  font-size: clamp(2.1rem, 5.5vw, 3rem);
+  font-size: clamp(2.1rem, 5.5vw, 3.1rem);
   margin: 0 0 0.4em;
 }
 h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  font-size: clamp(1.45rem, 3.5vw, 1.9rem);
   margin: 1.8em 0 0.5em;
 }
 h3 {
   font-size: 1.25rem;
   margin: 1.4em 0 0.4em;
+}
+
+/* Микро-лейбл: мелкий, жирный, разряжённый, капсом. Рядом с крупным
+   серифным заголовком даёт журнальный контраст. */
+.eyebrow {
+  display: block;
+  font-family: var(--font);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+  margin-bottom: var(--sp-3);
 }
 
 img {
@@ -110,34 +234,38 @@ img {
   display: block;
 }
 
-/* Buttons */
+/* ─── Кнопки ─── */
 .btn {
   display: inline-block;
   background: var(--brand);
   color: #fff;
-  padding: 12px 22px;
+  padding: 12px 24px;
   border-radius: 999px;
   font-weight: 600;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn:hover {
   background: var(--brand-dark);
   text-decoration: none;
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
 }
 
-/* Cards grid */
+/* ─── Сетка карточек ─── */
 .grid {
   display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-5);
+  /* min() вместо голых 280px: иначе на экране уже ~320px карточка не влезает
+     в контейнер и распирает страницу горизонтальным скроллом. */
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
 }
 
-/* Header */
+/* ─── Шапка ─── */
 .site-header {
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: saturate(180%) blur(8px);
+  background: color-mix(in srgb, var(--bg-base) 85%, transparent);
+  backdrop-filter: saturate(180%) blur(10px);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -146,50 +274,212 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--sp-4);
   padding-block: 14px;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  font-size: 1.25rem;
+  gap: 12px;
+  font-family: var(--font-logo);
+  font-weight: var(--font-logo-weight);
+  font-style: var(--font-logo-style);
+  /* Заметно крупнее прежних 1.3rem и с положительным трекингом вместо
+     сжатия — название должно дышать, а не быть строчкой меню. */
+  /* Курсив Playfair визуально мельче прямого начертания того же кегля,
+     поэтому чуть крупнее и с большим трекингом — наклонным буквам он идёт. */
+  font-size: clamp(1.6rem, 4.4vw, 2.1rem);
+  letter-spacing: 0.012em;
+  line-height: 1.1;
+  /* Название не переносится: на узком экране «Лапки Дома» рвалось на две
+     строки и переставало читаться как логотип. */
+  white-space: nowrap;
   color: var(--text);
+  /* Свой контекст наложения: объёмная подложка названия лежит на z-index -1
+     и без изоляции провалилась бы под фон шапки. */
+  isolation: isolate;
+  /* Логотип не ужимается ради меню — сжиматься должно меню. */
+  flex: none;
 }
 .brand:hover {
   text-decoration: none;
 }
-.brand .leaf {
-  font-size: 1.4rem;
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: block;
+  flex: none;
+  filter: drop-shadow(0 2px 3px rgba(87, 46, 18, 0.28));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.nav {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.nav a {
-  color: var(--text-soft);
-  font-size: 0.98rem;
-  font-weight: 500;
-}
-.nav a:hover {
-  color: var(--brand-dark);
+.brand:hover .brand-mark {
+  transform: rotate(-9deg) scale(1.08);
 }
 
-/* Footer */
+/* ─── Объёмное название сайта ───
+   Лицевая сторона букв — вертикальный градиент (свет сверху, тень снизу),
+   вырезанный по глифам. Экструзия рисуется отдельным слоем-двойником под
+   ним: text-shadow нельзя положить на текст с background-clip: text —
+   буквы прозрачные, и тень просвечивала бы прямо сквозь них. */
+.brand-name {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(178deg, #fff8ee 4%, #e3a469 46%, #b2622c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Тонкая тёмная окантовка: без неё светлая вершина букв растворяется
+     в кремовом фоне шапки. */
+  -webkit-text-stroke: 0.4px rgba(122, 62, 22, 0.45);
+}
+.brand-name::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: #9a5a2e;
+  text-shadow:
+    0 1px 0 #c98a58,
+    0 2px 0 #bd7c4a,
+    0 3px 0 #ac6b3b,
+    0 4px 0 #99592d,
+    0 5px 0 #874a23,
+    0 6px 7px rgba(87, 46, 18, 0.36),
+    0 11px 18px rgba(87, 46, 18, 0.22);
+  -webkit-text-stroke: 0;
+}
+.brand:hover .brand-name {
+  background: linear-gradient(178deg, #fffaf3 4%, #eeb47a 46%, #c06f33 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (prefers-color-scheme: dark) {
+  .brand-name {
+    background: linear-gradient(178deg, #ffe9d2 4%, #f0a068 46%, #b4602c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.5);
+  }
+  .brand-name::before {
+    color: #4a2a17;
+    text-shadow:
+      0 1px 0 #5c3620,
+      0 2px 0 #4f2d1a,
+      0 3px 0 #422516,
+      0 4px 0 #351d11,
+      0 5px 0 #28150c,
+      0 6px 8px rgba(0, 0, 0, 0.55),
+      0 11px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ─── Меню: объёмные кнопки-клавиши ───
+   Меню всегда в ОДНУ строку: перенос на второй ряд поднимал липкую шапку
+   до 108px, и она съедала треть экрана телефона на каждой странице.
+   Не помещается — уезжает в горизонтальную прокрутку (см. медиазапросы). */
+.nav {
+  display: flex;
+  gap: 5px;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
+  /* Прокрутка включена на всех ширинах, а не с определённого порога: так
+     меню не может «сломаться» ни на одной промежуточной ширине окна и ни
+     от новой категории в конфиге. На десктопе кнопки помещаются целиком,
+     и полоса прокрутки не появляется. */
+  overflow-x: auto;
+  /* Место под торец кнопки и её подъём при наведении — иначе контейнер
+     прокрутки срежет и то и другое. */
+  padding: 3px 2px 10px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav::-webkit-scrollbar {
+  display: none;
+}
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  flex: none;
+  color: var(--text);
+  background: var(--btn-face);
+  box-shadow:
+    0 4px 0 var(--btn-edge),
+    inset 0 2px 3px var(--btn-inner-light),
+    inset 0 -3px 5px var(--btn-inner-dark),
+    0 5px 11px var(--btn-cast);
+  transform: translateY(0);
+  transition:
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.nav-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex: none;
+  filter: drop-shadow(0 1px 1.5px rgba(87, 46, 18, 0.3));
+}
+.nav-btn:hover {
+  text-decoration: none;
+  color: var(--brand-dark);
+  background: var(--btn-face-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 var(--btn-edge-dark),
+    inset 0 2px 3px var(--btn-inner-light),
+    inset 0 -3px 5px var(--btn-inner-dark),
+    0 8px 15px var(--btn-cast);
+}
+/* Нажатие: клавиша уходит вниз ровно на свою толщину, торец почти исчезает,
+   а внутренняя тень переезжает наверх — свет теперь падает на дно углубления. */
+.nav-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 var(--btn-edge-dark),
+    inset 0 3px 6px var(--btn-inner-dark),
+    inset 0 -2px 3px var(--btn-inner-light),
+    0 1px 3px var(--btn-cast);
+}
+.nav-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+/* Текущий раздел — вдавленная клавиша: состояние читается формой, а не
+   только цветом (важно при дальтонизме). */
+.nav-btn[aria-current='page'] {
+  color: var(--brand-dark);
+  background: linear-gradient(180deg, var(--brand-soft) 0%, var(--surface) 100%);
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 var(--btn-edge-dark),
+    inset 0 3px 6px var(--btn-inner-dark),
+    inset 0 -2px 3px var(--btn-inner-light);
+}
+
+/* ─── Подвал ─── */
 .site-footer {
   border-top: 1px solid var(--border);
   background: var(--bg-soft);
-  margin-top: 64px;
-  padding-block: 40px;
+  margin-top: var(--sp-9);
+  padding-block: var(--sp-7);
   color: var(--text-soft);
   font-size: 0.92rem;
 }
 .site-footer .cols {
   display: flex;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: var(--sp-6);
   justify-content: space-between;
 }
 .site-footer a {
@@ -200,41 +490,331 @@ img {
   margin: 0 0 10px;
 }
 
-/* Hero */
+/* ═══ ГЛАВНАЯ ═══════════════════════════════════════════════════════ */
+
+/* Hero-вход через проблему читателя, а не через рассказ о себе */
 .hero {
-  background: linear-gradient(160deg, var(--brand-soft), var(--bg));
-  padding-block: 56px;
+  padding-block: var(--sp-8) var(--sp-7);
   text-align: center;
-  border-bottom: 1px solid var(--border);
+}
+.hero h1 {
+  max-width: 15ch;
+  margin-inline: auto;
 }
 .hero p.lead {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--text-soft);
-  max-width: 560px;
+  max-width: 52ch;
   margin-inline: auto;
 }
 
-/* Article card */
+/* Чипы-ситуации: мост от «что случилось» к статье */
+.situations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: var(--sp-6);
+}
+.situation {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 500;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.situation:hover {
+  border-color: var(--brand);
+  color: var(--brand-dark);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Совместимость: старый класс чипов на других страницах */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: var(--sp-5);
+}
+.chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.92rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.chip:hover {
+  border-color: var(--brand);
+  text-decoration: none;
+}
+
+/* ─── Бенто-сетка категорий ───
+   Ячейки разного размера на общей 12-колоночной сетке: асимметрия
+   контролируемая, всё выравнено по одному модулю. */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+/* Раскладка рассчитана на пять категорий: 7 + 5, затем 4 + 4 + 4.
+   Если категорий станет больше или меньше — пересчитать спаны. */
+/* Плитки — та же «клавиша», что и в меню, только прямоугольная: сплошной
+   торец снизу вместо размытой тени, нажатие проваливает плитку внутрь. */
+.bento-cell {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 168px;
+  padding: var(--sp-5);
+  background: var(--btn-face);
+  border-radius: var(--radius-btn);
+  box-shadow:
+    0 7px 0 var(--btn-edge),
+    inset 0 2px 4px var(--btn-inner-light),
+    inset 0 -5px 9px var(--btn-inner-dark),
+    0 9px 20px var(--btn-cast);
+  color: var(--text);
+  transform: translateY(0);
+  transition:
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.18s ease;
+}
+.bento-cell:hover {
+  text-decoration: none;
+  background: var(--btn-face-hover);
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 0 var(--btn-edge-dark),
+    inset 0 2px 4px var(--btn-inner-light),
+    inset 0 -5px 9px var(--btn-inner-dark),
+    0 14px 28px var(--btn-cast);
+}
+.bento-cell:active {
+  transform: translateY(7px);
+  box-shadow:
+    0 0 0 var(--btn-edge-dark),
+    inset 0 5px 10px var(--btn-inner-dark),
+    inset 0 -3px 5px var(--btn-inner-light),
+    0 2px 4px var(--btn-cast);
+}
+.bento-cell:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+/* Две ведущие категории занимают по 7 и 5 колонок — намеренно неравные */
+.bento-cell.is-lead {
+  grid-column: span 7;
+  min-height: 210px;
+  background: linear-gradient(150deg, var(--brand-soft) 0%, var(--btn-lead-face) 72%);
+}
+.bento-cell.is-lead:hover {
+  background: linear-gradient(150deg, var(--brand-soft) 0%, var(--btn-lead-hover) 72%);
+}
+.bento-cell.is-lead + .bento-cell {
+  grid-column: span 5;
+  min-height: 210px;
+}
+.bento-cell .bento-icon {
+  display: block;
+  line-height: 0;
+}
+.bento-cell .bento-icon img {
+  width: 46px;
+  height: 46px;
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(87, 46, 18, 0.26));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bento-cell.is-lead .bento-icon img {
+  width: 58px;
+  height: 58px;
+}
+.bento-cell:hover .bento-icon img {
+  transform: scale(1.09) rotate(-5deg);
+}
+.bento-cell h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+.bento-cell.is-lead h3 {
+  font-size: 1.7rem;
+}
+.bento-cell p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+.bento-cell .bento-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+}
+
+/* ─── Лента фото на странице категории ───
+   Показывает, кого охватывает раздел, даже если статей про всех ещё нет. */
+.cat-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+.cat-photos figure {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.cat-photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.cat-photos figcaption {
+  padding: 10px 12px 12px;
+  font-size: 0.9rem;
+}
+.cat-photos figcaption b {
+  display: block;
+  color: var(--text);
+}
+
+/* ─── Галерея внутри статьи (например, породы из перечня) ─── */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-6) 0;
+}
+.photo-gallery figure {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.photo-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.photo-gallery figcaption {
+  padding: 10px 12px 12px;
+  font-size: 0.92rem;
+}
+.photo-gallery figcaption b {
+  display: block;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+/* ─── Атрибуция фотографий ───
+   CC BY / CC BY-SA требуют указать автора, поэтому убрать подпись совсем нельзя.
+   Но под каждым снимком она не нужна: собираем в один служебный блок — лицензия
+   соблюдена, а картинки остаются чистыми. */
+.photo-credits {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+.photo-credits h2 {
+  margin: 0 0 var(--sp-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.photo-credits ul {
+  margin: 0;
+  padding-left: 1.1em;
+  line-height: 1.6;
+}
+.photo-credits a,
+.strip-credits a {
+  color: var(--text-soft);
+  text-decoration: underline;
+}
+.strip-credits {
+  margin: var(--sp-3) 0 0;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* ─── Блок доверия «как мы пишем» ─── */
+.trust {
+  margin-top: var(--sp-9);
+  padding: var(--sp-7) var(--sp-5);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.trust h2 {
+  margin-top: 0;
+  text-align: center;
+}
+.trust-items {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  margin-top: var(--sp-5);
+}
+.trust-item h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: 1.1rem;
+}
+.trust-item p {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+/* ═══ КАРТОЧКА СТАТЬИ ═══════════════════════════════════════════════ */
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 .card:hover {
   transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
 }
 .card .body {
   padding: 18px 20px 22px;
 }
 .card .cat {
-  font-size: 0.78rem;
+  font-size: 0.69rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.16em;
   color: var(--brand-dark);
   font-weight: 700;
 }
@@ -256,7 +836,6 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.4rem;
 }
 .card .thumb img {
   width: 100%;
@@ -264,10 +843,23 @@ img {
   object-fit: cover;
   display: block;
 }
+/* Статья без своей обложки — иконка категории по центру заглушки */
+.card .thumb-icon {
+  display: block;
+  line-height: 0;
+}
+.card .thumb-icon img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(87, 46, 18, 0.24));
+}
 
-/* Обложка статьи + подпись автора фото (обязательна для лицензий CC BY / CC BY-SA) */
+/* ═══ СТАТЬЯ ════════════════════════════════════════════════════════ */
+
+/* Обложка + подпись автора фото (обязательна для CC BY / CC BY-SA) */
 .article-cover {
-  margin: 24px 0 8px;
+  margin: var(--sp-5) 0 var(--sp-2);
 }
 .article-cover img {
   width: 100%;
@@ -277,7 +869,7 @@ img {
   display: block;
 }
 .article-cover figcaption {
-  margin-top: 8px;
+  margin-top: var(--sp-2);
   font-size: 0.85rem;
   color: var(--text-soft);
   text-align: right;
@@ -287,14 +879,94 @@ img {
   text-decoration: underline;
 }
 
-/* Блок автора под статьёй — живой человек вместо безликой «редакции» */
+/* ─── Блок «сначала присоединение, потом техника» ───
+   Первое, что читает встревоженный человек: его состояние названо
+   нормальным, и сразу — короткий список того, что можно сделать. */
+.calm-intro {
+  background: var(--brand-soft);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
+  margin: var(--sp-5) 0 var(--sp-6);
+}
+.calm-intro .reassurance {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+.calm-intro .tldr-title {
+  display: block;
+  margin: var(--sp-4) 0 var(--sp-2);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+}
+.calm-intro ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.calm-intro li {
+  margin: 0.35em 0;
+}
+
+/* ─── Красные флаги ───
+   Заметно, но без сплошной красной заливки: человеку, который уже
+   напуган, красный экран делает хуже, а не лучше. */
+.vet-alert {
+  background: var(--alert-soft);
+  border: 1px solid color-mix(in srgb, var(--alert) 30%, transparent);
+  border-left: 4px solid var(--alert);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--sp-5);
+  margin: var(--sp-6) 0;
+}
+.vet-alert h2 {
+  margin: 0 0 var(--sp-3);
+  font-size: 1.25rem;
+  color: var(--text);
+}
+.vet-alert .vet-alert-icon {
+  margin-right: 8px;
+}
+.vet-alert ul {
+  margin: 0;
+  padding-left: 1.3em;
+}
+.vet-alert li {
+  margin: 0.4em 0;
+}
+.vet-alert .vet-alert-tail {
+  margin: var(--sp-4) 0 0;
+  font-size: 0.94rem;
+  color: var(--text-soft);
+}
+
+/* ─── Дисклеймер о ветконсультации ─── */
+.vet-disclaimer {
+  margin: var(--sp-6) 0 0;
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.vet-disclaimer strong {
+  color: var(--text);
+}
+
+/* ─── Блок автора ─── */
 .author-box {
   background: var(--brand-soft);
   border: 1px solid var(--border);
   border-left: 4px solid var(--brand);
-  border-radius: var(--radius);
+  border-radius: 0 var(--radius) var(--radius) 0;
   padding: 18px 22px;
-  margin: 36px 0 8px;
+  margin: var(--sp-6) 0 var(--sp-2);
 }
 .author-box .author-name {
   margin: 0 0 6px;
@@ -311,7 +983,7 @@ img {
   color: var(--text-soft);
 }
 
-/* Article body */
+/* ─── Тело статьи ─── */
 .article-body {
   font-size: 1.08rem;
 }
@@ -353,12 +1025,31 @@ img {
 .article-meta {
   color: var(--text-soft);
   font-size: 0.92rem;
-  margin-bottom: 24px;
+  margin-bottom: var(--sp-5);
 }
 
-/* Ad slot */
+/* ─── Оглавление ─── */
+.toc {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-4) var(--sp-5);
+  margin: var(--sp-5) 0;
+  font-size: 0.95rem;
+}
+.toc strong {
+  display: block;
+  margin-bottom: var(--sp-2);
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* ═══ РЕКЛАМА И ПАРТНЁРКИ ═══════════════════════════════════════════ */
+
 .ad-slot {
-  margin: 32px 0;
+  margin: var(--sp-6) 0;
   min-height: 100px;
   border: 1px dashed var(--border);
   border-radius: var(--radius);
@@ -370,7 +1061,6 @@ img {
   background: var(--bg-soft);
 }
 
-/* Affiliate card */
 .aff-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -379,7 +1069,7 @@ img {
   background: var(--surface);
   box-shadow: var(--shadow);
   display: flex;
-  gap: 16px;
+  gap: var(--sp-4);
   align-items: flex-start;
   flex-wrap: wrap;
 }
@@ -396,62 +1086,30 @@ img {
   font-size: 0.95rem;
 }
 
-/* Table of contents */
-.toc {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin: 24px 0;
-  font-size: 0.95rem;
-}
-.toc strong {
-  display: block;
-  margin-bottom: 8px;
-}
-.toc ol {
-  margin: 0;
-  padding-left: 1.2em;
-}
-
-/* Disclosure banner */
+/* Раскрытие партнёрских ссылок. Наверху статьи — тонкая сноска,
+   развёрнутый текст стоит рядом с самими товарами. */
 .disclosure {
   font-size: 0.85rem;
   color: var(--text-soft);
   background: var(--brand-soft);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
-  margin: 0 0 24px;
+  margin: 0 0 var(--sp-5);
+}
+.disclosure-note {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  margin: 0 0 var(--sp-5);
 }
 
-/* Category chips */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 26px;
-}
-.chip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 0.92rem;
-  color: var(--text);
-  font-weight: 500;
-}
-.chip:hover {
-  border-color: var(--brand);
-  text-decoration: none;
-}
+/* ═══ СЕКЦИИ ════════════════════════════════════════════════════════ */
 
 .section-title {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 48px 0 8px;
-  gap: 12px;
+  margin: var(--sp-9) 0 var(--sp-2);
+  gap: var(--sp-3);
 }
 .section-title h2 {
   margin: 0;
@@ -462,11 +1120,123 @@ img {
   margin-inline: auto;
 }
 
+/* ═══ ДВИЖЕНИЕ ══════════════════════════════════════════════════════
+   Заметное движение — признак любительской работы. Здесь только
+   вход элементов и микро-отклик на наведение. Никаких бесконечных
+   циклов: статический сайт, Core Web Vitals важнее эффектов. */
+
+/* Движение построено на переходах, а не на keyframes с fill-mode.
+   Разница принципиальная: конечный вид задаёт КЛАСС, а не проигрывание
+   анимации. Если анимация почему-либо не пошла (вкладка в фоне, окно
+   свёрнуто, экономия энергии), элемент просто окажется видимым —
+   вместо того чтобы навсегда застыть на кадре с opacity: 0.
+
+   Начальное состояние выставляется только под .ld-anim, а этот класс
+   ставит скрипт. Нет JS — нет и скрытия. */
+
+.ld-anim .enter {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.enter-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* Оркестровка: элементы hero проявляются друг за другом */
+.enter-1 {
+  transition-delay: 0.05s;
+}
+.enter-2 {
+  transition-delay: 0.16s;
+}
+.enter-3 {
+  transition-delay: 0.27s;
+}
+
+/* Секции при прокрутке — класс .reveal тоже ставит скрипт */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+  .reveal,
+  .ld-anim .enter {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ═══ МОБИЛЬНЫЕ ═════════════════════════════════════════════════════ */
+
+@media (max-width: 860px) {
+  .bento-cell,
+  .bento-cell.is-lead,
+  .bento-cell.is-lead + .bento-cell {
+    grid-column: span 12;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  /* Логотип и меню перестают помещаться в одну строку — раскладываем в стопку.
+     Отступы урезаны: в две строки липкая шапка занимала 119px, то есть
+     шестую часть экрана телефона на каждой странице. */
+  .site-header .bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-2);
+    padding-block: 9px 4px;
+  }
+  .brand {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 640px) {
   body {
     font-size: 17px;
   }
-  .nav {
-    gap: 14px;
+  :root {
+    --sp-9: 56px;
+    --sp-8: 40px;
+  }
+  .nav-btn {
+    padding: 7px 13px;
+    font-size: 0.88rem;
+  }
+  .nav-btn img {
+    width: 19px;
+    height: 19px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .hero {
+    padding-block: var(--sp-7) var(--sp-6);
+  }
+  .calm-intro,
+  .vet-alert {
+    padding: var(--sp-4);
   }
 }

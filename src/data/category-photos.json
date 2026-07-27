@@ -1,0 +1,44 @@
+{
+  "gryzuny": [
+    {
+      "src": "/images/photos/category/gryzuny-krolik.jpg",
+      "alt": "Кролик",
+      "caption": "Кролик",
+      "author": "Diego Delso",
+      "license": "CC BY-SA 3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Conejo_com%C3%BAn_(Oryctolagus_cuniculus),_Tierpark_Hellabrunn,_M%C3%BAnich,_Alemania,_2012-06-17,_DD_01.JPG"
+    },
+    {
+      "src": "/images/photos/category/gryzuny-krysa.jpg",
+      "alt": "Декоративная крыса",
+      "caption": "Декоративная крыса",
+      "author": "AlexK100",
+      "license": "CC BY-SA 2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fancy_rat_blaze.jpg"
+    },
+    {
+      "src": "/images/photos/category/gryzuny-shinshilla.jpg",
+      "alt": "Шиншилла",
+      "caption": "Шиншилла",
+      "author": "Trurl66",
+      "license": "Public domain",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chinchilla_lanigera1.jpg"
+    },
+    {
+      "src": "/images/photos/category/gryzuny-homyak.jpg",
+      "alt": "Хомяк",
+      "caption": "Хомяк",
+      "author": "Dennis Blöte",
+      "license": "CC BY-SA 2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mesocricetus_auratus_-pet_hamster-8a.jpg"
+    },
+    {
+      "src": "/images/photos/category/gryzuny-morskaya-svinka.jpg",
+      "alt": "Морская свинка",
+      "caption": "Морская свинка",
+      "author": "Diego Delso",
+      "license": "CC BY-SA 3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cobaya_(Cavia_porcellus),_Tierpark_Hellabrunn,_M%C3%BAnich,_Alemania,_2012-06-17,_DD_01.JPG"
+    }
+  ]
+}

@@ -1,17 +1,37 @@
 ---
-import { SITE, CATEGORIES } from '../site.config.mjs';
+import { SITE, CATEGORIES, CATEGORY_FALLBACK_ICON } from '../site.config.mjs';
 import { categoryUrl } from '../lib/urls.mjs';
+
+// Подсветка текущего раздела: сравниваем по первому сегменту пути, чтобы
+// страница статьи тоже подсвечивала свою категорию.
+const seg = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 ---
 
 <header class="site-header">
   <div class="container container-wide bar">
     <a href="/" class="brand">
-      <span class="leaf">🐾</span>
-      <span>{SITE.name}</span>
+      <img class="brand-mark" src={CATEGORY_FALLBACK_ICON} alt="" width="64" height="64" />
+      {/* data-text дублирует название: псевдоэлемент рисует объёмную «подложку»
+          под градиентными буквами — тень нельзя наложить на текст с
+          background-clip: text, она просвечивала бы сквозь него насквозь. */}
+      <span class="brand-name" data-text={SITE.name}>{SITE.name}</span>
     </a>
     <nav class="nav" aria-label="Основное меню">
-      {CATEGORIES.map((c) => <a href={categoryUrl(c.slug)}>{c.title}</a>)}
-      <a href="/o-saite">О сайте</a>
+      {
+        CATEGORIES.map((c) => (
+          <a
+            class="nav-btn"
+            href={categoryUrl(c.slug)}
+            aria-current={seg === c.slug ? 'page' : undefined}
+          >
+            <img src={c.icon ?? CATEGORY_FALLBACK_ICON} alt="" width="64" height="64" />
+            <span>{c.title}</span>
+          </a>
+        ))
+      }
+      <a class="nav-btn" href="/o-saite" aria-current={seg === 'o-saite' ? 'page' : undefined}>
+        <span>О сайте</span>
+      </a>
     </nav>
   </div>
 </header>

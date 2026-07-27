@@ -3,12 +3,21 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import { CATEGORIES } from '../site.config.mjs';
+import categoryPhotos from '../data/category-photos.json';
 
 export async function getStaticPaths() {
   return CATEGORIES.map((c) => ({ params: { category: c.slug }, props: { category: c } }));
 }
 
 const { category } = Astro.props;
+// Лента фото над списком статей: показывает, кого охватывает раздел, даже
+// если статьи пока написаны не про всех. Заполняется `fetch-photos.mjs --sets`.
+const photos = categoryPhotos[category.slug] ?? [];
+// CC BY / CC BY-SA требуют указать автора, public domain и CC0 — нет.
+// Подписи собраны под лентой одной строкой, а не под каждым снимком.
+const photoCredits = photos.filter(
+  (p) => p.author && !/public domain|^cc0/i.test(String(p.license ?? '')),
+);
 const all = await getCollection('articles', ({ data }) => import.meta.env.PROD ? !data.draft : true);
 const articles = all
   .filter((a) => a.data.category === category.slug)
@@ -22,6 +31,34 @@ const articles = all
       <p class="lead">{category.description}</p>
     </div>
   </section>
+
+  {
+    photos.length > 0 && (
+      <div class="container container-wide">
+        <section class="cat-photos" aria-label={`Кто живёт в разделе «${category.title}»`}>
+          {photos.map((p) => (
+            <figure>
+              <img src={p.src} alt={p.caption} loading="lazy" />
+              <figcaption>
+                <b>{p.caption}</b>
+              </figcaption>
+            </figure>
+          ))}
+        </section>
+        {photoCredits.length > 0 && (
+          <p class="strip-credits">
+            Фото:{' '}
+            {photoCredits.map((p, i) => (
+              <>
+                {i > 0 ? ', ' : ''}
+                <a href={p.sourceUrl} target="_blank" rel="noopener nofollow">{p.author}</a>{p.license ? ` (${p.license})` : ''}
+              </>
+            ))}
+          </p>
+        )}
+      </div>
+    )
+  }
 
   <div class="container container-wide" style="margin-top: 40px;">
     {
