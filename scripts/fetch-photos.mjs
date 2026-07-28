@@ -64,8 +64,8 @@ const PHOTO_QUERIES = {
   'britanskaya-koshka-harakter-uhod-osobennosti': 'British Shorthair kitten',
   'kak-priuchit-koshku-k-perenoske-bez-stressa': 'Cat in travel carrier',
   'regdoll-harakter-uhod-i-osobennosti-porody': 'Ragdoll cat lying',
-  'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat winter',
-  'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting on windowsill night',
+  'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat breed',
+  'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting windowsill',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -75,7 +75,7 @@ const PHOTO_QUERIES = {
   'francuzskiy-buldog-harakter-uhod-zdorovye': 'French Bulldog puppy',
   'taksa-harakter-uhod-i-osobennosti-porody': 'Dachshund puppy',
   'sobaka-tyanet-povodok-kak-otuchit': 'Dog pulling on leash',
-  'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog sitting',
+  'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog',
   'kavaler-king-charlz-spaniel-harakter-i-uhod': 'Cavalier King Charles Spaniel puppy',
   'schenok-kusaet-ruki-v-igre-kak-otuchit': 'Puppy chewing toy',
 
@@ -91,9 +91,9 @@ const PHOTO_QUERIES = {
   'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Golden hamster',
   'morskaya-svinka-kto-eto-i-chto-ey-nuzhno': 'Guinea pig on grass',
   'homyak-gryzet-prutya-kletki-pochemu-i-chto-delat': 'Syrian hamster cage',
-  'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno': 'Rabbit eating hay',
-  'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla in cage',
-  'zapah-ot-kletki-gryzuna-kak-ubrat': 'Rodent cage wood shavings',
+  'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno': 'Holland Lop rabbit pet',
+  'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla pet',
+  'zapah-ot-kletki-gryzuna-kak-ubrat': 'Guinea pig cage',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -107,14 +107,14 @@ const PHOTO_QUERIES = {
   // Спокойный кот рядом с лотком, а не сам «промах» — пугать читателя нечем.
   'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno': 'Cat litter box',
   'ponos-u-sobaki-kogda-nablyudat-a-kogda-k-vrachu': 'Labrador Retriever lying on grass',
-  'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog paw close up grass',
+  'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog lying on grass resting',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
   'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
-  'kuda-det-pitomca-v-otpuske': 'Cat in suitcase',
+  'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
