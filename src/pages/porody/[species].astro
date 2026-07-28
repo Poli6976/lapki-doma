@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CAT_BREEDS } from '../../data/breeds-koshki.mjs';
+import { DOG_BREEDS } from '../../data/breeds-sobaki.mjs';
+import breedPhotos from '../../data/breed-photos.json';
+import { categoryUrl } from '../../lib/urls.mjs';
+
+/**
+ * Справочник пород: /porody/koshki и /porody/sobaki.
+ *
+ * Зачем страница нужна: человек приходит «посмотреть породы» задолго до того,
+ * как у нас написан портрет каждой из них. Раньше он попадал в категорию и
+ * видел статьи про лоток и линьку — не то, за чем шёл. Здесь он видит сами
+ * породы: фото, короткое описание и ссылку на портрет там, где тот уже есть.
+ *
+ * Породы, про которые статьи ещё нет, честно помечены «портрет готовим» —
+ * это лучше, чем ссылка в никуда или заглушка «страница в разработке».
+ */
+export function getStaticPaths() {
+  return [
+    {
+      params: { species: 'koshki' },
+      props: {
+        title: 'Породы кошек',
+        lead: 'Как порода узнаётся и о чём стоит знать заранее. Порода задаёт склонность, а не гарантию характера: конкретный котёнок может оказаться совсем не таким, как описание.',
+        category: 'koshki',
+        categoryTitle: 'Кошки',
+        breeds: CAT_BREEDS,
+      },
+    },
+    {
+      params: { species: 'sobaki' },
+      props: {
+        title: 'Породы собак',
+        lead: 'Как порода узнаётся и о чём стоит знать заранее. Порода задаёт склонность, а не гарантию характера: многое зависит от конкретной собаки и от того, сколько с ней занимаются.',
+        category: 'sobaki',
+        categoryTitle: 'Собаки',
+        breeds: DOG_BREEDS,
+      },
+    },
+  ];
+}
+
+const { species } = Astro.params;
+const { title, lead, category, categoryTitle, breeds } = Astro.props;
+
+const published = await getCollection('articles', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true,
+);
+const articleById = new Map(published.map((e) => [e.id, e]));
+
+// Фото ищем по ключу породы: имя файла собрано скриптом как `<вид>-<key>.jpg`.
+const photoFor = (key) =>
+  (breedPhotos[species] ?? []).find((p) => p.src.includes(`/${species}-${key}.`));
+
+const items = breeds.map((b) => {
+  const entry = b.article ? articleById.get(b.article) : undefined;
+  return {
+    ...b,
+    href: entry ? `/${entry.data.category}/${entry.id}` : undefined,
+    photo: photoFor(b.key),
+  };
+});
+
+const ready = items.filter((i) => i.href).length;
+
+// CC BY / CC BY-SA требуют указать автора, public domain и CC0 — нет.
+const credits = items
+  .map((i) => i.photo)
+  .filter((p) => p && p.author && !/public domain|^cc0/i.test(String(p.license ?? '')));
+
+const description = `${title}: как порода узнаётся, какой характер и что учесть перед тем, как взять питомца. ${breeds.length} пород, ${ready} с подробным разбором.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="hero">
+    <div class="container">
+      <h1>{title}</h1>
+      <p class="lead">{lead}</p>
+      <nav class="situations" aria-label="Разделы">
+        <a class="situation" href={categoryUrl(category)}>Все статьи про раздел «{categoryTitle}»</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="container container-wide">
+    <ul class="breed-grid">
+      {
+        items.map((b) => (
+          <li class="breed-card" id={b.key}>
+            {b.photo ? (
+              <img class="breed-photo" src={b.photo.src} alt={b.name} loading="lazy" width="400" height="300" />
+            ) : (
+              <div class="breed-photo breed-photo-empty" aria-hidden="true"></div>
+            )}
+            <div class="breed-body">
+              <h2>{b.name}</h2>
+              <p>{b.blurb}</p>
+              {b.href ? (
+                <a class="breed-link" href={b.href}>
+                  Подробно о породе →
+                </a>
+              ) : (
+                <span class="breed-soon">Портрет породы готовим</span>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      credits.length > 0 && (
+        <p class="strip-credits">
+          Фото:{' '}
+          {credits.map((p, i) => (
+            <>
+              {i > 0 ? ', ' : ''}
+              <a href={p.sourceUrl} target="_blank" rel="noopener nofollow">
+                {p.author}
+              </a>
+              {p.license ? ` (${p.license})` : ''}
+            </>
+          ))}
+        </p>
+      )
+    }
+  </div>
+</BaseLayout>

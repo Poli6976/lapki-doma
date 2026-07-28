@@ -31,6 +31,8 @@ const OUT_DIR = path.join(ROOT, 'public/images/photos');
 const FORCE = process.argv.includes('--force');
 // --sets = режим наборов (галереи и ленты категорий), обложки при нём не трогаются.
 const SETS = process.argv.includes('--sets');
+// --breeds = только справочник пород (страницы /porody/koshki и /porody/sobaki).
+const BREEDS = process.argv.includes('--breeds');
 // Явно перечисленные slug-и перезагружаем, даже если фото уже стоит.
 const ONLY = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 
@@ -61,6 +63,9 @@ const PHOTO_QUERIES = {
   'meyn-kun-harakter-uhod-i-osobennosti-porody': 'Maine Coon cat face tufted ears',
   'britanskaya-koshka-harakter-uhod-osobennosti': 'British Shorthair kitten',
   'kak-priuchit-koshku-k-perenoske-bez-stressa': 'Cat in travel carrier',
+  'regdoll-harakter-uhod-i-osobennosti-porody': 'Ragdoll cat lying',
+  'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat winter',
+  'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting on windowsill night',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -70,6 +75,9 @@ const PHOTO_QUERIES = {
   'francuzskiy-buldog-harakter-uhod-zdorovye': 'French Bulldog puppy',
   'taksa-harakter-uhod-i-osobennosti-porody': 'Dachshund puppy',
   'sobaka-tyanet-povodok-kak-otuchit': 'Dog pulling on leash',
+  'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog sitting',
+  'kavaler-king-charlz-spaniel-harakter-i-uhod': 'Cavalier King Charles Spaniel puppy',
+  'schenok-kusaet-ruki-v-igre-kak-otuchit': 'Puppy chewing toy',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -83,6 +91,9 @@ const PHOTO_QUERIES = {
   'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Golden hamster',
   'morskaya-svinka-kto-eto-i-chto-ey-nuzhno': 'Guinea pig on grass',
   'homyak-gryzet-prutya-kletki-pochemu-i-chto-delat': 'Syrian hamster cage',
+  'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno': 'Rabbit eating hay',
+  'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla in cage',
+  'zapah-ot-kletki-gryzuna-kak-ubrat': 'Rodent cage wood shavings',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -96,12 +107,14 @@ const PHOTO_QUERIES = {
   // Спокойный кот рядом с лотком, а не сам «промах» — пугать читателя нечем.
   'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno': 'Cat litter box',
   'ponos-u-sobaki-kogda-nablyudat-a-kogda-k-vrachu': 'Labrador Retriever lying on grass',
+  'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog paw close up grass',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
   'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
+  'kuda-det-pitomca-v-otpuske': 'Cat in suitcase',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
@@ -385,8 +398,18 @@ const GALLERY_QUERIES = {
       query: 'French Bulldog',
       article: 'francuzskiy-buldog-harakter-uhod-zdorovye',
     },
-    { key: 'mops', caption: 'Мопс', query: 'Pug dog' },
-    { key: 'kavaler-king-charlz', caption: 'Кавалер-кинг-чарльз-спаниель', query: 'Cavalier King Charles Spaniel' },
+    {
+      key: 'mops',
+      caption: 'Мопс',
+      query: 'Pug dog',
+      article: 'mops-harakter-uhod-i-osobennosti-porody',
+    },
+    {
+      key: 'kavaler-king-charlz',
+      caption: 'Кавалер-кинг-чарльз-спаниель',
+      query: 'Cavalier King Charles Spaniel',
+      article: 'kavaler-king-charlz-spaniel-harakter-i-uhod',
+    },
     { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
     {
       key: 'taksa',
@@ -404,14 +427,24 @@ const GALLERY_QUERIES = {
       query: 'Maine Coon cat',
       article: 'meyn-kun-harakter-uhod-i-osobennosti-porody',
     },
-    { key: 'regdoll', caption: 'Рэгдолл', query: 'Ragdoll cat' },
+    {
+      key: 'regdoll',
+      caption: 'Рэгдолл',
+      query: 'Ragdoll cat',
+      article: 'regdoll-harakter-uhod-i-osobennosti-porody',
+    },
     {
       key: 'britanskaya',
       caption: 'Британская короткошёрстная',
       query: 'British Shorthair cat',
       article: 'britanskaya-koshka-harakter-uhod-osobennosti',
     },
-    { key: 'sibirskaya', caption: 'Сибирская кошка', query: 'Siberian cat breed' },
+    {
+      key: 'sibirskaya',
+      caption: 'Сибирская кошка',
+      query: 'Siberian cat breed',
+      article: 'sibirskaya-koshka-harakter-uhod-osobennosti',
+    },
     { key: 'birmanskaya', caption: 'Бирманская кошка', query: 'Birman cat' },
   ],
 };
@@ -419,9 +452,19 @@ const GALLERY_QUERIES = {
 /** Лента фото на странице категории. Пишется в src/data/category-photos.json. */
 const CATEGORY_PHOTOS = {
   gryzuny: [
-    { key: 'krolik', caption: 'Кролик', query: 'Domestic rabbit' },
+    {
+      key: 'krolik',
+      caption: 'Кролик',
+      query: 'Domestic rabbit',
+      article: 'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno',
+    },
     { key: 'krysa', caption: 'Декоративная крыса', query: 'Fancy rat pet' },
-    { key: 'shinshilla', caption: 'Шиншилла', query: 'Chinchilla pet' },
+    {
+      key: 'shinshilla',
+      caption: 'Шиншилла',
+      query: 'Chinchilla pet',
+      article: 'shinshilla-kto-eto-i-chto-ey-nuzhno',
+    },
     {
       key: 'homyak',
       caption: 'Хомяк',
@@ -437,7 +480,60 @@ const CATEGORY_PHOTOS = {
   ],
 };
 
-if (process.argv.includes('--sets')) {
+/**
+ * Справочник пород: фото для страниц /porody/koshki и /porody/sobaki.
+ * Список пород и их порядок живут в `src/data/breeds-*.mjs`, здесь только
+ * поисковые запросы. Ключ должен совпадать с `key` в файле пород — по нему
+ * страница находит снимок.
+ */
+const BREED_PHOTOS = {
+  koshki: [
+    { key: 'meyn-kun', caption: 'Мейн-кун', query: 'Maine Coon cat' },
+    { key: 'britanskaya', caption: 'Британская короткошёрстная', query: 'British Shorthair cat' },
+    { key: 'shotlandskaya-vislouhaya', caption: 'Шотландская вислоухая', query: 'Scottish Fold cat' },
+    { key: 'sfinks', caption: 'Сфинкс', query: 'Sphynx cat' },
+    { key: 'bengalskaya', caption: 'Бенгальская', query: 'Bengal cat breed' },
+    { key: 'siamskaya', caption: 'Сиамская', query: 'Siamese cat' },
+    {
+      key: 'regdoll',
+      caption: 'Рэгдолл',
+      query: 'Ragdoll cat',
+      article: 'regdoll-harakter-uhod-i-osobennosti-porody',
+    },
+    { key: 'sibirskaya', caption: 'Сибирская', query: 'Siberian cat breed' },
+    { key: 'birmanskaya', caption: 'Бирманская', query: 'Birman cat' },
+    { key: 'persidskaya', caption: 'Персидская', query: 'Afkhami Persian cat' },
+    { key: 'abissinskaya', caption: 'Абиссинская', query: 'Poktori Abyssinian cat' },
+    { key: 'russkaya-golubaya', caption: 'Русская голубая', query: 'Russian Blue cat' },
+  ],
+  sobaki: [
+    { key: 'francuzskiy-buldog', caption: 'Французский бульдог', query: 'French Bulldog' },
+    { key: 'taksa', caption: 'Такса', query: 'Dachshund dog' },
+    {
+      key: 'mops',
+      caption: 'Мопс',
+      query: 'Pug dog',
+      article: 'mops-harakter-uhod-i-osobennosti-porody',
+    },
+    {
+      key: 'kavaler-king-charlz',
+      caption: 'Кавалер-кинг-чарльз-спаниель',
+      query: 'Cavalier King Charles Spaniel',
+      article: 'kavaler-king-charlz-spaniel-harakter-i-uhod',
+    },
+    { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
+    { key: 'labrador', caption: 'Лабрадор-ретривер', query: 'Labrador Retriever Aurora Colorado' },
+    { key: 'nemeckaya-ovcharka', caption: 'Немецкая овчарка', query: 'German Shepherd dog' },
+    { key: 'yorkshirskiy-terer', caption: 'Йоркширский терьер', query: 'Yorkshire Terrier' },
+    { key: 'chihuahua', caption: 'Чихуахуа', query: 'Chihuahua sitting sirraychen' },
+    { key: 'pomeranskiy-shpic', caption: 'Померанский шпиц', query: 'Pomeranian dog' },
+    // «Husky» в Commons — это ещё и порода лаек и куча ездовых упряжек.
+    { key: 'haski', caption: 'Сибирский хаски', query: 'Juvenile Siberian Husky' },
+    { key: 'dzhek-rassel', caption: 'Джек-рассел-терьер', query: 'Jack Russell Terrier' },
+  ],
+};
+
+if (SETS || BREEDS) {
   const GALLERY_DIR = path.join(ROOT, 'public/images/photos/gallery');
   const DATA_DIR = path.join(ROOT, 'src/data');
   fs.mkdirSync(GALLERY_DIR, { recursive: true });
@@ -478,8 +574,10 @@ if (process.argv.includes('--sets')) {
 
   const allMissing = [];
 
-  console.log('\n\n=== Галереи внутри статей ===');
-  for (const [slug, items] of Object.entries(GALLERY_QUERIES)) {
+  if (BREEDS) console.log('\n\n=== Галереи и ленты пропущены (режим --breeds) ===');
+
+  if (!BREEDS) console.log('\n\n=== Галереи внутри статей ===');
+  for (const [slug, items] of Object.entries(BREEDS ? {} : GALLERY_QUERIES)) {
     // Перечислили слаги в командной строке — трогаем только их. Иначе новая
     // галерея тянула бы за собой перекачку уже проверенных глазами наборов.
     if (ONLY.length > 0 && !ONLY.includes(slug)) continue;
@@ -521,8 +619,8 @@ if (process.argv.includes('--sets')) {
   // «собери галерею вот этим двум статьям» молча перекачивало бы и ленту
   // категории вместе с category-photos.json (проверено на практике 28.07.2026 —
   // пришлось откатывать через git четыре фото грызунов).
-  if (ONLY.length > 0) {
-    console.log('\n\n=== Ленты категорий пропущены (указаны конкретные статьи) ===');
+  if (ONLY.length > 0 || BREEDS) {
+    if (!BREEDS) console.log('\n\n=== Ленты категорий пропущены (указаны конкретные статьи) ===');
   } else {
     console.log('\n\n=== Ленты категорий ===');
     const CATEGORY_DIR = path.join(ROOT, 'public/images/photos/category');
@@ -538,6 +636,35 @@ if (process.argv.includes('--sets')) {
     fs.writeFileSync(
       path.join(DATA_DIR, 'category-photos.json'),
       JSON.stringify(catData, null, 2) + '\n',
+      'utf8',
+    );
+  }
+
+  // Справочник пород: /porody/koshki и /porody/sobaki.
+  if (BREEDS) {
+    console.log('\n\n=== Справочник пород ===');
+    const BREED_DIR = path.join(ROOT, 'public/images/photos/breeds');
+    fs.mkdirSync(BREED_DIR, { recursive: true });
+    const breedData = {};
+    for (const [species, items] of Object.entries(BREED_PHOTOS)) {
+      // Можно ограничить одним видом: `--breeds koshki`.
+      if (ONLY.length > 0 && !ONLY.includes(species)) continue;
+      console.log(`\n${species}:`);
+      const { out, miss } = await fetchSet(items, species, BREED_DIR, '/images/photos/breeds');
+      if (miss.length) allMissing.push(`породы ${species}: ${miss.join(', ')}`);
+      breedData[species] = out;
+      console.log(`  → в справочнике ${out.length} из ${items.length}`);
+    }
+
+    // Дописываем, а не перезаписываем: прогон по одному виду не должен
+    // стирать фотографии другого.
+    const breedFile = path.join(DATA_DIR, 'breed-photos.json');
+    const existing = fs.existsSync(breedFile)
+      ? JSON.parse(fs.readFileSync(breedFile, 'utf8'))
+      : {};
+    fs.writeFileSync(
+      breedFile,
+      JSON.stringify({ ...existing, ...breedData }, null, 2) + '\n',
       'utf8',
     );
   }

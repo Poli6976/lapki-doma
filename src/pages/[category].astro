@@ -23,6 +23,11 @@ const articles = all
   .filter((a) => a.data.category === category.slug)
   .sort((a, b) => +new Date(b.data.publishDate) - +new Date(a.data.publishDate));
 
+// Справочник пород есть только у кошек и собак: человеку, который пришёл
+// «посмотреть породы», нужен вход туда прямо со страницы раздела.
+const BREED_PAGES = { koshki: 'Все породы кошек', sobaki: 'Все породы собак' };
+const breedPage = BREED_PAGES[category.slug];
+
 // Фото в ленте ведёт на статью-портрет вида, если она уже написана. Нет
 // статьи — снимок остаётся обычной картинкой, а не ссылкой в никуда.
 const articleLinks = new Map(all.map((e) => [e.id, `/${e.data.category}/${e.id}`]));
@@ -42,6 +47,15 @@ const subs = (category.subcategories ?? []).map((s) => ({
     <div class="container">
       <h1>{category.title}</h1>
       <p class="lead">{category.description}</p>
+      {
+        breedPage && (
+          <nav class="situations" aria-label="Справочник пород">
+            <a class="situation" href={`/porody/${category.slug}`}>
+              {breedPage}
+            </a>
+          </nav>
+        )
+      }
     </div>
   </section>
 

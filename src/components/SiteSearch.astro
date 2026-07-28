@@ -1,0 +1,273 @@
+---
+import { getCollection } from 'astro:content';
+import { ANALYTICS, CATEGORIES } from '../site.config.mjs';
+import { CAT_BREEDS } from '../data/breeds-koshki.mjs';
+import { DOG_BREEDS } from '../data/breeds-sobaki.mjs';
+import { articleUrl } from '../lib/urls.mjs';
+
+/**
+ * Поиск по сайту на главной.
+ *
+ * Читатель приходит с конкретным вопросом («кошка не ест третий день») и не
+ * обязан угадывать, в какой раздел ему идти. Строка ведёт прямо на статью.
+ *
+ * Индекс собирается на сборке и кладётся в страницу отдельным JSON-блоком:
+ * статей несколько десятков, это единицы килобайт. Никакого запроса на сервер
+ * при вводе не уходит — весь поиск происходит в браузере. Это важно и по
+ * приватности: вопросы про здоровье питомца никуда не отправляются.
+ *
+ * Единственное исключение — запрос, по которому НИЧЕГО не нашлось: он уходит
+ * целью в Яндекс.Метрику, если счётчик подключён. Так владелец видит, чего
+ * люди ищут и не находят, и пишет статьи по реальным вопросам, а не наугад.
+ * Счётчик не подключён — запрос не уходит никуда, и текст под строкой этого
+ * не обещает (см. `noHitText` ниже).
+ */
+const all = await getCollection('articles', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true,
+);
+
+const catTitle = (slug) => CATEGORIES.find((c) => c.slug === slug)?.title ?? '';
+
+// Короткие ключи вместо человеческих названий: индекс уезжает в HTML каждой
+// сборкой, и на 35 статьях разница уже заметна.
+const articleEntries = all.map((e) => ({
+  t: e.data.title,
+  u: articleUrl(e),
+  c: catTitle(e.data.category),
+  k: (e.data.keywords ?? []).join(' '),
+  d: e.data.description,
+}));
+
+/**
+ * Породы из справочника — чтобы запрос «мопс» не упирался в пустоту, пока
+ * портрет этой породы не написан. Породы, у которых портрет уже есть, сюда
+ * НЕ добавляем: они и так в индексе статьёй, а два одинаковых пункта в
+ * подсказках только путают.
+ */
+const breedEntries = [
+  ...CAT_BREEDS.map((b) => ({ ...b, species: 'koshki', c: 'Породы кошек' })),
+  ...DOG_BREEDS.map((b) => ({ ...b, species: 'sobaki', c: 'Породы собак' })),
+]
+  .filter((b) => !b.article)
+  .map((b) => ({
+    t: b.name,
+    u: `/porody/${b.species}#${b.key}`,
+    c: b.c,
+    k: b.name,
+    d: b.blurb,
+  }));
+
+const index = [...articleEntries, ...breedEntries];
+
+const tracked = Boolean(ANALYTICS.yaMetrikaId);
+const noHitText = tracked
+  ? 'Пока такой статьи нет. Вопрос записан — по таким запросам мы и решаем, о чём писать дальше.'
+  : 'Пока такой статьи нет. Посмотрите частые ситуации ниже — возможно, ваша тема рядом.';
+---
+
+<search class="site-search enter enter-3">
+  <form class="search-box" role="search" autocomplete="off">
+    <label class="sr-only" for="site-search-input">Поиск по сайту</label>
+    <input
+      id="site-search-input"
+      class="search-input"
+      type="search"
+      name="q"
+      placeholder="Породы или что случилось?"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="site-search-results"
+      aria-autocomplete="list"
+    />
+    <button class="search-submit" type="submit" aria-label="Найти">
+      {/* Стрелка нарисована svg, а не эмодзи: новые эмодзи на Windows 10
+          показываются квадратиками — уже проверено на практике. */}
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+        <path
+          d="M4 12h14M13 6l6 6-6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </button>
+  </form>
+
+  <ul id="site-search-results" class="search-results" role="listbox" aria-label="Найденные статьи" hidden></ul>
+  <p class="search-note" role="status" hidden></p>
+</search>
+
+<script type="application/json" id="site-search-index" is:inline set:html={JSON.stringify(index)}
+></script>
+
+<script is:inline define:vars={{ metrikaId: ANALYTICS.yaMetrikaId, noHitText }}>
+  (() => {
+    const form = document.querySelector('.site-search .search-box');
+    const input = document.getElementById('site-search-input');
+    const list = document.getElementById('site-search-results');
+    const note = document.querySelector('.site-search .search-note');
+    const data = document.getElementById('site-search-index');
+    if (!form || !input || !list || !note || !data) return;
+
+    const index = JSON.parse(data.textContent || '[]');
+    const LIMIT = 6;
+    let matches = [];
+    let active = -1;
+
+    /** Приводим к общему виду: регистр, ё/е, знаки препинания. */
+    const norm = (s) =>
+      String(s)
+        .toLowerCase()
+        .replace(/ё/g, 'е')
+        .replace(/[^a-zа-я0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    // Грубая замена морфологии: сравниваем первые четыре буквы, чтобы «кошка»,
+    // «кошки» и «кошке» считались одним словом. Полноценный стеммер сюда тащить
+    // незачем — запросы короткие и бытовые.
+    //
+    // ⚠️ Короткие слова (меньше четырёх букв) сравниваем только целиком.
+    // Иначе служебное «так» из описания статьи цепляется к запросу «такса»,
+    // и в выдачу лезет случайщина — проверено на практике.
+    const PREFIX = 4;
+    const hits = (haystack, token) =>
+      haystack.split(' ').some((w) => {
+        if (w.length < PREFIX || token.length < PREFIX) return w === token;
+        return w.slice(0, PREFIX) === token.slice(0, PREFIX);
+      });
+
+    function search(query) {
+      const tokens = norm(query)
+        .split(' ')
+        .filter((w) => w.length >= 3);
+      if (!tokens.length) return [];
+
+      return index
+        .map((item) => {
+          const title = norm(item.t);
+          const keys = norm(item.k);
+          const rest = norm(item.d + ' ' + item.c);
+          let score = 0;
+          let matched = 0;
+          for (const token of tokens) {
+            let s = 0;
+            // Ключевые слова весят больше всего: их автор проставлял руками
+            // именно под то, как читатель формулирует вопрос.
+            if (hits(keys, token)) s += 4;
+            if (hits(title, token)) s += 3;
+            if (hits(rest, token)) s += 1;
+            if (s > 0) matched++;
+            score += s;
+          }
+          // Совпало только одно слово из длинного запроса — это шум.
+          if (tokens.length > 1 && matched < 2) score = 0;
+          return { item, score };
+        })
+        .filter((r) => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, LIMIT)
+        .map((r) => r.item);
+    }
+
+    function clear() {
+      list.textContent = '';
+      list.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+      active = -1;
+    }
+
+    function render() {
+      list.textContent = '';
+      matches.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.className = 'search-result';
+        li.id = `search-result-${i}`;
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', 'false');
+
+        const a = document.createElement('a');
+        a.href = item.u;
+
+        const title = document.createElement('b');
+        // textContent, а не innerHTML: в индекс попадают заголовки статей,
+        // и подставлять их разметкой незачем.
+        title.textContent = item.t;
+
+        const cat = document.createElement('span');
+        cat.className = 'search-result-cat';
+        cat.textContent = item.c;
+
+        a.append(title, cat);
+        li.append(a);
+        list.append(li);
+      });
+      list.hidden = matches.length === 0;
+      input.setAttribute('aria-expanded', String(matches.length > 0));
+    }
+
+    function highlight(next) {
+      const items = list.querySelectorAll('.search-result');
+      if (!items.length) return;
+      if (active >= 0) items[active].setAttribute('aria-selected', 'false');
+      active = (next + items.length) % items.length;
+      items[active].setAttribute('aria-selected', 'true');
+      input.setAttribute('aria-activedescendant', items[active].id);
+    }
+
+    /** Запрос без единой находки — единственное, что уходит с этой страницы. */
+    function reportMiss(query) {
+      if (!metrikaId) return;
+      const ym = window.ym;
+      if (typeof ym !== 'function') return;
+      ym(metrikaId, 'reachGoal', 'search_no_result', { search_query: query });
+    }
+
+    input.addEventListener('input', () => {
+      note.hidden = true;
+      matches = search(input.value);
+      if (!input.value.trim()) {
+        clear();
+        return;
+      }
+      render();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlight(active + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlight(active - 1);
+      } else if (e.key === 'Escape') {
+        clear();
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (!query) return;
+
+      // Выбрана подсказка стрелками — идём по ней, иначе по лучшему совпадению.
+      const target = matches[active >= 0 ? active : 0];
+      if (target) {
+        window.location.href = target.u;
+        return;
+      }
+
+      clear();
+      note.textContent = noHitText;
+      note.hidden = false;
+      reportMiss(query);
+    });
+
+    // Клик мимо — прячем список, но текст в строке не трогаем.
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.site-search')) clear();
+    });
+  })();
+</script>
