@@ -98,7 +98,18 @@ const noHitText = tracked
   <p class="search-note" role="status" hidden></p>
 </search>
 
-<script type="application/json" id="site-search-index" is:inline set:html={JSON.stringify(index)}
+{/*
+  Индекс поиска отдаётся страницей как JSON внутри <script>.
+  ⚠️ `<` обязательно экранируем в <: без этого заголовок или описание
+  статьи, содержащие «</script», закрыли бы тег раньше времени, и остаток
+  строки браузер разобрал бы как HTML. JSON.stringify сам `<` не экранирует.
+  То же самое сделано для JSON-LD в BaseLayout.
+*/}
+<script
+  type="application/json"
+  id="site-search-index"
+  is:inline
+  set:html={JSON.stringify(index).replace(/</g, '\\u003c')}
 ></script>
 
 <script is:inline define:vars={{ metrikaId: ANALYTICS.yaMetrikaId, noHitText }}>

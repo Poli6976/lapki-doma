@@ -13,16 +13,22 @@ const { place = 'a', label = 'Реклама' } = Astro.props;
 const blockId = MONETIZATION.yandexRtbBlockId;
 const enabled = Boolean(blockId);
 const containerId = `yandex_rtb_${blockId}_${place}`;
+
+// ID блока подставляется в инлайновый скрипт. Вставляем его через JSON.stringify,
+// а не кавычками вручную: так значение всегда остаётся строковым литералом, даже
+// если в конфиг попадёт кавычка или перенос строки. Плюс экранируем `<` — иначе
+// значение с «</script» закрыло бы тег.
+const rtbScript = `window.yaContextCb=window.yaContextCb||[];window.yaContextCb.push(()=>{Ya.Context.AdvManager.render({blockId:${JSON.stringify(blockId)},renderTo:${JSON.stringify(containerId)}})})`.replace(
+  /</g,
+  '\\u003c'
+);
 ---
 
 {
   enabled ? (
     <>
       <div id={containerId} />
-      <script
-        is:inline
-        set:html={`window.yaContextCb=window.yaContextCb||[];window.yaContextCb.push(()=>{Ya.Context.AdvManager.render({blockId:"${blockId}",renderTo:"${containerId}"})})`}
-      />
+      <script is:inline set:html={rtbScript} />
     </>
   ) : (
     <div class="ad-slot" aria-hidden="true">{label} · рекламный блок</div>

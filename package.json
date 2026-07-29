@@ -11,9 +11,10 @@
     "new": "node scripts/new-article.mjs",
     "generate": "node scripts/generate-articles.mjs"
   },
+  "_comment_deps": "Версии закреплены точно, без ^: обновляем осознанно, а не при случайной переустановке. Реальные версии в сборке всё равно берутся из package-lock.json (CI ставит через npm ci).",
   "dependencies": {
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.4.1",
-    "astro": "^5.13.0"
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "5.18.2"
   }
 }
