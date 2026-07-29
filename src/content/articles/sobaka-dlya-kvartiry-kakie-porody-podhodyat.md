@@ -51,6 +51,7 @@ gallery:
     author: 'Marcelo RosaMelo'
     license: 'CC0'
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Shih_tzu_dog.jpg'
+    article: 'shi-tcu-harakter-uhod-i-osobennosti-porody'
   - src: '/images/photos/gallery/sobaka-dlya-kvartiry-kakie-porody-podhodyat-taksa.jpg'
     alt: 'Такса'
     caption: 'Такса'

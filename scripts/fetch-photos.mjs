@@ -37,9 +37,8 @@ const BREEDS = process.argv.includes('--breeds');
 const ONLY = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 
 // Wikimedia требует осмысленный User-Agent с контактом, иначе блокирует запросы.
-// ⚠️ Поправить домен/почту, когда появится реальный домен (сейчас lapki-doma.ru
-// не куплен — см. PROJECT.md).
-const UA = 'LapkiDomaBot/1.0 (https://lapki-doma.ru; lapkidoma@yandex.com)';
+// Домен куплен 27.07.2026, почта владельца задана 29.07.2026 — актуально.
+const UA = 'LapkiDomaBot/1.0 (https://lapki-doma.ru; andr3y2065@yandex.ru)';
 
 /**
  * Какое фото искать для какой статьи. Запросы — по-английски: по русским
@@ -63,6 +62,9 @@ const PHOTO_QUERIES = {
   'meyn-kun-harakter-uhod-i-osobennosti-porody': 'Maine Coon cat face tufted ears',
   'britanskaya-koshka-harakter-uhod-osobennosti': 'British Shorthair kitten',
   'kak-priuchit-koshku-k-perenoske-bez-stressa': 'Cat in travel carrier',
+  'shotlandskaya-vislouhaya-harakter-uhod-osobennosti': 'Scottish Fold cat lying',
+  'sfinks-harakter-uhod-i-osobennosti-porody': 'Sphynx cat portrait',
+  'koshka-kusaet-kogda-gladish-pochemu': 'Cat being petted by owner',
   'regdoll-harakter-uhod-i-osobennosti-porody': 'Ragdoll cat lying',
   'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat breed',
   'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting windowsill',
@@ -75,6 +77,9 @@ const PHOTO_QUERIES = {
   'francuzskiy-buldog-harakter-uhod-zdorovye': 'French Bulldog puppy',
   'taksa-harakter-uhod-i-osobennosti-porody': 'Dachshund puppy',
   'sobaka-tyanet-povodok-kak-otuchit': 'Dog pulling on leash',
+  'shi-tcu-harakter-uhod-i-osobennosti-porody': 'Shih Tzu puppy',
+  'labrador-retriver-harakter-uhod-osobennosti': 'Labrador Retriever dog portrait',
+  'sobaka-ne-podhodit-na-zov-kak-nauchit': 'Dog running towards camera park',
   'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog',
   'kavaler-king-charlz-spaniel-harakter-i-uhod': 'Cavalier King Charles Spaniel puppy',
   'schenok-kusaet-ruki-v-igre-kak-otuchit': 'Puppy chewing toy',
@@ -88,6 +93,9 @@ const PHOTO_QUERIES = {
   'kakaya-kletka-nuzhna-homyaku-razmer-napolnitel-chto-vnutri': 'Hamster cage bedding',
   'kakoy-gryzun-podoydet-rebenku-homyak-morskaya-svinka-ili-krysa': 'Guinea pig portrait',
   'chem-kormit-morskuyu-svinku-seno-vitamin-c-i-zaprety': 'Guinea pigs eating lettuce',
+  'dekorativnaya-krysa-kto-eto-i-chto-ey-nuzhno': 'Pet rat on hand',
+  'dzhungarskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Djungarian hamster',
+  'homyak-sbezhal-iz-kletki-kak-nayti': 'Hamster on carpet floor',
   'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Golden hamster',
   'morskaya-svinka-kto-eto-i-chto-ey-nuzhno': 'Guinea pig on grass',
   'homyak-gryzet-prutya-kletki-pochemu-i-chto-delat': 'Syrian hamster cage',
@@ -106,6 +114,7 @@ const PHOTO_QUERIES = {
   'sobaka-otkazyvaetsya-ot-edy-kogda-eto-trevozhno': 'Dog food bowl',
   // Спокойный кот рядом с лотком, а не сам «промах» — пугать читателя нечем.
   'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno': 'Cat litter box',
+  'koshka-dyshit-s-otkrytym-rtom-kogda-eto-srochno': 'Cat resting on bed',
   'ponos-u-sobaki-kogda-nablyudat-a-kogda-k-vrachu': 'Labrador Retriever lying on grass',
   'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog lying on grass resting',
 
@@ -113,6 +122,7 @@ const PHOTO_QUERIES = {
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
   'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
+  'kak-vybrat-veterinarnuyu-kliniku': 'Vet examining cat clinic',
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
   'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
 };
@@ -410,7 +420,12 @@ const GALLERY_QUERIES = {
       query: 'Cavalier King Charles Spaniel',
       article: 'kavaler-king-charlz-spaniel-harakter-i-uhod',
     },
-    { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
+    {
+      key: 'shi-tcu',
+      caption: 'Ши-тцу',
+      query: 'Shih Tzu',
+      article: 'shi-tcu-harakter-uhod-i-osobennosti-porody',
+    },
     {
       key: 'taksa',
       caption: 'Такса',
@@ -458,7 +473,12 @@ const CATEGORY_PHOTOS = {
       query: 'Domestic rabbit',
       article: 'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno',
     },
-    { key: 'krysa', caption: 'Декоративная крыса', query: 'Fancy rat pet' },
+    {
+      key: 'krysa',
+      caption: 'Декоративная крыса',
+      query: 'Fancy rat pet',
+      article: 'dekorativnaya-krysa-kto-eto-i-chto-ey-nuzhno',
+    },
     {
       key: 'shinshilla',
       caption: 'Шиншилла',
@@ -521,7 +541,12 @@ const BREED_PHOTOS = {
       query: 'Cavalier King Charles Spaniel',
       article: 'kavaler-king-charlz-spaniel-harakter-i-uhod',
     },
-    { key: 'shi-tcu', caption: 'Ши-тцу', query: 'Shih Tzu' },
+    {
+      key: 'shi-tcu',
+      caption: 'Ши-тцу',
+      query: 'Shih Tzu',
+      article: 'shi-tcu-harakter-uhod-i-osobennosti-porody',
+    },
     { key: 'labrador', caption: 'Лабрадор-ретривер', query: 'Labrador Retriever Aurora Colorado' },
     { key: 'nemeckaya-ovcharka', caption: 'Немецкая овчарка', query: 'German Shepherd dog' },
     { key: 'yorkshirskiy-terer', caption: 'Йоркширский терьер', query: 'Yorkshire Terrier' },
