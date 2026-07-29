@@ -53,6 +53,35 @@ const situations = SITUATIONS.map((s) => {
 /** Сколько статей уже есть в категории — показываем честно, как есть. */
 const countIn = (slug) => articles.filter((a) => a.data.category === slug).length;
 
+/**
+ * Ширины плиток бенто-сетки (12 колонок).
+ *
+ * Первая пара намеренно неравная — 7 + 5, это и создаёт «бенто». Остальные
+ * делятся так, чтобы КАЖДЫЙ ряд заполнялся целиком: одинокая узкая плитка
+ * в последнем ряду выглядит как недоделанная вёрстка.
+ *
+ * Раньше спаны были зашиты в CSS под ровно пять категорий. С добавлением
+ * шестой («Попугаи») ряд ломался, поэтому считаем здесь — теперь можно
+ * добавлять и убирать категории, не трогая стили.
+ *
+ * ⚠️ Результат уходит в атрибут `data-span`, а НЕ в inline-стиль: inline
+ * перебивает любые правила таблицы стилей, и мобильный медиазапрос
+ * (одна колонка) перестал бы работать.
+ */
+function bentoSpans(n) {
+  if (n <= 2) return Array.from({ length: n }, () => (n === 1 ? 12 : 6));
+  const spans = [7, 5];
+  let rest = n - 2;
+  while (rest > 0) {
+    // По 3 в ряд, если делится нацело; иначе по 2; остаток меньше 3 — как есть.
+    const inRow = rest % 3 === 0 ? 3 : rest % 2 === 0 ? 2 : rest >= 3 ? 3 : rest;
+    for (let i = 0; i < inRow; i++) spans.push(12 / inRow);
+    rest -= inRow;
+  }
+  return spans;
+}
+const spans = bentoSpans(CATEGORIES.length);
+
 const plural = (n) => {
   const mod100 = n % 100;
   const mod10 = n % 10;
@@ -90,7 +119,11 @@ const plural = (n) => {
           CATEGORIES.map((c, i) => {
             const n = countIn(c.slug);
             return (
-              <a class={`bento-cell${i === 0 ? ' is-lead' : ''}`} href={categoryUrl(c.slug)}>
+              <a
+                class={`bento-cell${i === 0 ? ' is-lead' : ''}`}
+                data-span={spans[i]}
+                href={categoryUrl(c.slug)}
+              >
                 <span class="bento-icon" aria-hidden="true">
                   <img src={c.icon ?? CATEGORY_FALLBACK_ICON} alt="" width="64" height="64" loading="lazy" />
                 </span>

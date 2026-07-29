@@ -380,7 +380,7 @@ img {
    Не помещается — уезжает в горизонтальную прокрутку (см. медиазапросы). */
 .nav {
   display: flex;
-  gap: 5px;
+  gap: 4px;
   flex-wrap: nowrap;
   align-items: center;
   min-width: 0;
@@ -402,9 +402,9 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 11px;
+  padding: 7px 10px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   line-height: 1.15;
   white-space: nowrap;
@@ -717,8 +717,9 @@ img {
   gap: var(--sp-4);
   margin-top: var(--sp-5);
 }
-/* Раскладка рассчитана на пять категорий: 7 + 5, затем 4 + 4 + 4.
-   Если категорий станет больше или меньше — пересчитать спаны. */
+/* Ширину каждой плитки задаёт inline-стиль из index.astro (функция bentoSpans):
+   спаны считаются от числа категорий, чтобы последний ряд заполнялся целиком.
+   Значение ниже — запасное, на случай если стиль почему-то не проставился. */
 /* Плитки — та же «клавиша», что и в меню, только прямоугольная: сплошной
    торец снизу вместо размытой тени, нажатие проваливает плитку внутрь. */
 .bento-cell {
@@ -766,8 +767,17 @@ img {
   outline-offset: 3px;
 }
 /* Две ведущие категории занимают по 7 и 5 колонок — намеренно неравные */
+/* Ширина плитки приходит из index.astro атрибутом data-span. Селектор с
+   атрибутом специфичнее голого класса — поэтому мобильное правило внизу файла
+   тоже написано через [data-span], иначе оно не смогло бы всё схлопнуть
+   в одну колонку. */
+.bento-cell[data-span='4'] { grid-column: span 4; }
+.bento-cell[data-span='5'] { grid-column: span 5; }
+.bento-cell[data-span='6'] { grid-column: span 6; }
+.bento-cell[data-span='7'] { grid-column: span 7; }
+.bento-cell[data-span='12'] { grid-column: span 12; }
+
 .bento-cell.is-lead {
-  grid-column: span 7;
   min-height: 210px;
   background: linear-gradient(150deg, var(--brand-soft) 0%, var(--btn-lead-face) 72%);
 }
@@ -775,7 +785,6 @@ img {
   background: linear-gradient(150deg, var(--brand-soft) 0%, var(--btn-lead-hover) 72%);
 }
 .bento-cell.is-lead + .bento-cell {
-  grid-column: span 5;
   min-height: 210px;
 }
 .bento-cell .bento-icon {
@@ -1528,9 +1537,10 @@ img {
 /* ═══ МОБИЛЬНЫЕ ═════════════════════════════════════════════════════ */
 
 @media (max-width: 860px) {
+  /* Через [data-span], чтобы перебить спаны с главной: селектор с атрибутом
+     специфичнее голого класса. */
   .bento-cell,
-  .bento-cell.is-lead,
-  .bento-cell.is-lead + .bento-cell {
+  .bento-cell[data-span] {
     grid-column: span 12;
     min-height: 0;
   }

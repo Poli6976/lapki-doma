@@ -16,7 +16,7 @@ const articles = defineCollection({
     description: z.string().max(200),
 
     // Категория — должна совпадать со slug из CATEGORIES в site.config.mjs.
-    category: z.enum(['koshki', 'sobaki', 'gryzuny', 'zdorovie-i-povedenie', 'sovety']),
+    category: z.enum(['koshki', 'sobaki', 'gryzuny', 'popugai', 'zdorovie-i-povedenie', 'sovety']),
 
     // Дата публикации и (опционально) последнего обновления.
     publishDate: z.coerce.date(),

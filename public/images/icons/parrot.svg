@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Попугай">
+  <defs>
+    <radialGradient id="headG" cx="36%" cy="26%" r="80%">
+      <stop offset="0%" stop-color="#ffe89a"/>
+      <stop offset="45%" stop-color="#f5c53f"/>
+      <stop offset="100%" stop-color="#c2871c"/>
+    </radialGradient>
+    <linearGradient id="bodyG" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0%" stop-color="#7fd06a"/>
+      <stop offset="50%" stop-color="#4da83f"/>
+      <stop offset="100%" stop-color="#256b22"/>
+    </linearGradient>
+    <linearGradient id="wingG" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#6ec4d8"/>
+      <stop offset="55%" stop-color="#3d93b5"/>
+      <stop offset="100%" stop-color="#1f5c7d"/>
+    </linearGradient>
+    <linearGradient id="tailG" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#5fb8d2"/>
+      <stop offset="100%" stop-color="#20607f"/>
+    </linearGradient>
+    <linearGradient id="beakG" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#f0f0f0"/>
+      <stop offset="45%" stop-color="#d8d2c6"/>
+      <stop offset="100%" stop-color="#9c948a"/>
+    </linearGradient>
+    <linearGradient id="perchG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c69a6b"/>
+      <stop offset="50%" stop-color="#a3764a"/>
+      <stop offset="100%" stop-color="#6f4c28"/>
+    </linearGradient>
+    <radialGradient id="gloss" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity=".72"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="lift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0.6" dy="1.4" stdDeviation="1.1" flood-color="#2a4418" flood-opacity=".42"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="32" cy="58" rx="15" ry="2.8" fill="#5a3a18" opacity=".26" filter="url(#soft)"/>
+
+  <!-- жёрдочка -->
+  <rect x="8" y="50" width="48" height="5.4" rx="2.7" fill="url(#perchG)"/>
+  <rect x="10" y="51" width="44" height="1.6" rx=".8" fill="#fff" opacity=".3"/>
+
+  <!-- хвост -->
+  <path d="M36 44 L52 58 L44 58 L33 48 Z" fill="url(#tailG)" filter="url(#lift)"/>
+
+  <!-- тело -->
+  <g filter="url(#lift)">
+    <path d="M32 14 q14 2 15 18 q1 16-15 18 q-16-2-15-18 q1-16 15-18 Z" fill="url(#bodyG)"/>
+    <ellipse cx="25" cy="26" rx="6.5" ry="9" fill="url(#gloss)" opacity=".55"/>
+  </g>
+
+  <!-- крыло -->
+  <path d="M38 24 q10 4 9 16 q-1 9-8 10 q-5-10-4-26 Z" fill="url(#wingG)"/>
+  <g stroke="#1f5c7d" stroke-width="1" opacity=".5" fill="none">
+    <path d="M40 30 q6 4 6 12"/><path d="M42 28 q5 5 5 14"/>
+  </g>
+
+  <!-- лапы -->
+  <g stroke="#b8842f" stroke-width="2.4" stroke-linecap="round">
+    <path d="M28 48 v3.6"/><path d="M36 48 v3.6"/>
+  </g>
+
+  <!-- голова -->
+  <g filter="url(#lift)">
+    <circle cx="32" cy="18" r="12.5" fill="url(#headG)"/>
+    <ellipse cx="27" cy="12.5" rx="5.5" ry="3.6" fill="url(#gloss)"/>
+    <!-- клюв -->
+    <path d="M20.5 18 q-6 1.5-5.5 5.5 q4.5 1.5 7-2.5 Z" fill="url(#beakG)"/>
+    <path d="M20.5 18 q-4 1-4 3.4" stroke="#8a8279" stroke-width=".9" fill="none"/>
+    <!-- глаз -->
+    <circle cx="27.5" cy="16.5" r="3.4" fill="#fffdf6"/>
+    <circle cx="27" cy="16.7" r="2.2" fill="#20180f"/>
+    <circle cx="26.2" cy="15.9" r=".85" fill="#fff" opacity=".95"/>
+    <!-- хохолок -->
+    <path d="M33 6.5 q1.5-5 6-5.2 q-1.5 4.5-3 6.5 Z" fill="#f0932b"/>
+    <path d="M30 6 q-.5-5 3-6.4 q1 4.5.5 6.8 Z" fill="#f5b041"/>
+  </g>
+</svg>
