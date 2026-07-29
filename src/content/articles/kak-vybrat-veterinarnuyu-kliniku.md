@@ -22,9 +22,9 @@ products: []
 cover: /images/photos/kak-vybrat-veterinarnuyu-kliniku.jpg
 coverAlt: 'Как выбрать ветеринарную клинику'
 coverCredit:
-  author: 'Kathy Eastwood'
-  license: 'Public domain'
-  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Stray_mom_cat_gets_a_veterinary_exam_at_West_Point.jpg'
+  author: 'User:Seyedkhan (Mohsen Sajjadi)'
+  license: 'CC BY-SA 4.0'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Iranian_cat_in_clinic.jpg'
 ---
 
 Выбирать ветклинику лучше не в ночь, когда с питомцем что-то случилось, а заранее, в спокойном состоянии. В панике легко схватить первый попавшийся вариант из поиска, а спустя пару часов понять, что клиника не берёт вашего хомяка или до неё час езды через весь город. Присмотреться к вариантам заранее — это не занудство, а один из самых полезных шагов, которые можно сделать для питомца до того, как он понадобится.

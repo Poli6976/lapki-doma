@@ -22,9 +22,9 @@ products: []
 cover: /images/photos/shotlandskaya-vislouhaya-harakter-uhod-osobennosti.jpg
 coverAlt: 'Шотландская вислоухая: характер и уход'
 coverCredit:
-  author: 'Samui pelmeny'
+  author: 'TheNightmareOfRosguill'
   license: 'CC0'
-  sourceUrl: 'https://commons.wikimedia.org/wiki/File:%D0%A1%D0%B5%D1%80%D1%8B%D0%B9_%D0%BA%D0%BE%D1%82-%D0%B1%D1%80%D0%B8%D1%82%D0%B0%D0%BD%D0%B5%D1%86_%D0%BD%D0%B0_%D0%BF%D0%BE%D0%B4%D1%83%D1%88%D0%BA%D0%B5.jpg'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Tabby_Scottish_Fold_cat.jpg'
 ---
 
 Если вас привлекли круглые «плюшевые» мордочки и прижатые ушки шотландской вислоухой, но при этом смущает, что заводчики так серьёзно относятся к вязкам, — это не перестраховка. Вислоухость действительно связана не только с внешностью, и знать об этом стоит до покупки котёнка, а не после. И здесь тоже работает общее правило: **порода задаёт склонность к характеру, а не гарантирует его** — многое решает конкретный котёнок и его ранняя социализация.

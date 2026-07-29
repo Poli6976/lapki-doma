@@ -62,9 +62,9 @@ const PHOTO_QUERIES = {
   'meyn-kun-harakter-uhod-i-osobennosti-porody': 'Maine Coon cat face tufted ears',
   'britanskaya-koshka-harakter-uhod-osobennosti': 'British Shorthair kitten',
   'kak-priuchit-koshku-k-perenoske-bez-stressa': 'Cat in travel carrier',
-  'shotlandskaya-vislouhaya-harakter-uhod-osobennosti': 'Scottish Fold cat lying',
-  'sfinks-harakter-uhod-i-osobennosti-porody': 'Sphynx cat portrait',
-  'koshka-kusaet-kogda-gladish-pochemu': 'Cat being petted by owner',
+  'shotlandskaya-vislouhaya-harakter-uhod-osobennosti': 'Scottish Fold',
+  'sfinks-harakter-uhod-i-osobennosti-porody': 'Sphynx cat',
+  'koshka-kusaet-kogda-gladish-pochemu': 'Cat cuddling with owner',
   'regdoll-harakter-uhod-i-osobennosti-porody': 'Ragdoll cat lying',
   'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat breed',
   'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting windowsill',
@@ -78,8 +78,8 @@ const PHOTO_QUERIES = {
   'taksa-harakter-uhod-i-osobennosti-porody': 'Dachshund puppy',
   'sobaka-tyanet-povodok-kak-otuchit': 'Dog pulling on leash',
   'shi-tcu-harakter-uhod-i-osobennosti-porody': 'Shih Tzu puppy',
-  'labrador-retriver-harakter-uhod-osobennosti': 'Labrador Retriever dog portrait',
-  'sobaka-ne-podhodit-na-zov-kak-nauchit': 'Dog running towards camera park',
+  'labrador-retriver-harakter-uhod-osobennosti': 'Labrador Retriever dog sitting',
+  'sobaka-ne-podhodit-na-zov-kak-nauchit': 'Dog running on grass',
   'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog',
   'kavaler-king-charlz-spaniel-harakter-i-uhod': 'Cavalier King Charles Spaniel puppy',
   'schenok-kusaet-ruki-v-igre-kak-otuchit': 'Puppy chewing toy',
@@ -95,13 +95,39 @@ const PHOTO_QUERIES = {
   'chem-kormit-morskuyu-svinku-seno-vitamin-c-i-zaprety': 'Guinea pigs eating lettuce',
   'dekorativnaya-krysa-kto-eto-i-chto-ey-nuzhno': 'Pet rat on hand',
   'dzhungarskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Djungarian hamster',
-  'homyak-sbezhal-iz-kletki-kak-nayti': 'Hamster on carpet floor',
+  'homyak-sbezhal-iz-kletki-kak-nayti': 'Pet hamster',
   'siriyskiy-homyak-kto-eto-i-chto-emu-nuzhno': 'Golden hamster',
   'morskaya-svinka-kto-eto-i-chto-ey-nuzhno': 'Guinea pig on grass',
   'homyak-gryzet-prutya-kletki-pochemu-i-chto-delat': 'Syrian hamster cage',
   'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno': 'Holland Lop rabbit pet',
   'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla pet',
   'zapah-ot-kletki-gryzuna-kak-ubrat': 'Guinea pig cage',
+
+  // Попугаи
+  'volnistyy-popugay-kto-eto-i-chto-emu-nuzhno': 'Budgerigar pet bird',
+  'korella-kto-eto-i-chto-ey-nuzhno': 'Cockatiel bird',
+  'nerazluchniki-kto-eto-i-chto-im-nuzhno': 'Lovebird parrot pair',
+  // Первый кадр (Papooga, огурец) совпал с фото в ленте категории «Попугаи».
+  // Второй запрос («Congo African grey parrot pet portrait») дал кадр без
+  // хвоста — для статьи про жако нужен виден именно красный хвост.
+  'zhako-kto-eto-i-chto-emu-nuzhno': 'African grey parrot red tail perched',
+  'ozherelovyy-popugay-kto-eto-i-chto-emu-nuzhno': 'Rose-ringed parakeet',
+  'kakaya-kletka-nuzhna-popugayu': 'Bird cage with parrot',
+  // ⚠️ Обложка подобрана вручную (Leintalzoo, попугай ест дольку апельсина) —
+  // ни один автоматический запрос не находил кадр именно кормления без
+  // медовой палочки/проса на палочке. Прогон скрипта по этому слагу заменит
+  // фото на менее подходящее — сверяться с public/images/photos глазами.
+  'chem-kormit-volnistogo-popugaya': 'Budgerigar parakeet eating',
+  // ⚠️ Обложка подобрана вручную (Dawnseeker2000, два попугая на верёвочной
+  // жёрдочке на фоне шторы) — ни один текстовый запрос не находил спокойный
+  // домашний кадр вне клетки. Прогон скрипта по этому слагу заменит фото —
+  // сверяться с public/images/photos глазами.
+  'bezopasnaya-kvartira-dlya-popugaya': 'Budgerigar pet room chair',
+  // «Parrot on human hand» и «sitting on finger hand» ничего не нашли.
+  'kak-priruchit-popugaya-k-rukam': 'Budgerigar perched on finger',
+  // «Parrot head close up» вернул портрет пуэрториканского амазона — редкого
+  // охраняемого вида, который дома не держат. Ищем портрет обычной ручной птицы.
+  'kak-nauchit-popugaya-govorit': 'African grey parrot portrait pet',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -122,7 +148,7 @@ const PHOTO_QUERIES = {
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
   'sobaka-v-mnogokvartirnom-dome-prava-sosedey': 'Dog resting on sofa',
   'pervyy-den-schenka-ili-kotenka-doma-chto-podgotovit': 'Kitten sofa',
-  'kak-vybrat-veterinarnuyu-kliniku': 'Vet examining cat clinic',
+  'kak-vybrat-veterinarnuyu-kliniku': 'Veterinarian with cat clinic',
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
   'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
 };
@@ -466,6 +492,38 @@ const GALLERY_QUERIES = {
 
 /** Лента фото на странице категории. Пишется в src/data/category-photos.json. */
 const CATEGORY_PHOTOS = {
+  popugai: [
+    {
+      key: 'volnistyy',
+      caption: 'Волнистый попугай',
+      query: 'Budgerigar bird',
+      article: 'volnistyy-popugay-kto-eto-i-chto-emu-nuzhno',
+    },
+    {
+      key: 'korella',
+      caption: 'Корелла',
+      query: 'Cockatiel parrot',
+      article: 'korella-kto-eto-i-chto-ey-nuzhno',
+    },
+    {
+      key: 'nerazluchnik',
+      caption: 'Неразлучники',
+      query: 'Lovebird Agapornis',
+      article: 'nerazluchniki-kto-eto-i-chto-im-nuzhno',
+    },
+    {
+      key: 'zhako',
+      caption: 'Жако',
+      query: 'Grey parrot Psittacus',
+      article: 'zhako-kto-eto-i-chto-emu-nuzhno',
+    },
+    {
+      key: 'ozherelovyy',
+      caption: 'Ожереловый попугай',
+      query: 'Psittacula krameri pet',
+      article: 'ozherelovyy-popugay-kto-eto-i-chto-emu-nuzhno',
+    },
+  ],
   gryzuny: [
     {
       key: 'krolik',
@@ -640,11 +698,15 @@ if (SETS || BREEDS) {
     console.log(`  → в галерее ${out.length} из ${items.length}`);
   }
 
-  // Ленты категорий трогаем, только когда слаги статей НЕ перечислены: иначе
-  // «собери галерею вот этим двум статьям» молча перекачивало бы и ленту
-  // категории вместе с category-photos.json (проверено на практике 28.07.2026 —
-  // пришлось откатывать через git четыре фото грызунов).
-  if (ONLY.length > 0 || BREEDS) {
+  // Ленты категорий. Перечисленный аргумент может быть слагом категории
+  // (`--sets popugai`) — тогда трогаем только её. Это важно: раньше любой
+  // прогон лент перекачивал их все разом и стирал уже проверенные глазами
+  // фото (28.07.2026 пришлось откатывать через git четыре снимка грызунов).
+  const CATEGORY_KEYS = Object.keys(CATEGORY_PHOTOS);
+  const wantedCats = ONLY.filter((a) => CATEGORY_KEYS.includes(a));
+  const skipCats = BREEDS || (ONLY.length > 0 && wantedCats.length === 0);
+
+  if (skipCats) {
     if (!BREEDS) console.log('\n\n=== Ленты категорий пропущены (указаны конкретные статьи) ===');
   } else {
     console.log('\n\n=== Ленты категорий ===');
@@ -652,15 +714,22 @@ if (SETS || BREEDS) {
     fs.mkdirSync(CATEGORY_DIR, { recursive: true });
     const catData = {};
     for (const [cat, items] of Object.entries(CATEGORY_PHOTOS)) {
+      if (wantedCats.length > 0 && !wantedCats.includes(cat)) continue;
       console.log(`\n${cat}:`);
       const { out, miss } = await fetchSet(items, cat, CATEGORY_DIR, '/images/photos/category');
       if (miss.length) allMissing.push(`категория ${cat}: ${miss.join(', ')}`);
       catData[cat] = out;
       console.log(`  → в ленте ${out.length} из ${items.length}`);
     }
+    // Дописываем, а не перезаписываем: прогон по одной категории не должен
+    // стирать ленту другой.
+    const catFile = path.join(DATA_DIR, 'category-photos.json');
+    const existingCats = fs.existsSync(catFile)
+      ? JSON.parse(fs.readFileSync(catFile, 'utf8'))
+      : {};
     fs.writeFileSync(
-      path.join(DATA_DIR, 'category-photos.json'),
-      JSON.stringify(catData, null, 2) + '\n',
+      catFile,
+      JSON.stringify({ ...existingCats, ...catData }, null, 2) + '\n',
       'utf8',
     );
   }

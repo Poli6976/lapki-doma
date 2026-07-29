@@ -19,9 +19,9 @@ products: []
 cover: /images/photos/koshka-kusaet-kogda-gladish-pochemu.jpg
 coverAlt: 'Кошка кусает, когда её гладишь: почему'
 coverCredit:
-  author: 'Breawycker'
-  license: 'CC BY-SA 4.0'
-  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Cat_getting_headpats.jpg'
+  author: 'Judgefloro'
+  license: 'CC0'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:9824Black_tortoiseshell_and_white_cat_portraits_in_the_Philippines_10.jpg'
 ---
 
 Кошка лежит на коленях, мурлычет, жмурится — и вдруг разворачивается и хватает руку зубами. Первая мысль хозяина обычно: «за что?». Но чаще всего дело не в характере кошки и не в том, что вы сделали что-то не так. Это называют «синдромом перегладивания»: кошка терпит контакт до определённого предела, а потом сообщает о переизбытке ощущений единственным доступным ей способом.

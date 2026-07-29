@@ -120,6 +120,7 @@ export const CATEGORIES = [
     title: 'Попугаи',
     icon: '/images/icons/parrot.svg',
     description: 'Волнистые, кореллы, неразлучники: клетка, корм, приручение и разговор.',
+    subcategories: [{ slug: 'vidy', title: 'Кто есть кто' }],
   },
   {
     slug: 'zdorovie-i-povedenie',

@@ -17,6 +17,12 @@ redFlags:
   - в этих случаях нужен срочный осмотр у ветеринара-ратолога.
 draft: false
 products: []
+cover: /images/photos/homyak-sbezhal-iz-kletki-kak-nayti.jpg
+coverAlt: 'Хомяк сбежал из клетки: как найти и поймать'
+coverCredit:
+  author: 'Bernard Ladenthin'
+  license: 'CC0'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Pet_Hamster_eating_cucumber.JPG'
 ---
 
 Хомяк пропал из клетки — и первая реакция почти всегда паника: перевернуть всю квартиру, гоняться за каждым шорохом. Спокойный и последовательный поиск работает куда лучше: хомяки редко уходят далеко и почти всегда находятся дома, если дать им время и не спугнуть окончательно.

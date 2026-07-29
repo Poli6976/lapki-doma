@@ -20,9 +20,9 @@ products: []
 cover: /images/photos/labrador-retriver-harakter-uhod-osobennosti.jpg
 coverAlt: 'Лабрадор-ретривер: характер, уход и особенности'
 coverCredit:
-  author: 'Herwig Kavallar'
+  author: 'Burnopfielder1'
   license: 'Public domain'
-  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Labrador_Retriever_portrait.jpg'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Buster_the_black_Labrador_Retriever_(2007).jpg'
 ---
 
 Лабрадор-ретривер — одна из самых узнаваемых пород в мире: дружелюбная морда, машущий хвост и репутация «идеальной семейной собаки». Репутация во многом заслуженная, но за дружелюбием и энергией стоят конкретные особенности, с которыми лучше познакомиться до, а не после того, как щенок окажется дома.

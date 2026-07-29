@@ -18,6 +18,12 @@ redFlags:
   - в этих случаях нужен осмотр у ветеринара, а не дополнительная дрессировка.
 draft: false
 products: []
+cover: /images/photos/sobaka-ne-podhodit-na-zov-kak-nauchit.jpg
+coverAlt: 'Собака не подходит на зов: как научить'
+coverCredit:
+  author: 'Huggorm'
+  license: 'Public domain'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Papillon_running_(cropped).JPG'
 ---
 
 Зов, на который собака не реагирует, — одна из самых частых причин раздражения на прогулке. Хозяин зовёт, повышает голос, идёт следом, а собака как будто не слышит. Дело почти никогда не в упрямстве или глупости — чаще всего собака просто на своём опыте выучила, что подходить невыгодно.
