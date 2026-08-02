@@ -77,6 +77,7 @@ const PHOTO_QUERIES = {
   'abissinskaya-koshka-harakter-uhod-osobennosti': 'Abyssinian cat',
   'russkaya-golubaya-koshka-harakter-uhod-osobennosti': 'Russian Blue cat portrait',
   'koshku-rvet-shersyu-eto-norma-ili-net': 'Cat grooming licking fur',
+  'koshka-boitsya-pylesosa-i-bytovoy-shum': 'Cat sitting on carpet',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -101,6 +102,7 @@ const PHOTO_QUERIES = {
   'sibirskiy-haski-harakter-uhod-osobennosti': 'Siberian Husky dog pet',
   'dzhek-rassel-terer-harakter-uhod-osobennosti': 'Jack Russell Terrier pet',
   'kak-podgotovit-pitomca-k-pereezdu': 'Cat in cardboard box moving',
+  'sobaka-gryzet-mebel-i-obuv-doma': 'Puppy sneaker',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -120,6 +122,7 @@ const PHOTO_QUERIES = {
   'dekorativnyy-krolik-kto-eto-i-chto-emu-nuzhno': 'Holland Lop rabbit pet',
   'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla pet',
   'zapah-ot-kletki-gryzuna-kak-ubrat': 'Guinea pig cage',
+  'mozhno-li-derzhat-vmeste-dvuh-gryzunov': 'Two guinea pigs together',
 
   // Попугаи
   'volnistyy-popugay-kto-eto-i-chto-emu-nuzhno': 'Budgerigar pet bird',
@@ -149,6 +152,13 @@ const PHOTO_QUERIES = {
   // ⚠️ Подобрано вручную (Slipperymonkey44, Budgie preening.JPG) — птица должна быть
   // здоровой, с целым оперением, а не показывать сам симптом (оголённые участки).
   'popugay-vyschipyvaet-perya-pochemu': 'Budgie preening',
+  'kakadu-kto-eto-i-chto-emu-nuzhno': 'Cacatua alba',
+  'ara-kto-eto-i-chto-emu-nuzhno': 'Macaw parrot pet',
+  'kvaker-kto-eto-i-chto-emu-nuzhno': 'Monk parakeet pet',
+  'aleksandriyskiy-popugay-kto-eto-i-chto-emu-nuzhno': 'Alexandrine parakeet pet',
+  'senegalskiy-popugay-kto-eto-i-chto-emu-nuzhno': 'Senegal parrot pet',
+  'amazon-popugay-kto-eto-i-chto-emu-nuzhno': 'Amazon parrot pet',
+  'rozella-kto-eto-i-chto-ey-nuzhno': 'Eastern rosella bird',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -172,6 +182,7 @@ const PHOTO_QUERIES = {
   'kak-vybrat-veterinarnuyu-kliniku': 'Veterinarian with cat clinic',
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
   'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
+  'pervaya-pomoshch-pri-ukuse-ili-carapine-ot-pitomca': 'Bandaging hand wound',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */

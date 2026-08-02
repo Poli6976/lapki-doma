@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { ANALYTICS, CATEGORIES } from '../site.config.mjs';
 import { CAT_BREEDS } from '../data/breeds-koshki.mjs';
 import { DOG_BREEDS } from '../data/breeds-sobaki.mjs';
+import { PARROT_SPECIES } from '../data/breeds-popugai.mjs';
 import { articleUrl } from '../lib/urls.mjs';
 
 /**
@@ -47,6 +48,7 @@ const articleEntries = all.map((e) => ({
 const breedEntries = [
   ...CAT_BREEDS.map((b) => ({ ...b, species: 'koshki', c: 'Породы кошек' })),
   ...DOG_BREEDS.map((b) => ({ ...b, species: 'sobaki', c: 'Породы собак' })),
+  ...PARROT_SPECIES.map((b) => ({ ...b, species: 'popugai', c: 'Виды попугаев' })),
 ]
   .filter((b) => !b.article)
   .map((b) => ({

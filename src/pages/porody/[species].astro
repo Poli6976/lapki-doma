@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { CAT_BREEDS } from '../../data/breeds-koshki.mjs';
 import { DOG_BREEDS } from '../../data/breeds-sobaki.mjs';
+import { PARROT_SPECIES } from '../../data/breeds-popugai.mjs';
 import breedPhotos from '../../data/breed-photos.json';
 import { categoryUrl } from '../../lib/urls.mjs';
 
@@ -37,6 +38,16 @@ export function getStaticPaths() {
         category: 'sobaki',
         categoryTitle: 'Собаки',
         breeds: DOG_BREEDS,
+      },
+    },
+    {
+      params: { species: 'popugai' },
+      props: {
+        title: 'Виды попугаев',
+        lead: 'Комнатных попугаев гораздо больше, чем волнистый и корелла. У каждого вида свой размер, голос и характер — и это стоит узнать до, а не после покупки.',
+        category: 'popugai',
+        categoryTitle: 'Попугаи',
+        breeds: PARROT_SPECIES,
       },
     },
   ];
