@@ -12,7 +12,7 @@ import { absoluteUrl } from '../lib/urls.mjs';
  * @property {string} [description]
  * @property {string} [image]
  * @property {'website'|'article'} [type]
- * @property {object} [jsonLd] произвольный JSON-LD объект (Article/BreadcrumbList и т.п.)
+ * @property {object|object[]} [jsonLd] один JSON-LD объект или массив (Article/BreadcrumbList и т.п.)
  * @property {boolean} [noindex]
  */
 const {
@@ -27,6 +27,7 @@ const {
 const pageTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
 const canonical = absoluteUrl(Astro.url.pathname, SITE.url);
 const ogImage = image ? absoluteUrl(image, SITE.url) : undefined;
+const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
@@ -92,12 +93,12 @@ const ogImage = image ? absoluteUrl(image, SITE.url) : undefined;
     </script>
 
     {
-      jsonLd && (
+      jsonLdList.map((ld) => (
         <script
           type="application/ld+json"
-          set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
+          set:html={JSON.stringify(ld).replace(/</g, '\\u003c')}
         />
-      )
+      ))
     }
 
     <!-- Яндекс РСЯ (загружается только если задан ID блока) -->
