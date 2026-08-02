@@ -68,6 +68,15 @@ const PHOTO_QUERIES = {
   'regdoll-harakter-uhod-i-osobennosti-porody': 'Ragdoll cat lying',
   'sibirskaya-koshka-harakter-uhod-osobennosti': 'Siberian cat breed',
   'koshka-gromko-myaukaet-po-nocham-chto-delat': 'Cat sitting windowsill',
+  'bengalskaya-koshka-harakter-uhod-osobennosti': 'Bengal cat spotted portrait',
+  'siamskaya-koshka-harakter-uhod-osobennosti': 'Seal point Siamese cat short hair',
+  'birmanskaya-koshka-harakter-uhod-osobennosti': 'Birman cat portrait',
+  // ⚠️ Подобрано вручную (Stefan Ivanov, Grouchy Persian cat) — автозапрос давал
+  // экстремальный кроп на один глаз, где не видно приплюснутой морды породы.
+  'persidskaya-koshka-harakter-uhod-osobennosti': 'Grouchy Persian cat',
+  'abissinskaya-koshka-harakter-uhod-osobennosti': 'Abyssinian cat',
+  'russkaya-golubaya-koshka-harakter-uhod-osobennosti': 'Russian Blue cat portrait',
+  'koshku-rvet-shersyu-eto-norma-ili-net': 'Cat grooming licking fur',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -83,6 +92,15 @@ const PHOTO_QUERIES = {
   'mops-harakter-uhod-i-osobennosti-porody': 'Pug dog',
   'kavaler-king-charlz-spaniel-harakter-i-uhod': 'Cavalier King Charles Spaniel puppy',
   'schenok-kusaet-ruki-v-igre-kak-otuchit': 'Puppy chewing toy',
+  // ⚠️ Подобрано вручную (Tim Dobbelaere, German Shepherd Dog sitting leash.jpg) —
+  // автозапрос давал только фото с выставок (ленты, кубки, суетливый фон).
+  'nemeckaya-ovcharka-harakter-uhod-osobennosti': 'German Shepherd Dog sitting leash',
+  'yorkshirskiy-terer-harakter-uhod-osobennosti': 'Yorkshire Terrier dog outdoor',
+  'chihuahua-harakter-uhod-osobennosti': 'Chihuahua dog face',
+  'pomeranskiy-shpic-harakter-uhod-osobennosti': 'Pomeranian dog outdoor',
+  'sibirskiy-haski-harakter-uhod-osobennosti': 'Siberian Husky dog pet',
+  'dzhek-rassel-terer-harakter-uhod-osobennosti': 'Jack Russell Terrier pet',
+  'kak-podgotovit-pitomca-k-pereezdu': 'Cat in cardboard box moving',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -128,6 +146,9 @@ const PHOTO_QUERIES = {
   // «Parrot head close up» вернул портрет пуэрториканского амазона — редкого
   // охраняемого вида, который дома не держат. Ищем портрет обычной ручной птицы.
   'kak-nauchit-popugaya-govorit': 'African grey parrot portrait pet',
+  // ⚠️ Подобрано вручную (Slipperymonkey44, Budgie preening.JPG) — птица должна быть
+  // здоровой, с целым оперением, а не показывать сам симптом (оголённые участки).
+  'popugay-vyschipyvaet-perya-pochemu': 'Budgie preening',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -570,8 +591,18 @@ const BREED_PHOTOS = {
     { key: 'britanskaya', caption: 'Британская короткошёрстная', query: 'British Shorthair cat' },
     { key: 'shotlandskaya-vislouhaya', caption: 'Шотландская вислоухая', query: 'Scottish Fold cat' },
     { key: 'sfinks', caption: 'Сфинкс', query: 'Sphynx cat' },
-    { key: 'bengalskaya', caption: 'Бенгальская', query: 'Bengal cat breed' },
-    { key: 'siamskaya', caption: 'Сиамская', query: 'Siamese cat' },
+    {
+      key: 'bengalskaya',
+      caption: 'Бенгальская',
+      query: 'Bengal cat breed',
+      article: 'bengalskaya-koshka-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'siamskaya',
+      caption: 'Сиамская',
+      query: 'Siamese cat',
+      article: 'siamskaya-koshka-harakter-uhod-osobennosti',
+    },
     {
       key: 'regdoll',
       caption: 'Рэгдолл',
@@ -579,10 +610,30 @@ const BREED_PHOTOS = {
       article: 'regdoll-harakter-uhod-i-osobennosti-porody',
     },
     { key: 'sibirskaya', caption: 'Сибирская', query: 'Siberian cat breed' },
-    { key: 'birmanskaya', caption: 'Бирманская', query: 'Birman cat' },
-    { key: 'persidskaya', caption: 'Персидская', query: 'Afkhami Persian cat' },
-    { key: 'abissinskaya', caption: 'Абиссинская', query: 'Poktori Abyssinian cat' },
-    { key: 'russkaya-golubaya', caption: 'Русская голубая', query: 'Russian Blue cat' },
+    {
+      key: 'birmanskaya',
+      caption: 'Бирманская',
+      query: 'Birman cat',
+      article: 'birmanskaya-koshka-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'persidskaya',
+      caption: 'Персидская',
+      query: 'Afkhami Persian cat',
+      article: 'persidskaya-koshka-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'abissinskaya',
+      caption: 'Абиссинская',
+      query: 'Poktori Abyssinian cat',
+      article: 'abissinskaya-koshka-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'russkaya-golubaya',
+      caption: 'Русская голубая',
+      query: 'Russian Blue cat',
+      article: 'russkaya-golubaya-koshka-harakter-uhod-osobennosti',
+    },
   ],
   sobaki: [
     { key: 'francuzskiy-buldog', caption: 'Французский бульдог', query: 'French Bulldog' },
@@ -605,14 +656,49 @@ const BREED_PHOTOS = {
       query: 'Shih Tzu',
       article: 'shi-tcu-harakter-uhod-i-osobennosti-porody',
     },
-    { key: 'labrador', caption: 'Лабрадор-ретривер', query: 'Labrador Retriever Aurora Colorado' },
-    { key: 'nemeckaya-ovcharka', caption: 'Немецкая овчарка', query: 'German Shepherd dog' },
-    { key: 'yorkshirskiy-terer', caption: 'Йоркширский терьер', query: 'Yorkshire Terrier' },
-    { key: 'chihuahua', caption: 'Чихуахуа', query: 'Chihuahua sitting sirraychen' },
-    { key: 'pomeranskiy-shpic', caption: 'Померанский шпиц', query: 'Pomeranian dog' },
+    {
+      key: 'labrador',
+      caption: 'Лабрадор-ретривер',
+      query: 'Labrador Retriever Aurora Colorado',
+      article: 'labrador-retriver-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'nemeckaya-ovcharka',
+      caption: 'Немецкая овчарка',
+      query: 'German Shepherd dog',
+      article: 'nemeckaya-ovcharka-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'yorkshirskiy-terer',
+      caption: 'Йоркширский терьер',
+      query: 'Yorkshire Terrier',
+      article: 'yorkshirskiy-terer-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'chihuahua',
+      caption: 'Чихуахуа',
+      query: 'Chihuahua sitting sirraychen',
+      article: 'chihuahua-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'pomeranskiy-shpic',
+      caption: 'Померанский шпиц',
+      query: 'Pomeranian dog',
+      article: 'pomeranskiy-shpic-harakter-uhod-osobennosti',
+    },
     // «Husky» в Commons — это ещё и порода лаек и куча ездовых упряжек.
-    { key: 'haski', caption: 'Сибирский хаски', query: 'Juvenile Siberian Husky' },
-    { key: 'dzhek-rassel', caption: 'Джек-рассел-терьер', query: 'Jack Russell Terrier' },
+    {
+      key: 'haski',
+      caption: 'Сибирский хаски',
+      query: 'Juvenile Siberian Husky',
+      article: 'sibirskiy-haski-harakter-uhod-osobennosti',
+    },
+    {
+      key: 'dzhek-rassel',
+      caption: 'Джек-рассел-терьер',
+      query: 'Jack Russell Terrier',
+      article: 'dzhek-rassel-terer-harakter-uhod-osobennosti',
+    },
   ],
 };
 
