@@ -78,6 +78,8 @@ const PHOTO_QUERIES = {
   'russkaya-golubaya-koshka-harakter-uhod-osobennosti': 'Russian Blue cat portrait',
   'koshku-rvet-shersyu-eto-norma-ili-net': 'Cat grooming licking fur',
   'koshka-boitsya-pylesosa-i-bytovoy-shum': 'Cat sitting on carpet',
+  'kot-metit-ugly-pochemu-i-chto-delat': 'Cat sitting next to door',
+  'koshka-prinosit-domoy-myshey-i-ptic': 'Cat crouched in grass',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -103,6 +105,8 @@ const PHOTO_QUERIES = {
   'dzhek-rassel-terer-harakter-uhod-osobennosti': 'Jack Russell Terrier pet',
   'kak-podgotovit-pitomca-k-pereezdu': 'Cat in cardboard box moving',
   'sobaka-gryzet-mebel-i-obuv-doma': 'Puppy sneaker',
+  'sobaka-voet-na-sireny-muzyku-i-drugie-zvuki': 'Dog howling',
+  'kak-poznakomit-sobaku-s-novorozhdennym-rebenkom': 'Newborn baby with dog',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -123,6 +127,8 @@ const PHOTO_QUERIES = {
   'shinshilla-kto-eto-i-chto-ey-nuzhno': 'Chinchilla pet',
   'zapah-ot-kletki-gryzuna-kak-ubrat': 'Guinea pig cage',
   'mozhno-li-derzhat-vmeste-dvuh-gryzunov': 'Two guinea pigs together',
+  'pochemu-homyak-nabivaet-shchyoki-i-pryachet-edu': 'Hamster cheek pouch food',
+  'mozhno-li-kupat-homyaka-svinku-ili-shinshillu': 'Napoleon chinchilla in box',
 
   // Попугаи
   'volnistyy-popugay-kto-eto-i-chto-emu-nuzhno': 'Budgerigar pet bird',
@@ -159,6 +165,8 @@ const PHOTO_QUERIES = {
   'senegalskiy-popugay-kto-eto-i-chto-emu-nuzhno': 'Senegal parrot pet',
   'amazon-popugay-kto-eto-i-chto-emu-nuzhno': 'Amazon parrot pet',
   'rozella-kto-eto-i-chto-ey-nuzhno': 'Eastern rosella bird',
+  'popugay-postoyanno-krichit-pochemu-i-kak-uspokoit': 'Budgerigar in cage home',
+  'mozhno-li-kupat-popugaya': 'Budgerigar bathing',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -174,6 +182,8 @@ const PHOTO_QUERIES = {
   'koshka-dyshit-s-otkrytym-rtom-kogda-eto-srochno': 'Cat resting on bed',
   'ponos-u-sobaki-kogda-nablyudat-a-kogda-k-vrachu': 'Labrador Retriever lying on grass',
   'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog lying on grass resting',
+  'sobaka-ili-koshka-chasto-chihaet-kogda-eto-norma': 'Black cat sniffing a flower',
+  'nepriyatnyy-zapah-izo-rta-u-koshki-ili-sobaki': 'Dog open mouth teeth',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
@@ -183,6 +193,7 @@ const PHOTO_QUERIES = {
   'nashli-kotenka-na-ulice-chto-delat': 'Kitten in grass',
   'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
   'pervaya-pomoshch-pri-ukuse-ili-carapine-ot-pitomca': 'Bandaging hand wound',
+  'kak-vvesti-novogo-pitomca-v-dom-s-koshkoy-ili-sobakoy': 'Cat and Dog Cuddling',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
