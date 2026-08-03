@@ -7,10 +7,10 @@ keywords: ['стерилизация кошки', 'восстановление 
 draft: true
 products:
   - name: 'Наполнитель для кошачьего туалета'
-    amazonSearch: 'undefined'
+    marketplaceSearch: 'placeholder'
     blurb: 'Хороший впитывающий наполнитель облегчает уборку и снижает запах.'
   - name: 'Когтеточка'
-    amazonSearch: 'undefined'
+    marketplaceSearch: 'placeholder'
     blurb: 'Спасает мебель и удовлетворяет естественную потребность точить когти.'
 ---
 
