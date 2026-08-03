@@ -73,7 +73,7 @@ export function buildMarkdown({ title, description, category, keywords = [], pro
     fm.push('products:');
     for (const p of products) {
       fm.push(`  - name: ${yamlStr(p.name)}`);
-      fm.push(`    amazonSearch: ${yamlStr(p.amazonSearch)}`);
+      fm.push(`    marketplaceSearch: ${yamlStr(p.marketplaceSearch)}`);
       fm.push(`    blurb: ${yamlStr(p.blurb)}`);
     }
   }
