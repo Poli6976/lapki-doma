@@ -80,6 +80,26 @@ const PHOTO_QUERIES = {
   'koshka-boitsya-pylesosa-i-bytovoy-shum': 'Cat sitting on carpet',
   'kot-metit-ugly-pochemu-i-chto-delat': 'Cat sitting next to door',
   'koshka-prinosit-domoy-myshey-i-ptic': 'Cat crouched in grass',
+  // ⚠️ Обложка подобрана вручную (Öljylautta, Grey cat eating.jpg) — запрос
+  // «Cat eating cat food» неожиданно первым кандидатом отдавал PD-фото
+  // пластиковых столовых приборов (Scott Bauer), а не кошку. Прогон скрипта
+  // по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'chem-kormit-koshku-suhoy-korm-ili-naturalnaya-eda': 'Cat eating cat food',
+  // ⚠️ Обложка подобрана вручную (Roc0ast3r, Cat staring out window) — автозапросы
+  // либо ничего не находили, либо повторно отдавали то же фото, что уже стоит в
+  // «kuda-det-pitomca-v-otpuske» ('Cat looking out window (2023-08-27)'). Прогон
+  // скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'kak-ponyat-chto-koshke-skuchno': 'Grey cat lying on carpet bored',
+  // ⚠️ Обложка подобрана вручную (Famartin, Tabby cat lying on a bed) — первый
+  // автонайденный кандидат («Cat resting on a couch», Unsplash/CC0) уже занят
+  // сразу двумя другими статьями («pervyy-den-schenka-ili-kotenka-doma…» и
+  // черновая версия этой самой статьи) — дубль поймали только сверкой sourceUrl
+  // по всем статьям. Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами и проверять на дубли с другими статьями.
+  'sterilizaciya-koshki-kogda-delat-i-chto-posle': 'Tabby cat resting on cushion',
+  'koshka-topchet-lapkami-chto-oznachaet-eto-povedenie': 'Cat kneading blanket',
+  'kot-pryachetsya-i-ne-vyhodit-iz-ukrytiya': 'Cat under bed hiding',
+  'koshka-agressivna-k-drugoy-koshke-v-dome': 'Two cats sitting together',
 
   // Собаки
   'potencialno-opasnye-porody-sobak': 'American Staffordshire Terrier',
@@ -107,6 +127,8 @@ const PHOTO_QUERIES = {
   'sobaka-gryzet-mebel-i-obuv-doma': 'Puppy sneaker',
   'sobaka-voet-na-sireny-muzyku-i-drugie-zvuki': 'Dog howling',
   'kak-poznakomit-sobaku-s-novorozhdennym-rebenkom': 'Newborn baby with dog',
+  'sobaka-est-travu-na-progulke': 'Dog in green grass park walk',
+  'sobaka-drozhit-chastye-prichiny-i-kogda-eto-trevozhno': 'Chihuahua dog portrait',
 
   // Грызуны
   // Овощи, а не хомяк: найденное фото хомяка с белым хлебом противоречило
@@ -129,6 +151,7 @@ const PHOTO_QUERIES = {
   'mozhno-li-derzhat-vmeste-dvuh-gryzunov': 'Two guinea pigs together',
   'pochemu-homyak-nabivaet-shchyoki-i-pryachet-edu': 'Hamster cheek pouch food',
   'mozhno-li-kupat-homyaka-svinku-ili-shinshillu': 'Napoleon chinchilla in box',
+  'homyak-ili-morskaya-svinka-vyalye-kak-ponyat-chto-chto-to-ne-tak': 'Guinea pig in hay',
 
   // Попугаи
   'volnistyy-popugay-kto-eto-i-chto-emu-nuzhno': 'Budgerigar pet bird',
@@ -167,6 +190,11 @@ const PHOTO_QUERIES = {
   'rozella-kto-eto-i-chto-ey-nuzhno': 'Eastern rosella bird',
   'popugay-postoyanno-krichit-pochemu-i-kak-uspokoit': 'Budgerigar in cage home',
   'mozhno-li-kupat-popugaya': 'Budgerigar bathing',
+  // ⚠️ Обложка подобрана вручную (Alana Elliott, Budgerigar -4.jpg — сидит
+  // нахохлившись, спокойная домашняя обстановка) — автозапросы находили либо
+  // сканы орнитологических журналов, либо игровой комплекс без намёка на позу.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'popugay-nahohlilsya-i-molchit-kogda-stoit-nastorozhitsya': 'Budgerigar bird perched cage home',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -184,6 +212,7 @@ const PHOTO_QUERIES = {
   'sobaka-hromaet-kogda-zhdat-nelzya': 'Dog lying on grass resting',
   'sobaka-ili-koshka-chasto-chihaet-kogda-eto-norma': 'Black cat sniffing a flower',
   'nepriyatnyy-zapah-izo-rta-u-koshki-ili-sobaki': 'Dog open mouth teeth',
+  'koshka-ili-sobaka-stala-mnogo-pit-vody-kogda-eto-povod-nastorozhitsya': 'Dog drinking water bowl',
 
   // Советы
   'pitomec-prichinil-vred-otvetstvennost-vladelca': 'Cat and dog lying together',
@@ -194,6 +223,9 @@ const PHOTO_QUERIES = {
   'kuda-det-pitomca-v-otpuske': 'Cat looking out of window',
   'pervaya-pomoshch-pri-ukuse-ili-carapine-ot-pitomca': 'Bandaging hand wound',
   'kak-vvesti-novogo-pitomca-v-dom-s-koshkoy-ili-sobakoy': 'Cat and Dog Cuddling',
+  'skolko-stoit-soderzhanie-koshki-ili-sobaki-v-mesyac': 'Dog and cat friends',
+  'pitomec-poteryalsya-chto-delat-v-pervye-chasy': 'Dog standing on street',
+  'nuzhna-li-privivka-ot-beshenstva-i-kak-chasto-ee-delat': 'Golden Retriever dog sitting park',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
