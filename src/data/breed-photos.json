@@ -194,5 +194,25 @@
       "license": "Public domain",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Szczenie_Jack_Russell_Terrier3.jpg"
     }
+  ],
+  "popugai": [
+    {
+      "src": "/images/photos/breeds/popugai-lori.jpg",
+      "alt": "Лори (радужный лорикет)",
+      "caption": "Лори (радужный лорикет)",
+      "author": "User:Peripitus",
+      "license": "CC BY-SA 3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Trichoglossus_moluccanus_eating_plums.jpg",
+      "article": "lori-kto-eto-i-chto-emu-nuzhno"
+    },
+    {
+      "src": "/images/photos/breeds/popugai-kaik.jpg",
+      "alt": "Каик",
+      "caption": "Каик",
+      "author": "Peter Békési",
+      "license": "CC BY-SA 2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Black-headed_Parrot_(Pionites_melanocephalus)3.jpg",
+      "article": "kaik-kto-eto-i-chto-emu-nuzhno"
+    }
   ]
 }

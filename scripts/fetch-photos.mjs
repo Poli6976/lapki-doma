@@ -195,6 +195,8 @@ const PHOTO_QUERIES = {
   // сканы орнитологических журналов, либо игровой комплекс без намёка на позу.
   // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
   'popugay-nahohlilsya-i-molchit-kogda-stoit-nastorozhitsya': 'Budgerigar bird perched cage home',
+  'lori-kto-eto-i-chto-emu-nuzhno': 'Rainbow lorikeet pet bird',
+  'kaik-kto-eto-i-chto-emu-nuzhno': 'Black-headed caique parrot pet',
 
   // Здоровье и поведение
   'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat': 'Cat food bowl',
@@ -807,6 +809,24 @@ const BREED_PHOTOS = {
       caption: 'Джек-рассел-терьер',
       query: 'Jack Russell Terrier',
       article: 'dzhek-rassel-terer-harakter-uhod-osobennosti',
+    },
+  ],
+  // ⚠️ Справочник попугаев в BREED_PHOTOS пока содержит только два новых вида
+  // (lori, kaik) — остальные 12 карточек в /porody/popugai были опубликованы
+  // без фото ещё до появления этого ключа (обнаружено 06.08.2026). Дописывать
+  // остальные — отдельная задача, не входящая в текущий подбор.
+  popugai: [
+    {
+      key: 'lori',
+      caption: 'Лори (радужный лорикет)',
+      query: 'Rainbow lorikeet bird',
+      article: 'lori-kto-eto-i-chto-emu-nuzhno',
+    },
+    {
+      key: 'kaik',
+      caption: 'Каик',
+      query: 'Black-headed caique',
+      article: 'kaik-kto-eto-i-chto-emu-nuzhno',
     },
   ],
 };
