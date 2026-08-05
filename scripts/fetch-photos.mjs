@@ -226,6 +226,61 @@ const PHOTO_QUERIES = {
   'skolko-stoit-soderzhanie-koshki-ili-sobaki-v-mesyac': 'Dog and cat friends',
   'pitomec-poteryalsya-chto-delat-v-pervye-chasy': 'Dog standing on street',
   'nuzhna-li-privivka-ot-beshenstva-i-kak-chasto-ee-delat': 'Golden Retriever dog sitting park',
+  // ⚠️ Обложка подобрана вручную (Delusion23, Cat with microchip implant.JPG —
+  // чёрная кошка с биркой «protected by a microchip, scan me») — автозапросы
+  // либо возвращали рентген-снимок с чипом, либо снимок иглы/шприца крупным
+  // планом (нарушает правило «без игл»), либо архивные PDF законов о чипировании.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'nuzhno-li-chipirovat-pitomca': 'Cat with microchip implant',
+  // ⚠️ Обложка подобрана вручную (WinterCHEDDER, Two European Shorthairs.jpg —
+  // две кошки обнимаются в одной лежанке). Запрос «Cat and dog lying together»
+  // возвращал File:Cat_and_dog.JPG — то же фото уже стоит в
+  // «pitomec-prichinil-vred-otvetstvennost-vladelca» (дубль поймали сверкой
+  // sourceUrl). Другие запросы про игру котят выглядели как драка, а не дружба.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'stoit-li-zavodit-vtorogo-pitomca-kak-ponyat-chto-semya-gotova': 'Two European Shorthairs cat cuddling',
+  // ⚠️ Обложка подобрана вручную (Famartin, калико кошка на подоконнике внутри
+  // дома смотрит в окно) — запрос «Cat sitting on windowsill» отдавал файл,
+  // который уже стоит в «koshka-gromko-myaukaet-po-nocham-chto-delat»
+  // (File:Cat_-_Groningen,_Netherlands_-_29_August_2020.jpg) — дубль поймали
+  // сверкой sourceUrl. Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами и проверять на дубли.
+  'mozhno-li-ostavlyat-pitomca-odnogo-doma-na-celyy-den': 'Calico cat windowsill staring window Virginia',
+
+  // Здоровье и поведение (вторая партия)
+  'koshka-vilyaet-hvostom-chto-oznachayut-raznye-dvizheniya-hvosta': 'Ginger cat tail raised walking',
+  // ⚠️ Обложка подобрана вручную (Slyronit, Beagle licking her paws.jpg — бигль
+  // на кровати вылизывает лапу, спокойный домашний кадр). Поиск по этому запросу
+  // непостоянен: тот же текст один раз отдавал этот файл, в другой раз —
+  // File:Dog_licking_wound.jpg (лапа с ранкой крупным планом — по названию видно,
+  // что это именно повреждение, а не обычный уход). Прогон скрипта по этому
+  // слагу может заменить фото на менее удачное — сверяться с public/images/photos глазами.
+  'sobaka-lizhet-lapy-chastye-prichiny': 'Beagle licking her paws',
+  // ⚠️ Обложка подобрана вручную (Muhammad Mahdi Karim, Domestic cat felis catus
+  // itching.jpg — упитанный домашний кот чешет мордочку лапой в саду) — запрос
+  // «Dog scratching ear pet»/«Dog scratching itself» отдавал худого уличного пса
+  // на грязной дороге в Индии (File:Dog_scratching_itself.JPG) — не подходит для
+  // сайта про уход за домашними питомцами. Прогон скрипта заменит фото — сверяться
+  // с public/images/photos глазами.
+  'u-koshki-ili-sobaki-cheshutsya-ushi-chastye-prichiny': 'Domestic cat itching paw face',
+
+  // Грызуны (вторая партия)
+  // ⚠️ Обложка подобрана вручную (Rex tremendae majestatis, Guinea pig pet 2.jpg —
+  // спокойный портрет морской свинки крупным планом дома) — автозапросы либо
+  // отдавали архивные книги про разведение свинок, либо кадр с грязной
+  // фермерской клеткой на земле (не питомец, а похоже на разведение на ферме).
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'skolko-zhivut-homyaki-morskie-svinki-kroliki-i-krysy-sravnenie-po-vidam': 'Rex guinea pig pet',
+  // ⚠️ Обложка подобрана вручную (Padaguan, Mini rex bunny.jpg — насторожённый
+  // кролик с поднятыми ушами сидит на одеяле дома) — автозапросы либо отдавали
+  // архивные книги о разведении кроликов на ферму, либо не находили ничего.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'krolik-stuchit-zadney-lapoy-chto-eto-znachit': 'Mini rex bunny quilt',
+  'kak-otlichit-samca-ot-samki-u-homyaka-ili-morskoy-svinki': 'Hamster held in hands',
+
+  // Кошки / собаки (вторая партия)
+  'koshka-chasto-spit-skolko-eto-normalno': 'Cat sleeping cozy blanket',
+  'sobaka-chasto-zevaet-doma-skuka-ili-stress': 'Dog yawning',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
