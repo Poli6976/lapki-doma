@@ -283,6 +283,19 @@ const PHOTO_QUERIES = {
   // Кошки / собаки (вторая партия)
   'koshka-chasto-spit-skolko-eto-normalno': 'Cat sleeping cozy blanket',
   'sobaka-chasto-zevaet-doma-skuka-ili-stress': 'Dog yawning',
+
+  // Советы, здоровье, грызуны, собаки, попугаи (третья партия)
+  'chto-vzyat-s-soboy-v-poezdku-s-pitomcom': 'Dog car seat travel',
+  'nuzhna-li-strahovka-dlya-pitomca': 'Dog portrait home',
+  'kak-vybrat-imya-dlya-pitomca': 'Puppy sitting portrait',
+  'sobaka-hodit-krugami-pered-tem-kak-lech-pochemu': 'Dog lying floor',
+  'kot-vylizyvaetsya-slishkom-chasto-kogda-eto-trevozhno': 'Tabby cat grooming licking paw',
+  'u-sobaki-slezyatsya-glaza-chastye-prichiny': 'Dog face portrait pet',
+  'nuzhno-li-gryzunu-koleso-dlya-bega-kak-vybrat-bezopasnoe': 'Roborovski hamster wheel',
+  'krysa-pischit-i-skripit-zubami-chto-eto-znachit': 'Pet rat',
+  'krolik-gryzet-mebel-doma-kak-otuchit': 'House rabbit',
+  'sobaka-zakapyvaet-edu-ili-igrushki-pochemu': 'Dog digging',
+  'popugay-schyolkaet-klyuvom-chto-eto-znachit': 'Budgerigar close up',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
