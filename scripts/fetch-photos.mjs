@@ -296,6 +296,19 @@ const PHOTO_QUERIES = {
   'krolik-gryzet-mebel-doma-kak-otuchit': 'House rabbit',
   'sobaka-zakapyvaet-edu-ili-igrushki-pochemu': 'Dog digging',
   'popugay-schyolkaet-klyuvom-chto-eto-znachit': 'Budgerigar close up',
+
+  // Советы, здоровье, попугаи, кошки, собаки, грызуны (одиннадцатая партия)
+  'skolko-stoit-zavesti-pitomca-vpervye-razovye-traty-na-starte': 'Puppy playing with a toy Unsplash',
+  'kak-vybrat-korm-dlya-pitomca-na-chto-smotret-na-upakovke': 'Cat and Cat Foods',
+  'pitomec-i-malenkiy-rebenok-v-dome-kak-podgotovitsya-zaranee': 'Thornbury toddler and dog',
+  'koshka-ili-sobaka-tryaset-golovoy-chastye-prichiny': 'Dog with floppy ears portrait',
+  'pitomec-hromaet-na-perednyuyu-lapu-posle-aktivnoy-igry-chto-delat-v-pervye-chasy': 'Veterinarian dog paw examination',
+  'u-koshki-ili-sobaki-shelushitsya-kozha-i-sypetsya-perhot-chastye-prichiny': 'Golden Retriever fur coat close up',
+  'popugay-kusaetsya-pochemu-i-kak-otuchit': 'Budgerigar perched on hand pet',
+  'skolko-zhivut-popugai-raznyh-vidov-chego-ozhidat-pered-pokupkoy': 'Macaw parrot pet portrait',
+  'koshka-prinosit-igrushki-i-kladet-ryadom-chto-eto-znachit': 'Cat playing with toy mouse',
+  'sobaka-roet-zemlyu-ili-podkop-pod-zaborom-pochemu-i-chto-delat': 'Terrier dog digging garden',
+  'morskaya-svinka-pischit-i-svistit-chto-oznachayut-raznye-zvuki': 'Guinea pig close up portrait',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
