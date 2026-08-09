@@ -309,6 +309,51 @@ const PHOTO_QUERIES = {
   'koshka-prinosit-igrushki-i-kladet-ryadom-chto-eto-znachit': 'Cat playing with toy mouse',
   'sobaka-roet-zemlyu-ili-podkop-pod-zaborom-pochemu-i-chto-delat': 'Terrier dog digging garden',
   'morskaya-svinka-pischit-i-svistit-chto-oznachayut-raznye-zvuki': 'Guinea pig close up portrait',
+
+  // Советы, здоровье, поведение, грызуны, попугаи (двенадцатая партия)
+  'kak-vybrat-perenosku-dlya-koshki-ili-sobaki-na-chto-smotret': 'Pet carrier',
+  // ⚠️ Обложка подобрана вручную (Peggy Passavin, Valerie Chetboul Echo3D Chiens.jpg —
+  // улыбающийся ветеринар со стетоскопом спокойно держит расслабленного golden
+  // retriever на столе) — автозапросы «Dog vet clinic» / «Veterinary examination
+  // puppy» и подобные почти всегда отдавали военных ветеринаров (KFOR, Kosovo
+  // Force, U.S. Army) или архивные PDF-журналы «The Veterinarian» XIX века.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos
+  // глазами.
+  'pervyy-vizit-k-veterinaru-kak-podgotovit-pitomca-chtoby-on-ne-boyalsya': 'Dog vet clinic',
+  'nuzhno-li-uchit-pitomca-bazovym-komandam-zachem-eto-i-s-chego-nachat': 'Dog training',
+  // ⚠️ Обложка подобрана вручную (Jen Wong Hui Xian, BobbyWonderful.jpg —
+  // немецкая овчарка спокойно сидит с приоткрытой пастью, обычное дыхание,
+  // без слюны) — автозапрос «Dog portrait» отдавал «Human–canine friendship»,
+  // где главный герой кадра — обнимающий собаку ребёнок, а не питомец
+  // (нарушает правило «человек не должен быть главным героем снимка»).
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos
+  // глазами.
+  'u-koshki-ili-sobaki-tekut-slyuni-chastye-prichiny-i-kogda-eto-trevozhno': 'Dog portrait',
+  'koshka-perestala-zaprygivat-vysoko-vozrast-ili-bol-v-sustavah': 'Senior cat sitting portrait',
+  // ⚠️ Обложка подобрана вручную (Ashkan Baharlooe, Alerted Cat.jpeg — кремовая
+  // кошка с ярко-зелёными здоровыми глазами на фоне сада) — автозапрос «Cat face
+  // portrait» отдавал кота с чуть покрасневшим нижним веком/уголком глаза
+  // (Love Krittaya, Cat face 1.jpg) — на статье именно про красные глаза это
+  // выглядит как сам симптом, а не щадящая нейтральная картинка. Прогон скрипта
+  // по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'u-koshki-ili-sobaki-pokrasneli-glaza-chastye-prichiny': 'Cat face portrait',
+  'sobaka-laet-na-drugih-sobak-na-progulke-pochemu-i-kak-otuchit': 'Dogs meeting park',
+  // ⚠️ Обложка подобрана вручную (Maxunbanned, PiperTheChinchilla.jpg — чистый
+  // студийный портрет спокойной шиншиллы) — на Commons НЕТ ни одного фото с
+  // корректным названием/описанием именно пылевой ванны (проверено запросами
+  // «dust bath», «sand bath», «Sandbad», «volcanic sand», intitle: и insource:
+  // — везде либо архивные PDF о разведении шиншилл на мех, либо фермы, либо
+  // ничего). Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами.
+  'shinshilla-prinimaet-pylevuyu-vannu-kak-chasto-i-pravilno-eto-delat': 'Chinchilla dust bath house',
+  // ⚠️ Обложка подобрана вручную (Tobias Klüpfel, Sleeping Cat on lap.jpg —
+  // кошка спит свернувшись клубком на коленях хозяина, видны только ноги) —
+  // автозапрос «Cat sleeping with owner» отдавал одинокого кота без хозяина
+  // в кадре (фото у обложки статьи про Hornbill magazine). Прогон скрипта по
+  // этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'koshka-spit-ryadom-s-hozyainom-ili-v-nogah-chto-eto-oznachaet': 'Cat sleeping on lap',
+  'popugay-boitsya-ruk-posle-ispuga-kak-vernut-doverie': 'Budgerigar cage',
+  'chem-zanyat-popugaya-esli-on-ves-den-odin-doma': 'Parrot toys',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
