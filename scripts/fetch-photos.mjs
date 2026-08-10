@@ -354,6 +354,74 @@ const PHOTO_QUERIES = {
   'koshka-spit-ryadom-s-hozyainom-ili-v-nogah-chto-eto-oznachaet': 'Cat sleeping on lap',
   'popugay-boitsya-ruk-posle-ispuga-kak-vernut-doverie': 'Budgerigar cage',
   'chem-zanyat-popugaya-esli-on-ves-den-odin-doma': 'Parrot toys',
+
+  // Советы, здоровье, попугаи (тринадцатая партия)
+  // ⚠️ Подобрано вручную и закачано напрямую по фиксированному URL, В ОБХОД
+  // этого скрипта (Chachacha369, Dogtainers Pet Transport Dog Cage Travel
+  // Crate Labrador Puppy.jpg — щенок в одобренном для авиаперевозки деревянном
+  // боксе с миской-поилкой). Запрос «Cat in pet carrier airport» первым
+  // кандидатом отдавал архивное фото эвакуации после урагана Катрина с
+  // военными на переднем плане; следующий кандидат вручную, «Air Travel With
+  // A Cat.jpg», оказался ДУБЛЁМ обложки статьи «kak-priuchit-koshku-k-perenoske-
+  // bez-stressa» (поймано сверкой sourceUrl по всем статьям — сверяй всегда!).
+  // ⚠️ ПРОГОН СКРИПТА ПО ЭТОМУ СЛАГУ МОЖЕТ ЗАМЕНИТЬ ФОТО НА НЕПОДХОДЯЩЕЕ ИЛИ
+  // ДУБЛИРУЮЩЕЕ — после прогона обязательно сверяться с public/images/photos
+  // глазами и проверять sourceUrl на дубли по всем статьям.
+  'perelet-s-pitomcom-v-samolete-chto-nuzhno-znat-zaranee': 'Air Travel With A Cat',
+  // ⚠️ Подобрано вручную (Mtlchung, Golden Retriever puppy 2010.jpg — щенок
+  // дома на коврике смотрит в сторону двери) — запросы про «гостей»
+  // («Dog greeting people at home», «Cat with guest at home» и т.п.) почти
+  // всегда попадали в архивные тексты XIX века (Commons индексирует книги по
+  // словам «home»/«guest»/«door»). Прогон скрипта по этому слагу заменит
+  // фото — сверяться с public/images/photos глазами.
+  'pitomec-i-gosti-v-dome-kak-podgotovit-ego-k-vizitam': 'Golden Retriever puppy sitting',
+  // ⚠️ Подобрано вручную и закачано напрямую по фиксированному URL, В ОБХОД
+  // этого скрипта (japanese_craft_construction/Flickr, «Dog Stylin'»
+  // (3406880422).jpg — маленькая собака на столе в груминг-салоне под феном,
+  // грумер рядом). Причина: поиск Wikimedia недетерминирован — один и тот же
+  // запрос «Dog Stylin'» в ручной проверке и при прогоне скрипта вернул РАЗНЫЕ
+  // топ-кандидаты (в одном случае костюмированную таксу на улице). ⚠️ ПРОГОН
+  // СКРИПТА ПО ЭТОМУ СЛАГУ МОЖЕТ ЗАМЕНИТЬ ФОТО НА НЕПОДХОДЯЩЕЕ — после прогона
+  // обязательно сверяться с public/images/photos глазами, не доверять query ниже.
+  'kak-vybrat-grumera-ili-gruming-salon-dlya-koshki-ili-sobaki': "Dog Stylin'",
+  // ⚠️ Подобрано вручную (Omtaihalamatomi, My cat Ponyo in a box.jpg —
+  // спокойная упитанная кошка лежит на спине в картонной коробке дома, живот
+  // виден, но кадр не тревожный) — автозапрос «Healthy cat lying on floor»
+  // отдавал в основном архивные книги «The Black Cat» начала XX века.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'u-koshki-ili-sobaki-uvelichilsya-zhivot-chastye-prichiny': 'My cat Ponyo in a box',
+  'koshka-chasto-zevaet-chto-eto-znachit': 'Cat yawning',
+  // ⚠️ Подобрано вручную и закачано напрямую по фиксированному URL, В ОБХОД
+  // этого скрипта (Linda Bartlett, Guinea pig (2).jpg — морская свинка
+  // спокойно лежит на руках у человека, видны лапки, без ножниц/крови) —
+  // автозапрос «Guinea pig nail trimming» отдавал архивные книги о разведении
+  // свинок на мясо/мех. Причина ручной закачки: поиск Wikimedia недетерминирован
+  // — запрос «Guinea pig (2)» в ручной проверке отдавал этот файл первым
+  // PD/CC0-кандидатом, а при прогоне скрипта — другой CC0-файл (смазанное фото
+  // с попугаем на фоне). ⚠️ ПРОГОН СКРИПТА ПО ЭТОМУ СЛАГУ МОЖЕТ ЗАМЕНИТЬ ФОТО
+  // НА НЕПОДХОДЯЩЕЕ — после прогона обязательно сверяться с public/images/photos
+  // глазами, не доверять query ниже.
+  'kak-podstrich-kogti-homyaku-morskoy-svinke-ili-kroliku-pravila-bezopasnosti': 'Guinea pig (2)',
+  'krysa-ili-homyak-spit-celyy-den-eto-normalno': 'Hamster sleeping',
+  // ⚠️ Подобрано вручную и закачано напрямую по фиксированному URL, В ОБХОД
+  // этого скрипта (Joselodos, Border collie sitting on the grass.jpg, CC0) —
+  // спокойный портрет собаки на траве, без сцены объятий (тема требует
+  // деликатности — обнимающий человек в кадре мог бы выглядеть как раз тем,
+  // от чего собаке не по себе). Причина ручной закачки: поиск Wikimedia
+  // недетерминирован — тот же запрос при прогоне скрипта один раз вернул
+  // фото женщины, тискающей собаку за лапу (полная противоположность теме
+  // статьи). ⚠️ ПРОГОН СКРИПТА ПО ЭТОМУ СЛАГУ МОЖЕТ ЗАМЕНИТЬ ФОТО НА
+  // НЕПОДХОДЯЩЕЕ — после прогона обязательно сверяться с public/images/photos
+  // глазами, не доверять query ниже.
+  'sobaka-ne-lyubit-kogda-ee-obnimayut-pochemu': 'Border collie sitting on the grass',
+  // ⚠️ Подобрано вручную (A S M Jobaer, Love in every lick 01.jpg — одна кошка
+  // вылизывает другую, крупный план, тот самый аллогруминг, о котором говорит
+  // статья) — фото именно кошки, вылизывающей человека, на Commons найти не
+  // удалось (все кандидаты — самогруминг или архивные книги «The Black Cat»).
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'koshka-oblizyvaet-hozyaina-chto-eto-oznachaet': 'Love in every lick 01',
+  'popugay-linyaet-kogda-eto-norma-a-kogda-povod-dlya-trevogi': 'Budgerigar perched cage',
+  'igrushki-dlya-popugaya-kak-vybrat-bezopasnye': 'Parrot toy wooden perch cage',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
