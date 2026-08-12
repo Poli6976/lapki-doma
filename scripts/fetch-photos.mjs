@@ -422,6 +422,70 @@ const PHOTO_QUERIES = {
   'koshka-oblizyvaet-hozyaina-chto-eto-oznachaet': 'Love in every lick 01',
   'popugay-linyaet-kogda-eto-norma-a-kogda-povod-dlya-trevogi': 'Budgerigar perched cage',
   'igrushki-dlya-popugaya-kak-vybrat-bezopasnye': 'Parrot toy wooden perch cage',
+
+  // Советы, здоровье, поведение, грызуны, попугаи (четырнадцатая партия)
+  'poezdka-s-pitomcem-na-mashine-kak-podgotovitsya-k-dolgoy-doroge': 'Dog out car window',
+  // ⚠️ Подобрано вручную (Marek Ślusarczyk/Tupungato, «43 Old dog - senior
+  // labrador dog with collar resting on sidewalk.jpg» — пожилой лабрадор с
+  // ошейником и седой мордой спокойно лежит на мостовой) — запрос «Old dog
+  // noah» неожиданно отдавал картину XIX века (J. G. Vibert), а не фото; общие
+  // запросы вроде «Senior dog portrait» тонут в архивных книгах о собаках.
+  // Прогон скрипта по этому слагу заменит фото — сверяться с public/images/photos
+  // глазами.
+  'pozhiloy-pitomec-kak-menyaetsya-uhod-s-vozrastom': 'Old dog noah',
+  // ⚠️ Подобрано вручную (Szakalová Edina, Shar Pei puppies.jpg — три щенка
+  // шарпея в плетёной корзине) — запрос «Cats for sale» неожиданно отдавал PD-фото
+  // рыбной фермы в Бангладеш с козой на переднем плане (мисматч заголовка и
+  // содержимого на Commons); прямые запросы про заводчиков/зоомагазины
+  // почти всегда тонут в архивных книгах или дают котят с не совсем уместным
+  // кадром родов. Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами.
+  'kak-vybrat-zoomagazin-ili-zavodchika-pri-pokupke-pitomca': 'Cats for sale',
+  // ⚠️ Подобрано вручную (Matt Buck, IMGP9694 (51714855382).jpg — человек
+  // спокойно стрижёт когти лежащей на руках кошке когтерезом) — автозапрос
+  // «Cat nail cutter» отдавал только предметную съёмку самого инструмента
+  // без животного. Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами.
+  'kak-podstrich-kogti-koshke-v-domashnih-usloviyah': 'Cat nail cutter',
+  // ⚠️ Подобрано вручную (Darren Glanville, Camera Shy (11624598275).jpg —
+  // ч/б портрет собаки с опущенной головой и отведённым взглядом, современное
+  // фото, не архивный скан) — автозапрос «Shy saluki dog» отдавал салюки на
+  // выставке в захламлённом помещении с ногами человека в кадре. Прогон
+  // скрипта по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'sobaka-boitsya-lyudey-kak-ey-pomoch-osvoitsya': 'Shy saluki dog',
+  'kak-priuchit-sobaku-k-namordniku-bez-stressa': 'White shepherd in a muzzle',
+  'krolik-otkazyvaetsya-ot-edy-chastye-prichiny-i-chto-delat': 'Indoor brown rabbit',
+  'kak-perevozit-homyaka-ili-morskuyu-svinku-v-doroge': 'Guinea pig girl frends in carrier box',
+  // ⚠️ Запрос «Iranian cat in clinic» (осмотр кота ветеринаром) сначала казался
+  // удачным, но при сверке sourceUrl по всем статьям оказался ДУБЛЁМ обложки
+  // «kak-vybrat-veterinarnuyu-kliniku» — заменено на спокойный портрет здоровой
+  // кошки (правило допускает и «нейтральный кадр осмотра», и «спокойного
+  // здорового животного» — см. задание). Военные фото по запросам про осмотр
+  // у ветеринара (Guantanamo, U.S. Army) отклонены как не для гражданского
+  // сайта. Прогон скрипта по этому слагу заменит фото — сверяться
+  // с public/images/photos глазами и проверять sourceUrl на дубли.
+  'u-koshki-ili-sobaki-shishka-ili-uplotnenie-pod-kozhey-kogda-idti-k-vrachu': 'Tabby cat alert sitting portrait',
+  // ⚠️ Обложка НЕ показывает лоток: файл называется «litter tray», но по факту
+  // на фото спокойный портрет британской короткошёрстной кошки без лотка в
+  // кадре (несовпадение заголовка и содержимого на Commons, поймано только
+  // просмотром глазами). Оставлено намеренно — по правилу «не показывать сам
+  // симптом» (см. kot-pisaet-mimo-lotka) спокойный портрет кошки уместнее для
+  // тревожной темы «кошка не может сходить в туалет», чем фото-фейл. Прогон
+  // скрипта по этому слагу может заменить фото — сверяться с public/images/photos
+  // глазами.
+  'koshka-ne-mozhet-shodit-v-tualet-chastye-prichiny-i-kogda-eto-srochno': 'lie down in the litter tray',
+  // ⚠️ Подобрано вручную (CambridgeBayWeather, Fresh cat litter.JPG — лоток,
+  // до половины насыпанный чистым наполнителем, без кота) — автозапрос
+  // «Bentonite bianca...» отдавал итальянские пакеты наполнителя с фотографией
+  // котёнка на упаковке (коммерческая этикетка, а не сцена). Прогон скрипта
+  // по этому слагу заменит фото — сверяться с public/images/photos глазами.
+  'kak-vybrat-napolnitel-dlya-koshachego-tualeta': 'Bentonite bianca uso lettiera per gatti',
+  'popugay-ne-est-ili-est-menshe-obychnogo-chastye-prichiny': 'Ara ararauna eating from food dish',
+  // ⚠️ Проверено глазами (Claudia Sissi Jung, несколько волнистых попугаев с
+  // нахохленными перьями и убранными в перья клювами спят на верёвочной жёрдочке
+  // днём) — прогон скрипта по этому слагу заменит фото, если он найдёт другой
+  // кадр первым; сверяться с public/images/photos глазами.
+  'skolko-sna-nuzhno-popugayu-i-kak-vliyaet-svet-vecherom': 'Budgerigar sleeping perched',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
