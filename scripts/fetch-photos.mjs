@@ -486,6 +486,19 @@ const PHOTO_QUERIES = {
   // днём) — прогон скрипта по этому слагу заменит фото, если он найдёт другой
   // кадр первым; сверяться с public/images/photos глазами.
   'skolko-sna-nuzhno-popugayu-i-kak-vliyaet-svet-vecherom': 'Budgerigar sleeping perched',
+
+  // Советы, здоровье, поведение, грызуны, попугаи (пятнадцатая партия)
+  'sobaka-skulit-i-laet-kogda-ostaetsya-odna-doma-separacionnaya-trevoga': 'Dog whining',
+  'sobaka-podbiraet-edu-i-musor-s-zemli-na-progulke-kak-otuchit': 'Dog sniffing grass',
+  'sobaka-pisaet-ot-radosti-ili-volneniya-pri-vstreche-pochemu-i-chto-delat': 'Happy dog owner',
+  'stoit-li-brat-pitomca-iz-priyuta-chto-nuzhno-znat': 'Humane society dog kennel volunteer',
+  'allergiya-na-koshku-ili-sobaku-chto-delat-ne-otdavaya-pitomca': 'Cat resting on carpet',
+  'krolik-skripit-zubami-kogda-eto-norma-a-kogda-signal-boli': 'Netherland dwarf rabbit',
+  'u-koshki-ili-sobaki-vypadaet-sherst-klochkami-chastye-prichiny': 'Cat resting indoor',
+  'pravda-li-chto-goryachiy-nos-ili-ushi-u-pitomca-priznak-temperatury': 'Dog nose close up',
+  'popugay-tryasyot-golovoy-ili-chihaet-chastye-prichiny': 'Budgerigar portrait',
+  'mozhno-li-derzhat-popugaya-vmeste-s-koshkoy-ili-sobakoy': 'Budgerigar and cat',
+  'homyak-ili-morskaya-svinka-vdrug-rastolsteli-ozhirenie-ili-beremennost': 'Obese hamster',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
