@@ -92,7 +92,8 @@ const plural = (n) => {
 };
 ---
 
-<BaseLayout title={SITE.name} description={SITE.description}>
+{/* ownSearch: поиск на главной живёт в первом экране, полоса под шапкой не нужна */}
+<BaseLayout title={SITE.name} description={SITE.description} ownSearch>
   <section class="hero">
     <div class="container">
       <span class="eyebrow enter enter-1">Кошки и собаки</span>

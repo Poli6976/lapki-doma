@@ -531,6 +531,41 @@ img {
   margin: var(--sp-6) auto 0;
   text-align: left;
 }
+/* Полоса под шапкой на всех страницах, кроме главной. Отступы меньше, чем у
+   строки в первом экране: это служебный элемент, он не должен отодвигать
+   заголовок статьи вниз. Список подсказок лежит поверх страницы, поэтому
+   ничего под собой не двигает. */
+.site-search--bar {
+  margin: var(--sp-3) auto var(--sp-2);
+}
+.site-search--bar .search-box {
+  padding: 4px 4px 4px 16px;
+  box-shadow: none;
+}
+.site-search--bar .search-input {
+  padding: 7px 0;
+  font-size: 0.95rem;
+}
+.site-search--bar .search-submit {
+  width: 40px;
+  height: 40px;
+}
+/* Подпись «ничего не нашлось» на внутренней странице лежит ПОВЕРХ, а не в
+   потоке: иначе неудачный запрос сдвигал бы вниз всю статью под строкой.
+   На главной она остаётся в потоке — там под ней только чипы ситуаций. */
+.site-search--bar .search-note {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  text-align: left;
+}
 .search-box {
   display: flex;
   align-items: center;
@@ -579,6 +614,14 @@ img {
   color: #fff;
   background: var(--brand);
   cursor: pointer;
+  /* Убирает задержку в 300 мс перед нажатием на телефоне: без неё браузер
+     ждёт, не будет ли второго касания (двойной тап для зума), и кнопка
+     кажется неотзывчивой. */
+  touch-action: manipulation;
+  /* Выделение при долгом нажатии на телефоне — кнопка не текст. */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
   box-shadow: 0 3px 0 var(--brand-dark);
   transform: translateY(0);
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease,
@@ -1572,6 +1615,17 @@ img {
   .nav-btn {
     padding: 7px 13px;
     font-size: 0.88rem;
+  }
+  /* Пальцем — не мышью: кнопку поиска возвращаем к 44px, это нижняя граница
+     удобного касания. Строку заодно оставляем на 16px, иначе Safari при
+     фокусе зумит страницу. */
+  .site-search--bar .search-submit {
+    width: 44px;
+    height: 44px;
+  }
+  .site-search--bar .search-input {
+    padding: 9px 0;
+    font-size: 1rem;
   }
   .nav-btn img {
     width: 19px;

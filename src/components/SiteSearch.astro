@@ -7,10 +7,20 @@ import { PARROT_SPECIES } from '../data/breeds-popugai.mjs';
 import { articleUrl } from '../lib/urls.mjs';
 
 /**
- * Поиск по сайту на главной.
+ * Поиск по сайту.
  *
  * Читатель приходит с конкретным вопросом («кошка не ест третий день») и не
  * обязан угадывать, в какой раздел ему идти. Строка ведёт прямо на статью.
+ *
+ * Два вида (`variant`):
+ *  - `hero` — крупная строка в первом экране главной;
+ *  - `bar`  — узкая полоса под шапкой на всех остальных страницах. Особенно
+ *    важна на телефоне: там читатель приходит из поиска сразу на статью, и
+ *    без строки поиска ему некуда пойти со следующим вопросом.
+ *
+ * ⚠️ На страницу ставится РОВНО ОДИН экземпляр (BaseLayout сам решает, какой):
+ * вместе с компонентом в HTML уезжает индекс поиска, и второй экземпляр
+ * продублировал бы его целиком.
  *
  * Индекс собирается на сборке и кладётся в страницу отдельным JSON-блоком:
  * статей несколько десятков, это единицы килобайт. Никакого запроса на сервер
@@ -21,8 +31,14 @@ import { articleUrl } from '../lib/urls.mjs';
  * целью в Яндекс.Метрику, если счётчик подключён. Так владелец видит, чего
  * люди ищут и не находят, и пишет статьи по реальным вопросам, а не наугад.
  * Счётчик не подключён — запрос не уходит никуда, и текст под строкой этого
- * не обещает (см. `noHitText` ниже).
+ * не обещает (см. `noHitTail` ниже).
+ *
+ * @typedef {Object} Props
+ * @property {'hero'|'bar'} [variant]
  */
+const { variant = 'hero' } = Astro.props;
+const uid = `site-search-${variant}`;
+
 const all = await getCollection('articles', ({ data }) =>
   import.meta.env.PROD ? !data.draft : true,
 );
@@ -62,23 +78,31 @@ const breedEntries = [
 const index = [...articleEntries, ...breedEntries];
 
 const tracked = Boolean(ANALYTICS.yaMetrikaId);
-const noHitText = tracked
-  ? 'Пока такой статьи нет. Вопрос записан — по таким запросам мы и решаем, о чём писать дальше.'
-  : 'Пока такой статьи нет. Посмотрите частые ситуации ниже — возможно, ваша тема рядом.';
+
+// Хвост сообщения «ничего не нашлось». Начало собирается уже в браузере из
+// самого запроса: строка к этому моменту очищена, и человек должен увидеть,
+// что искали именно его слова.
+const noHitTail = tracked
+  ? 'пока ничего не нашлось. Вопрос записан — по таким запросам мы и решаем, о чём писать дальше.'
+  : variant === 'hero'
+    ? 'пока ничего не нашлось. Посмотрите частые ситуации ниже — возможно, ваша тема рядом.'
+    : 'пока ничего не нашлось. Загляните в разделы в шапке — возможно, ваша тема рядом.';
 ---
 
-<search class="site-search enter enter-3">
+<search
+  class:list={['site-search', `site-search--${variant}`, variant === 'hero' && 'enter enter-3']}
+>
   <form class="search-box" role="search" autocomplete="off">
-    <label class="sr-only" for="site-search-input">Поиск по сайту</label>
+    <label class="sr-only" for={`${uid}-input`}>Поиск по сайту</label>
     <input
-      id="site-search-input"
+      id={`${uid}-input`}
       class="search-input"
       type="search"
       name="q"
       placeholder="Породы или что случилось?"
       role="combobox"
       aria-expanded="false"
-      aria-controls="site-search-results"
+      aria-controls={`${uid}-results`}
       aria-autocomplete="list"
     />
     <button class="search-submit" type="submit" aria-label="Найти">
@@ -96,32 +120,44 @@ const noHitText = tracked
     </button>
   </form>
 
-  <ul id="site-search-results" class="search-results" role="listbox" aria-label="Найденные статьи" hidden></ul>
+  <ul
+    id={`${uid}-results`}
+    class="search-results"
+    role="listbox"
+    aria-label="Найденные статьи"
+    hidden></ul>
   <p class="search-note" role="status" hidden></p>
+
+  {/*
+    Индекс поиска отдаётся страницей как JSON внутри <script>. Лежит внутри
+    самого блока поиска, чтобы скрипт находил его рядом с собой, а не по
+    глобальному id.
+    ⚠️ `<` обязательно экранируем в <: без этого заголовок или описание
+    статьи, содержащие «</script», закрыли бы тег раньше времени, и остаток
+    строки браузер разобрал бы как HTML. JSON.stringify сам `<` не экранирует.
+    То же самое сделано для JSON-LD в BaseLayout.
+  */}
+  <script
+    type="application/json"
+    class="search-index"
+    is:inline
+    set:html={JSON.stringify(index).replace(/</g, '\\u003c')}
+  ></script>
 </search>
 
-{/*
-  Индекс поиска отдаётся страницей как JSON внутри <script>.
-  ⚠️ `<` обязательно экранируем в <: без этого заголовок или описание
-  статьи, содержащие «</script», закрыли бы тег раньше времени, и остаток
-  строки браузер разобрал бы как HTML. JSON.stringify сам `<` не экранирует.
-  То же самое сделано для JSON-LD в BaseLayout.
-*/}
-<script
-  type="application/json"
-  id="site-search-index"
-  is:inline
-  set:html={JSON.stringify(index).replace(/</g, '\\u003c')}
-></script>
-
-<script is:inline define:vars={{ metrikaId: ANALYTICS.yaMetrikaId, noHitText }}>
+<script is:inline define:vars={{ metrikaId: ANALYTICS.yaMetrikaId, noHitTail, variant }}>
   (() => {
-    const form = document.querySelector('.site-search .search-box');
-    const input = document.getElementById('site-search-input');
-    const list = document.getElementById('site-search-results');
-    const note = document.querySelector('.site-search .search-note');
-    const data = document.getElementById('site-search-index');
-    if (!form || !input || !list || !note || !data) return;
+    const root = document.querySelector('.site-search--' + variant);
+    if (!root || root.dataset.wired) return;
+    root.dataset.wired = '1';
+
+    const form = root.querySelector('.search-box');
+    const input = root.querySelector('.search-input');
+    const button = root.querySelector('.search-submit');
+    const list = root.querySelector('.search-results');
+    const note = root.querySelector('.search-note');
+    const data = root.querySelector('.search-index');
+    if (!form || !input || !button || !list || !note || !data) return;
 
     const index = JSON.parse(data.textContent || '[]');
     const LIMIT = 6;
@@ -197,7 +233,7 @@ const noHitText = tracked
       matches.forEach((item, i) => {
         const li = document.createElement('li');
         li.className = 'search-result';
-        li.id = `search-result-${i}`;
+        li.id = `${list.id}-${i}`;
         li.setAttribute('role', 'option');
         li.setAttribute('aria-selected', 'false');
 
@@ -238,6 +274,43 @@ const noHitText = tracked
       ym(metrikaId, 'reachGoal', 'search_no_result', { search_query: query });
     }
 
+    /**
+     * Отправка запроса. Одна на все способы: Enter, клик мышью по кнопке,
+     * палец по кнопке на телефоне.
+     */
+    function submit() {
+      const query = input.value.trim();
+      if (!query) {
+        input.focus();
+        return;
+      }
+
+      // Подсказка выбрана стрелками — идём по ней. Иначе считаем совпадения
+      // заново, а не берём накопленные: текст мог попасть в строку мимо события
+      // input — автозаполнением, вставкой, восстановлением формы при возврате
+      // «назад». Тогда накопленный список пуст, и кнопка соврала бы, что ничего
+      // не нашлось.
+      const target = active >= 0 ? matches[active] : search(query)[0];
+
+      // Строку чистим ВСЕГДА и до перехода: человек должен видеть, что запрос
+      // ушёл. Заодно при возврате «назад» строка не встретит его старым
+      // текстом. blur убирает с телефона экранную клавиатуру — на маленьком
+      // экране это самый заметный признак, что нажатие сработало.
+      input.value = '';
+      matches = [];
+      clear();
+      input.blur();
+
+      if (target) {
+        window.location.href = target.u;
+        return;
+      }
+
+      note.textContent = 'По запросу «' + query + '» ' + noHitTail;
+      note.hidden = false;
+      reportMiss(query);
+    }
+
     input.addEventListener('input', () => {
       note.hidden = true;
       matches = search(input.value);
@@ -260,27 +333,33 @@ const noHitText = tracked
       }
     });
 
+    // Enter в строке и обычный клик мышью по кнопке.
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const query = input.value.trim();
-      if (!query) return;
+      submit();
+    });
 
-      // Выбрана подсказка стрелками — идём по ней, иначе по лучшему совпадению.
-      const target = matches[active >= 0 ? active : 0];
-      if (target) {
-        window.location.href = target.u;
-        return;
-      }
-
-      clear();
-      note.textContent = noHitText;
-      note.hidden = false;
-      reportMiss(query);
+    /**
+     * Отдельная обработка нажатия на кнопку.
+     *
+     * На телефоне палец по кнопке при открытой клавиатуре часто не долетает до
+     * click: строка теряет фокус, клавиатура уезжает, страница на том же кадре
+     * меняет высоту — и клик приходится уже мимо кнопки. pointerdown
+     * срабатывает ДО всего этого. preventDefault не даёт строке потерять фокус
+     * раньше времени. Повторного срабатывания не будет: submit() чистит строку,
+     * и пришедший следом click упрётся в пустой запрос.
+     */
+    button.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      submit();
     });
 
     // Клик мимо — прячем список, но текст в строке не трогаем.
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.site-search')) clear();
+      const el = e.target;
+      if (!(el instanceof Element)) return;
+      if (!el.closest('.site-search')) clear();
     });
   })();
 </script>

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieNotice from '../components/CookieNotice.astro';
+import SiteSearch from '../components/SiteSearch.astro';
 import { SITE, MONETIZATION, ANALYTICS } from '../site.config.mjs';
 import { absoluteUrl } from '../lib/urls.mjs';
 
@@ -14,6 +15,7 @@ import { absoluteUrl } from '../lib/urls.mjs';
  * @property {'website'|'article'} [type]
  * @property {object|object[]} [jsonLd] один JSON-LD объект или массив (Article/BreadcrumbList и т.п.)
  * @property {boolean} [noindex]
+ * @property {boolean} [ownSearch] страница сама рисует поиск (главная — в первом экране)
  */
 const {
   title,
@@ -22,6 +24,7 @@ const {
   type = 'website',
   jsonLd,
   noindex = false,
+  ownSearch = false,
 } = Astro.props;
 
 const pageTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
@@ -122,6 +125,26 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   </head>
   <body>
     <Header />
+
+    <!--
+      Поиск на каждой странице, а не только на главной. Больше половины
+      читателей приходит из поиска сразу на статью и главной вообще не видит —
+      а вопрос у них обычно не один. На телефоне это критично: меню категорий
+      там короткое, и уйти со статьи со своим вопросом было просто некуда.
+
+      Строка стоит ПОД липкой шапкой, в обычном потоке, а не внутри неё:
+      шапка на телефоне и так в две строки, третья съела бы четверть экрана.
+      На главной эту полосу не рисуем — там поиск уже стоит в первом экране,
+      а два экземпляра продублировали бы индекс поиска в HTML.
+    -->
+    {
+      !ownSearch && (
+        <div class="container search-slot">
+          <SiteSearch variant="bar" />
+        </div>
+      )
+    }
+
     <main>
       <slot />
     </main>
