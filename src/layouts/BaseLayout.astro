@@ -67,9 +67,15 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       для ЭТОГО домена, подставлять чужие (с rasti-doma.ru) нельзя —
       не пройдёт проверку. Удалять после подтверждения тоже нельзя:
       Яндекс перепроверяет права и снимает их, если тег исчез.
-      Сюда же позже добавятся теги партнёрских сетей (Admitad / Такпродам).
     -->
     <meta name="yandex-verification" content="dccdda4238ed6706" />
+
+    <!--
+      Подтверждение владения сайтом в Такпродам (партнёрка Ozon/WB).
+      Тег привязан к аккаунту публишера, не к домену — тот же, что уже стоит
+      у rasti-doma.ru.
+    -->
+    <meta name="takprodam-verification" content="cecf88e7-ac00-4ce8-a0f5-cde2c72e59af" />
 
     <!--
       Шрифты стиля Grainy Warm.
