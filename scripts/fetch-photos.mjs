@@ -499,6 +499,45 @@ const PHOTO_QUERIES = {
   'popugay-tryasyot-golovoy-ili-chihaet-chastye-prichiny': 'Budgerigar portrait',
   'mozhno-li-derzhat-popugaya-vmeste-s-koshkoy-ili-sobakoy': 'Budgerigar and cat',
   'homyak-ili-morskaya-svinka-vdrug-rastolsteli-ozhirenie-ili-beremennost': 'Obese hamster',
+
+  // Собаки, советы, здоровье, грызуны, попугаи (шестнадцатая партия)
+  'chem-kormit-schenka-v-pervye-mesyacy': 'Brown puppy',
+  'kak-otuchit-sobaku-layat-na-prohozhih': 'Dog behind fence yard',
+  'kak-priuchit-schenka-k-pelenke-ili-ulice': 'Puppy on grass outside',
+  // Тема требует нейтральности: не хирургическая сцена, а спокойная здоровая
+  // собака (по заданию — осмотр у ветеринара или просто спокойный питомец).
+  'kastraciya-sobaki-plyusy-minusy-i-vosstanovlenie': 'Beagle dog resting',
+  'osnovnye-komandy-dlya-schenka-s-chego-nachat-dressirovku': 'Mini Australian Shepard Puppy',
+  'skolko-gulyat-s-sobakoy-v-den': 'Dog on leash grass field',
+  // Нейтральный кадр приёма у ветеринара, без игл крупным планом.
+  'kakie-privivki-nuzhny-koshke-ili-sobake-krome-beshenstva': 'German Shepherd puppy sitting',
+  'mozhno-li-davat-pitomcu-chelovecheskie-lekarstva': 'Tabby cat resting indoors',
+  'mozhno-li-brat-pitomca-v-kafe-otel-ili-obschestvennyy-transport': 'Dog on the ferry',
+  'koshka-sidit-v-korobkah-i-na-paketah-pochemu': 'Cat sitting in cardboard box',
+  'koshka-hodit-za-hozyainom-po-pyatam-pochemu': 'Tabby cat walking indoor',
+  'koshka-ili-sobaka-rezko-pohudela-chastye-prichiny': 'Grey tabby cat portrait sitting',
+  'koshka-ili-sobaka-kashlyaet-chastye-prichiny': 'Boxer dog portrait face',
+  // ⚠️ Первый подобранный кадр (Gnushi, «Schoko and tina in garden») оказался
+  // уличным вольером за сеткой-рабицей — статья целиком про безопасность ВНУТРИ
+  // квартиры, уличный кадр вводит в заблуждение. Текстовый поиск по «indoors»/
+  // «living room» тонул в архивных PDF-книгах о разведении свинок/кроликов —
+  // подобрано вручную через категорию Commons (Rex tremendae majestatis, Guinea
+  // pig on pillow.jpg — свинка на пледе на фоне книжной полки и коробки с сеном,
+  // однозначно домашняя комната). Прогон скрипта по этому слагу заменит фото —
+  // сверяться с public/images/photos глазами.
+  'mozhno-li-vypuskat-gryzuna-gulyat-po-kvartire-bez-prismotra': 'Guinea pig on carpet indoors living room',
+  'u-homyaka-ili-svinki-shumnoe-dyhanie-ili-chihanie-kogda-trevozhno': 'Guinea pig nose close up',
+  'mozhno-li-derzhat-popugaya-na-balkone-ili-lodzhii': 'Bird cage on balcony',
+  // ⚠️ Первый подобранный кадр (Edd34, «Bugerigar chewing.jpg») оказался
+  // волнистиком на боковой стенке холодильника рядом с бумажной наклейкой —
+  // к клетке отношения не имеет, плюс крупная жёлтая EXIF-дата в кадре.
+  // Текстовые запросы про «chewing/biting cage bars» находили только сканы
+  // Avicultural Magazine. Подобрано вручную через категорию Commons
+  // (Ian Martinez, Budgerigar (Melopsittacus undulatus) -on cage.jpg — здоровый
+  // волнистик сидит прямо на прутьях клетки, рядом верёвочная жёрдочка, без
+  // дат и водяных знаков). Прогон скрипта по этому слагу заменит фото —
+  // сверяться с public/images/photos глазами.
+  'popugay-gryzyot-ili-dolbit-kletku-pochemu-i-chto-delat': 'Budgerigar chewing cage bars',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
