@@ -1,0 +1,52 @@
+---
+/**
+ * Комментарии читателей под статьёй — виджет VK Комментарии.
+ *
+ * Выбран VK, а не GitHub-виджеты (Giscus/Utterances): у аудитории сайта
+ * (владельцы кошек и собак, не разработчики) почти у всех есть VK-логин,
+ * у гитхаба — почти ни у кого. Это не противоречит решению не строить
+ * VK-паблик (см. память проекта, 25.08.2026) — здесь VK используется только
+ * как технология входа для виджета, без сообщества и без набора подписчиков.
+ *
+ * ⚠️ Стоит явно предупреждать перед каждым блоком комментариев: статьи
+ * касаются здоровья и поведения питомцев, и в комментариях кто-то может
+ * посоветовать небезопасное (лекарство, дозировку). Плашка — не для галочки,
+ * это прямая просьба владельца (26.08.2026) после разговора про риски на
+ * YMYL-теме. Пока `COMMENTS.vkAppId` пуст, виджет не показывается вовсе —
+ * тот же принцип, что у РСЯ и аналитики: не рисовать то, что не подключено.
+ *
+ * @typedef {Object} Props
+ * @property {string} pageId уникальный идентификатор страницы для VK Widgets
+ */
+import { COMMENTS } from '../site.config.mjs';
+const { pageId } = Astro.props;
+---
+
+{
+  COMMENTS.vkAppId && (
+    <section class="comments" aria-label="Комментарии читателей">
+      <h2>Комментарии</h2>
+      <aside class="comments-warning" role="note">
+        <strong>Это мнения читателей, а не медицинский совет.</strong> Никогда не
+        давайте питомцу лекарства и не меняйте дозировку по совету из комментариев —
+        препараты и дозы подбирает только ветеринар, который видел животное. При
+        тревожных или нарастающих симптомах не ждите ответа в комментариях —
+        обращайтесь в клинику.
+      </aside>
+      <div id="vk_comments" data-page-id={pageId} />
+    </section>
+  )
+}
+
+{
+  COMMENTS.vkAppId && (
+    <Fragment>
+      <script type="text/javascript" src="https://vk.com/js/api/openapi.js?169" is:inline />
+      <script type="text/javascript" define:vars={{ apiId: COMMENTS.vkAppId }} is:inline>
+        VK.init({ apiId });
+        const container = document.getElementById('vk_comments');
+        VK.Widgets.Comments('vk_comments', { limit: 15, attach: '*' }, container.dataset.pageId);
+      </script>
+    </Fragment>
+  )
+}

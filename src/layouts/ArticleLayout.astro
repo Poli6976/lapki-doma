@@ -4,6 +4,7 @@ import AdSlot from '../components/AdSlot.astro';
 import AffiliateCard from '../components/AffiliateCard.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import CalmIntro from '../components/CalmIntro.astro';
+import CommentsWidget from '../components/CommentsWidget.astro';
 import VetAlert from '../components/VetAlert.astro';
 import VetDisclaimer from '../components/VetDisclaimer.astro';
 import LegalDisclaimer from '../components/LegalDisclaimer.astro';
@@ -247,6 +248,8 @@ const jsonLd = [articleJsonLd, breadcrumbJsonLd];
         </aside>
       )
     }
+
+    <CommentsWidget pageId={entry.id} />
 
     <AdSlot place="bottom" label="Реклама" />
   </article>
