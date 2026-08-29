@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import SiteSearch from '../components/SiteSearch.astro';
+import SubscribeBlock from '../components/SubscribeBlock.astro';
 import { SITE, CATEGORIES, CATEGORY_FALLBACK_ICON } from '../site.config.mjs';
 import { categoryUrl, articleUrl } from '../lib/urls.mjs';
 
@@ -191,5 +192,7 @@ const plural = (n) => {
         </div>
       </div>
     </section>
+
+    <SubscribeBlock />
   </div>
 </BaseLayout>

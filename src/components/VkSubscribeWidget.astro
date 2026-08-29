@@ -1,0 +1,23 @@
+---
+/**
+ * Живой виджет VK «Подписаться на сообщество» (VK.Widgets.Group).
+ * В отличие от обычной ссылки на паблик, кнопка рисуется официальным
+ * VK-скриптом прямо на странице сайта: залогиненный в VK человек
+ * подписывается в один клик, никуда не переходя. Показывается, только
+ * если задан SITE.social.vkGroupId — тот же принцип, что у остальных
+ * подключений (РСЯ, аналитика, комментарии): не рисовать неподключённое.
+ */
+import { SITE } from '../site.config.mjs';
+const { vkGroupId } = SITE.social;
+---
+
+{vkGroupId && <div id="vk_groups" class="vk-subscribe-widget" />}
+
+{
+  vkGroupId && (
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?169" is:inline />
+    <script type="text/javascript" define:vars={{ vkGroupId }} is:inline>
+      VK.Widgets.Group('vk_groups', { mode: 0, width: '300', no_cover: 0 }, vkGroupId);
+    </script>
+  )
+}

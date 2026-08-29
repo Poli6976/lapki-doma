@@ -19,5 +19,8 @@ export async function GET(context) {
     description: SITE.description,
     site: context.site ?? SITE.url,
     items,
+    // Без этого браузер показывает голый XML-код при клике на кнопку
+    // подписки — см. src/pages/rss-style.xsl.js.
+    stylesheet: '/rss-style.xsl',
   });
 }

@@ -1,0 +1,71 @@
+---
+/**
+ * Заметный блок «Подпишитесь на новые статьи».
+ *
+ * VK — живой виджет VK.Widgets.Group (VkSubscribeWidget.astro): для
+ * залогиненного в VK читателя это буквально одна кнопка «Подписаться»
+ * прямо на странице, без перехода на другой сайт — самый честный аналог
+ * «подписки в один клик» из всех платформ, которые у нас есть.
+ *
+ * Telegram/Дзен/RSS — узнаваемые круглые иконки платформ, как на
+ * большинстве сайтов с разделом «Мы в соцсетях», а не текстовые кнопки
+ * с техническим термином. У этих платформ нет встраиваемого виджета
+ * подписки — клик открывает канал, а дальше сама платформа показывает
+ * свою кнопку «Подписаться»/«Читать» (это максимум, что технически
+ * возможно без ухода со своей платформы).
+ *
+ * RSS-ссылка на сам сайт (`/rss.xml`) показывается всегда — это
+ * единственный способ подписаться на сайт напрямую, без стороннего
+ * аккаунта. Остальные — только если ссылка реально задана в SITE.social,
+ * тот же принцип, что у РСЯ, аналитики и комментариев: не рисовать то,
+ * что не подключено.
+ *
+ * ⚠️ Подпись у RSS-кнопки — «Подписаться» (не «RSS»), по прямому
+ * решению владельца 30.08.2026: слово RSS обывателю ничего не говорит
+ * (проверено на живом человеке), а «Подписаться» понятно всем. Мы
+ * заранее предупредили, что это не то же самое, что подписка в VK/
+ * Telegram — по клику откроется XML-файл, а не форма или уведомление, —
+ * владелец решение принял осознанно. Ссылка и механика не менялись.
+ */
+import { SITE } from '../site.config.mjs';
+import VkSubscribeWidget from './VkSubscribeWidget.astro';
+
+const channels = [
+  {
+    url: SITE.social.telegram,
+    label: 'Telegram',
+    color: '#26A5E4',
+    icon: '<svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><path d="M21.5 4.5 3 11.4c-.9.35-.9 1.65.02 1.98l4.4 1.55 1.7 5.46c.2.63 1 .82 1.47.35l2.53-2.5 4.65 3.42c.72.53 1.75.14 1.93-.74l3.16-15.02c.2-.94-.75-1.68-1.66-1.32Z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.6 14.2 18 8l-7.8 7.3-.3 3.2z" fill="#fff"/></svg>',
+  },
+  {
+    url: SITE.social.dzen,
+    label: 'Дзен',
+    color: '#292929',
+    icon: '<svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><g fill="#fff"><circle cx="12" cy="5.6" r="2.1"/><circle cx="18.4" cy="12" r="2.1"/><circle cx="12" cy="18.4" r="2.1"/><circle cx="5.6" cy="12" r="2.1"/><circle cx="12" cy="12" r="2.6"/></g></svg>',
+  },
+  {
+    url: '/rss.xml',
+    label: 'Подписаться',
+    color: '#EE802F',
+    icon: '<svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><circle cx="6.2" cy="17.8" r="2.1" fill="#fff"/><path d="M4 10.8a9.2 9.2 0 0 1 9.2 9.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M4 5.2a14.8 14.8 0 0 1 14.8 14.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  },
+].filter((c) => c.url);
+---
+
+{
+  channels.length > 0 && (
+    <section class="subscribe" aria-label="Подписка на новые статьи">
+      <h2>Подписывайтесь, чтобы не пропустить новые статьи</h2>
+      <p>Мы в соцсетях — новые материалы про кошек, собак и других питомцев там, где вам удобно.</p>
+      <VkSubscribeWidget />
+      <div class="subscribe-links">
+        {channels.map((c) => (
+          <a class="subscribe-link" href={c.url} target="_blank" rel="noopener" aria-label={`Подписаться: ${c.label}`}>
+            <span class="subscribe-icon" style={`background:${c.color}`} set:html={c.icon} />
+            <span class="subscribe-label">{c.label}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
