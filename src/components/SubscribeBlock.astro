@@ -46,8 +46,14 @@ const channels = [
   {
     url: '/rss.xml',
     label: 'Подписаться',
-    color: '#EE802F',
-    icon: '<svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><circle cx="6.2" cy="17.8" r="2.1" fill="#fff"/><path d="M4 10.8a9.2 9.2 0 0 1 9.2 9.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M4 5.2a14.8 14.8 0 0 1 14.8 14.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>',
+    // Логотип сайта (тот же рисунок и цвета, что в public/favicon.svg)
+    // вместо значка RSS — узнаваемее для читателя, чем абстрактный
+    // «сигнал». ⚠️ Цвета иконки — не терракота сайта (#d85a2e), а
+    // бежево-коричневые, как в самом favicon.svg (похоже на наследие
+    // копирования движка от «Расти Дома») — оставлено как есть, это
+    // уже реальная иконка сайта, менять не наша задача сейчас.
+    color: '#a47764',
+    icon: '<svg viewBox="0 0 64 64" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="42" rx="14" ry="12" fill="#f3ece2"/><ellipse cx="16" cy="24" rx="6" ry="7" fill="#f3ece2"/><ellipse cx="30" cy="16" rx="6" ry="7" fill="#f3ece2"/><ellipse cx="46" cy="24" rx="6" ry="7" fill="#f3ece2"/></svg>',
   },
 ].filter((c) => c.url);
 ---
