@@ -57,7 +57,7 @@ export const SITE = {
     vkGroupId: '241159723',
     telegram: 'https://t.me/lapkidoma_ru',
     pinterest: 'https://ru.pinterest.com/andr3y2065/',
-    dzen: 'https://dzen.ru/id/6a92a44a8dd10e7a00e13687',
+    dzen: 'https://dzen.ru/id/6a9685771de8e92a63ba585d',
   },
 };
 
