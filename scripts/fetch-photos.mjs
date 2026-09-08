@@ -79,6 +79,11 @@ const PHOTO_QUERIES = {
   'koshku-rvet-shersyu-eto-norma-ili-net': 'Cat grooming licking fur',
   'koshka-boitsya-pylesosa-i-bytovoy-shum': 'Cat sitting on carpet',
   'kot-metit-ugly-pochemu-i-chto-delat': 'Cat sitting next to door',
+  // ⚠️ Обложка подобрана вручную (MiNe, «2008-11-28 a Calico kitten on the litter
+  // box») — автозапросы «Cat near litter box» / «Cat sitting in litter box» либо
+  // отдавали брошенный пакет наполнителя в кустах, либо бродячую кошку без связи
+  // с темой. Прогон скрипта по этому слагу заменит фото — сверяться глазами.
+  'kot-perestal-zakapyvat-kakashki-v-lotke-chto-eto-znachit': '2008-11-28 a Calico kitten on the litter box',
   'koshka-prinosit-domoy-myshey-i-ptic': 'Cat crouched in grass',
   // ⚠️ Обложка подобрана вручную (Öljylautta, Grey cat eating.jpg) — запрос
   // «Cat eating cat food» неожиданно первым кандидатом отдавал PD-фото
@@ -538,6 +543,13 @@ const PHOTO_QUERIES = {
   // дат и водяных знаков). Прогон скрипта по этому слагу заменит фото —
   // сверяться с public/images/photos глазами.
   'popugay-gryzyot-ili-dolbit-kletku-pochemu-i-chto-delat': 'Budgerigar chewing cage bars',
+
+  // Лапы (семнадцатая партия)
+  'pochemu-u-sobaki-lapy-pahnut-popkornom-ili-kukuruzoy': 'Dog paw macro',
+  'koshka-ili-sobaka-vyryvaetsya-kogda-beresh-ee-za-lapu': 'Holding cat paw hand',
+  'u-sobaki-mezhdu-palcev-lap-namerzaet-sneg-chto-delat': 'Dog running in snow winter',
+  'sobaka-ili-koshka-poranila-lapu-zanoza-ili-porez-chto-delat-v-pervye-chasy': 'Dog walking in the woods',
+  'treschiny-i-suhost-podushechek-lap-u-koshki-ili-sobaki-chastye-prichiny': 'Dog paw pad',
 };
 
 /** Убирает html-теги из поля автора — Commons отдаёт его со ссылками. */
