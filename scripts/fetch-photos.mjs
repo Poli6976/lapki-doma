@@ -342,6 +342,7 @@ const PHOTO_QUERIES = {
   // выглядит как сам симптом, а не щадящая нейтральная картинка. Прогон скрипта
   // по этому слагу заменит фото — сверяться с public/images/photos глазами.
   'u-koshki-ili-sobaki-pokrasneli-glaza-chastye-prichiny': 'Cat face portrait',
+  'koshka-chasto-morgaet-odnim-glazom': 'Tabby cat close up face whiskers',
   'sobaka-laet-na-drugih-sobak-na-progulke-pochemu-i-kak-otuchit': 'Dogs meeting park',
   // ⚠️ Обложка подобрана вручную (Maxunbanned, PiperTheChinchilla.jpg — чистый
   // студийный портрет спокойной шиншиллы) — на Commons НЕТ ни одного фото с
