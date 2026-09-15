@@ -545,6 +545,14 @@ const PHOTO_QUERIES = {
   // сверяться с public/images/photos глазами.
   'popugay-gryzyot-ili-dolbit-kletku-pochemu-i-chto-delat': 'Budgerigar chewing cage bars',
 
+  // Зумис (восемнадцатая партия)
+  // ⚠️ Запрос «Dog running in park» первым кандидатом отдал африканскую
+  // гиеновидную собаку в Kruger National Park — WILD_SPECIES не ловит общее
+  // «wild dog» без слова «african» перед ним. Заменено на кадр золотистого
+  // ретривера в прыжке по лугу с апортом. Прогон скрипта по этому слагу может
+  // вернуть неподходящее фото — сверяться с public/images/photos глазами.
+  'koshka-ili-sobaka-nositsya-krugami-chto-takoe-zumis': 'Golden Retriever running grass',
+
   // Лапы (семнадцатая партия)
   'pochemu-u-sobaki-lapy-pahnut-popkornom-ili-kukuruzoy': 'Dog paw macro',
   'koshka-ili-sobaka-vyryvaetsya-kogda-beresh-ee-za-lapu': 'Holding cat paw hand',
