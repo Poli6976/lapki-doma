@@ -5,7 +5,7 @@ import { CAT_BREEDS } from '../../data/breeds-koshki.mjs';
 import { DOG_BREEDS } from '../../data/breeds-sobaki.mjs';
 import { PARROT_SPECIES } from '../../data/breeds-popugai.mjs';
 import breedPhotos from '../../data/breed-photos.json';
-import { categoryUrl } from '../../lib/urls.mjs';
+import { articleUrl, categoryUrl } from '../../lib/urls.mjs';
 
 /**
  * Справочник пород: /porody/koshki и /porody/sobaki.
@@ -69,7 +69,7 @@ const items = breeds.map((b) => {
   const entry = b.article ? articleById.get(b.article) : undefined;
   return {
     ...b,
-    href: entry ? `/${entry.data.category}/${entry.id}` : undefined,
+    href: entry ? articleUrl(entry) : undefined,
     photo: photoFor(b.key),
   };
 });

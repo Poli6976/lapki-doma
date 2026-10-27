@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import { CATEGORIES } from '../site.config.mjs';
 import categoryPhotos from '../data/category-photos.json';
+import { articleUrl } from '../lib/urls.mjs';
 
 export async function getStaticPaths() {
   return CATEGORIES.map((c) => ({ params: { category: c.slug }, props: { category: c } }));
@@ -30,7 +31,7 @@ const breedPage = BREED_PAGES[category.slug];
 
 // Фото в ленте ведёт на статью-портрет вида, если она уже написана. Нет
 // статьи — снимок остаётся обычной картинкой, а не ссылкой в никуда.
-const articleLinks = new Map(all.map((e) => [e.id, `/${e.data.category}/${e.id}`]));
+const articleLinks = new Map(all.map((e) => [e.id, articleUrl(e)]));
 const photoLink = (p) => (p.article ? articleLinks.get(p.article) : undefined);
 
 // Вкладки-подразделы. Показываем только те, что описаны в site.config.mjs,
@@ -50,7 +51,7 @@ const subs = (category.subcategories ?? []).map((s) => ({
       {
         breedPage && (
           <nav class="situations" aria-label="Справочник пород">
-            <a class="situation" href={`/porody/${category.slug}`}>
+            <a class="situation" href={`/porody/${category.slug}/`}>
               {breedPage}
             </a>
           </nav>

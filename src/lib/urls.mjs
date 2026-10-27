@@ -1,16 +1,23 @@
 import { MONETIZATION } from '../site.config.mjs';
 
+/*
+ * Внутренние ссылки — всегда со слэшем на конце. Так выглядит канонический адрес
+ * страницы (GitHub Pages отдаёт /slug/index.html, а /slug перекидывает 301-м
+ * редиректом). Ссылки без слэша приводили к тому, что Google держал в выдаче
+ * обе версии адреса и делил между ними показы (найдено в Search Console 28.10.2026).
+ */
+
 /**
- * URL статьи вида /care-guides/snake-plant-care.
+ * URL статьи вида /koshki/koshka-chasto-zevaet/.
  * @param {{ id: string, data: { category: string } }} entry запись коллекции articles
  */
 export function articleUrl(entry) {
-  return `/${entry.data.category}/${entry.id}`;
+  return `/${entry.data.category}/${entry.id}/`;
 }
 
-/** URL страницы категории вида /care-guides. */
+/** URL страницы категории вида /koshki/. */
 export function categoryUrl(slug) {
-  return `/${slug}`;
+  return `/${slug}/`;
 }
 
 /**
