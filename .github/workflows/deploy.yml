@@ -37,3 +37,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Сообщает Bing и Яндексу об опубликованных в этом пуше статьях (IndexNow).
+  # Ошибка здесь не должна считаться сбоем деплоя — сайт к этому моменту уже выложен.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Notify Bing and Yandex
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE" "$GITHUB_SHA" -- src/content/articles 2>/dev/null || true)
+          node scripts/indexnow.mjs $CHANGED
