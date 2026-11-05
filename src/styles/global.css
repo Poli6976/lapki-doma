@@ -1034,6 +1034,40 @@ img {
    CC BY / CC BY-SA требуют указать автора, поэтому убрать подпись совсем нельзя.
    Но под каждым снимком она не нужна: собираем в один служебный блок — лицензия
    соблюдена, а картинки остаются чистыми. */
+/* Источники сведений: реальные ссылки, на которые опирается статья. */
+.article-sources {
+  margin-top: var(--sp-6);
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 12px);
+  background: var(--surface, transparent);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.article-sources h2 {
+  margin: 0 0 var(--sp-2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.article-sources ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.article-sources li + li {
+  margin-top: 0.35em;
+}
+.article-sources a {
+  color: var(--link, inherit);
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+.article-sources .source-publisher {
+  color: var(--text-soft);
+}
+
 .photo-credits {
   margin-top: var(--sp-7);
   padding-top: var(--sp-4);

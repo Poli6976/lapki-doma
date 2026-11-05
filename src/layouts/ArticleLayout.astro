@@ -69,6 +69,7 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: SITE.name },
   mainEntityOfPage: absoluteUrl(Astro.url.pathname, SITE.url),
   ...(data.cover ? { image: absoluteUrl(data.cover, SITE.url) } : {}),
+  ...(data.sources.length > 0 ? { citation: data.sources.map((s) => s.url) } : {}),
 };
 
 const breadcrumbJsonLd = {
@@ -180,6 +181,22 @@ const jsonLd = [articleJsonLd, breadcrumbJsonLd];
     </div>
 
     <VetAlert redFlags={data.redFlags} />
+
+    {
+      data.sources.length > 0 && (
+        <section class="article-sources" aria-label="Источники сведений">
+          <h2>Источники сведений</h2>
+          <ul>
+            {data.sources.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+                {s.publisher ? <span class="source-publisher"> — {s.publisher}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     {
       data.products.length > 0 && (
