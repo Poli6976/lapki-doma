@@ -1458,8 +1458,30 @@
   `koshka-napadaet-na-lodyzhki…`, `koshka-sosyot-i-zhuet-pled…` (источники не
   проверены). Ловушка: DOI 10.1007/s00265-022-03280-9 оказался другой работой
   (Playà-Montmany 2022) — научные DOI всегда сверять через Crossref по названию.
-  **Дальше:** третья партия (оставшиеся показываемые статьи, лодыжки/плед),
-  сверка показов Google 7–12.11, замеры 27.11 и 02.12.
+  **Дальше:** см. запись о третьей партии ниже.
+
+- **2026-11-06** — **Блок «Источники сведений»: третья партия, 10 статей**
+  (коммит d7cd311, build/deploy/indexnow success, все 10 страниц 200, блок и
+  `citation` на месте; `updatedDate: 2026-11-06`). Всего с источниками — 29.
+  Выбраны по показам в Google за 90 дней (GSC, вкладка «Страницы»). Статьи → источники:
+  `krolik-skripit-zubami-…` (PDSA; в прошлый раз «источников нет» — теперь найден);
+  `krolik-gryzet-mebel-…` (House Rabbit Society); `sobaka-voet-na-sireny-…` (PetMD);
+  `skolko-sna-nuzhno-popugayu-…` (Chewy, 10–12 часов темноты);
+  `homyak-shumit-nochyu-…` (RSPCA «Understanding hamster behaviour», PetMD «Hamster Wheels»);
+  `nuzhno-li-gryzunu-koleso-…` (PetMD, RSPCA); `krysa-ili-homyak-spit-celyy-den-…` (RSPCA);
+  `koshka-sidit-v-korobkah-…` (van der Leij и др., PLOS ONE 2019, РКИ на 23 кошках;
+  Phys.org об исследовании Utrecht на 19 кошках — эффект краткосрочный);
+  `koshka-napadaet-na-lodyzhki-…` (Cats.com, автор — ветврач Dr. Youens);
+  `koshka-gromko-myaukaet-po-nocham-…` (Petplan «Why is my elderly cat yowling?»).
+  **Правка текста:** в статье про колесо добавлено сравнение — PetMD называет минимумом
+  8 дюймов (~20 см) для сирийского и 6 (~15 см) для карликового; наши цифры в таблице
+  щедрее, это оговорено. **Слабые места:** Petplan — страховая марка, не клиника;
+  RSPCA прямо не называет домашних хомяков «ночными» (пишет «дикие активны в сумерках и
+  ночью»). **Не вошли:** `popugay-gryzyot…` (надёжного источника про грызение клетки нет),
+  `kak-podstrich-kogti-…` (поиск дал только мусорные сайты), `chem-zanyat-popugaya…`,
+  `dzhungarskiy-homyak…`, `nerazluchniki…`, `senegalskiy-popugay…`, `koshka-sosyot-i-zhuet-pled…`.
+  **Дальше:** сверка показов Google 7–12.11; замеры 27.11 и 02.12; четвёртая партия
+  (породы/виды и оставшиеся статьи) — только если выяснится, что обвал связан с качеством.
 
 ## 8. Проектирование 27.07.2026 — что и почему сделано
 
