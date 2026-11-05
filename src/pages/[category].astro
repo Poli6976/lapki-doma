@@ -5,6 +5,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import { CATEGORIES } from '../site.config.mjs';
 import categoryPhotos from '../data/category-photos.json';
 import { articleUrl } from '../lib/urls.mjs';
+import { CATEGORY_INTROS } from '../data/category-intros.mjs';
 
 export async function getStaticPaths() {
   return CATEGORIES.map((c) => ({ params: { category: c.slug }, props: { category: c } }));
@@ -37,13 +38,34 @@ const photoLink = (p) => (p.article ? articleLinks.get(p.article) : undefined);
 // Вкладки-подразделы. Показываем только те, что описаны в site.config.mjs,
 // и считаем, сколько статей в каждой — пустая вкладка честно говорит «скоро»,
 // а не притворяется, что там что-то есть.
+// Вводный текст, главные статьи и вопросы раздела (src/data/category-intros.mjs).
+const info = CATEGORY_INTROS[category.slug];
+const featured = (info?.featured ?? [])
+  .map((id) => all.find((e) => e.id === id))
+  .filter(Boolean);
+const faqJsonLd = info?.faq?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: info.faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : undefined;
+
 const subs = (category.subcategories ?? []).map((s) => ({
   ...s,
   count: articles.filter((a) => a.data.subcategory === s.slug).length,
 }));
 ---
 
-<BaseLayout title={category.title} description={category.description}>
+<BaseLayout
+  title={info?.seoTitle ?? category.title}
+  description={info?.seoDescription ?? category.description}
+  jsonLd={faqJsonLd}
+>
   <section class="hero">
     <div class="container">
       <h1>{category.title}</h1>
@@ -59,6 +81,24 @@ const subs = (category.subcategories ?? []).map((s) => ({
       }
     </div>
   </section>
+
+  {
+    info && (
+      <section class="container cat-intro article-body" aria-label={`О разделе «${category.title}»`}>
+        {info.intro.map((para) => <p>{para}</p>)}
+        {featured.length > 0 && (
+          <>
+            <h2>С чего начать</h2>
+            <ul class="cat-featured">
+              {featured.map((e) => (
+                <li><a href={articleUrl(e)}>{e.data.title}</a></li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
+    )
+  }
 
   {
     photos.length > 0 && (
@@ -133,6 +173,20 @@ const subs = (category.subcategories ?? []).map((s) => ({
       )
     }
   </div>
+
+  {
+    info?.faq?.length > 0 && (
+      <section class="container cat-faq article-body" aria-label="Частые вопросы">
+        <h2>Частые вопросы</h2>
+        {info.faq.map((f) => (
+          <>
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </>
+        ))}
+      </section>
+    )
+  }
 
   {/* Фильтр вкладок. Без JS вкладки скрыты (класс ставит сам скрипт), а все
       статьи просто видны списком — страница остаётся рабочей. */}

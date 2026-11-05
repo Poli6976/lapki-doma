@@ -24,25 +24,31 @@ const latest = articles.slice(0, 9);
  * пока не написана. Подбор идёт по ключевым словам и заголовку: как только
  * появится подходящий материал, чип начнёт вести на него сам.
  *
+ * `slug` закрепляет ситуацию за конкретной статьёй (проверено 06.11.2026 по запросам).
+ *
  * ⚠️ Ключи в `match` должны быть узкими. Одиночное «ночью» однажды увело чип
  *    «Скулит по ночам» на статью про хомяка, который шумит в колесе. Для
  *    ситуаций, привязанных к виду животного, дополнительно указывается `only` —
  *    список категорий, где вообще допустимо искать.
  */
 const SITUATIONS = [
-  { label: 'Не ест', match: ['не ест', 'отказывается от еды', 'потерял аппетит'], category: 'zdorovie-i-povedenie' },
-  { label: 'Скулит по ночам', match: ['скулит', 'щенок плачет'], category: 'sobaki', only: ['sobaki'] },
-  { label: 'Чешется', match: ['чешется', 'зуд', 'блохи'], category: 'zdorovie-i-povedenie' },
-  { label: 'Метит в доме', match: ['метит', 'метки'], category: 'koshki', only: ['koshki'] },
+  { label: 'Не ест', slug: 'koshka-ne-est-skolko-mozhno-zhdat-i-chto-delat', match: ['не ест', 'отказывается от еды', 'потерял аппетит'], category: 'zdorovie-i-povedenie' },
+  { label: 'Скулит по ночам', slug: 'schenok-skulit-po-nocham-pervuyu-nedelyu-posle-pereezda', match: ['скулит', 'щенок плачет'], category: 'sobaki', only: ['sobaki'] },
+  { label: 'Чешется', slug: 'sobaka-cheshetsya-a-bloh-net-chastye-prichiny', match: ['чешется', 'зуд', 'блохи'], category: 'zdorovie-i-povedenie' },
+  { label: 'Метит в доме', slug: 'kot-metit-ugly-pochemu-i-chto-delat', match: ['метит', 'метки'], category: 'koshki', only: ['koshki'] },
   { label: 'Боится грозы и салютов', match: ['боится грозы', 'гроза', 'салют', 'фейерверк'], category: 'zdorovie-i-povedenie' },
-  { label: 'Рвота', match: ['рвота', 'тошнит', 'срыгивает'], category: 'zdorovie-i-povedenie' },
-  { label: 'Сильно линяет', match: ['линька', 'линяет'], category: 'sovety' },
-  { label: 'Мимо лотка', match: ['лоток', 'туалет'], category: 'koshki', only: ['koshki'] },
+  { label: 'Рвота', slug: 'rvota-u-koshki-kogda-ponablyudat-a-kogda-k-vrachu', match: ['рвота', 'тошнит', 'срыгивает'], category: 'zdorovie-i-povedenie' },
+  { label: 'Сильно линяет', slug: 'pitomec-silno-linyaet-gde-norma-a-gde-povod-nastorozhitsya', match: ['линька', 'линяет'], category: 'sovety' },
+  { label: 'Мимо лотка', slug: 'kot-pisaet-mimo-lotka-chastye-prichiny-i-kogda-eto-srochno', match: ['лоток', 'туалет'], category: 'koshki', only: ['koshki'] },
   { label: 'Хомяк кусается', match: ['хомяк кусается', 'кусается'], category: 'gryzuny', only: ['gryzuny'] },
-  { label: 'Шумит ночью в клетке', match: ['шумит ночью', 'колесо'], category: 'gryzuny', only: ['gryzuny'] },
+  { label: 'Шумит ночью в клетке', slug: 'homyak-shumit-nochyu-pochemu-i-kak-umenshit-shum', match: ['шумит ночью', 'колесо'], category: 'gryzuny', only: ['gryzuny'] },
 ];
 
 const situations = SITUATIONS.map((s) => {
+  // Если статья названа явно (slug) — ведём на неё. Подбор по словам ниже — запасной
+  // путь: он берёт первую попавшуюся статью и для общих ситуаций часто промахивается.
+  const pinned = s.slug ? articles.find((a) => a.id === s.slug) : undefined;
+  if (pinned) return { label: s.label, href: articleUrl(pinned) };
   const pool = s.only ? articles.filter((a) => s.only.includes(a.data.category)) : articles;
   const hit = pool.find((entry) => {
     const haystack = [entry.data.title, ...(entry.data.keywords ?? [])].join(' ').toLowerCase();

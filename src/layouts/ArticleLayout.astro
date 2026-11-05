@@ -92,7 +92,22 @@ const breadcrumbJsonLd = {
   ],
 };
 
-const jsonLd = [articleJsonLd, breadcrumbJsonLd];
+// FAQPage — только если у статьи есть блок «Частые вопросы»: разметка обязана
+// совпадать с видимым текстом страницы.
+const faqJsonLd =
+  data.faq.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: data.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
+
+const jsonLd = [articleJsonLd, breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
 ---
 
 <BaseLayout
@@ -147,7 +162,7 @@ const jsonLd = [articleJsonLd, breadcrumbJsonLd];
       )
     }
 
-    <AdSlot place="top" label="Реклама" />
+    {/* Верхнего рекламного блока нет намеренно: над первым экраном рекламы быть не должно. */}
 
     {
       data.gallery.length > 0 && (
@@ -181,6 +196,20 @@ const jsonLd = [articleJsonLd, breadcrumbJsonLd];
     </div>
 
     <VetAlert redFlags={data.redFlags} />
+
+    {
+      data.faq.length > 0 && (
+        <section class="article-faq article-body" aria-label="Частые вопросы">
+          <h2>Частые вопросы</h2>
+          {data.faq.map((f) => (
+            <>
+              <h3>{f.q}</h3>
+              <p>{f.a}</p>
+            </>
+          ))}
+        </section>
+      )
+    }
 
     {
       data.sources.length > 0 && (
@@ -227,14 +256,6 @@ const jsonLd = [articleJsonLd, breadcrumbJsonLd];
         <VetDisclaimer />
       )
     }
-
-    <aside class="author-box">
-      <p class="author-name">{author}</p>
-      <p class="author-bio">{SITE.contacts.authorBio}</p>
-      <p class="author-contact">
-        Есть вопрос или нашли неточность? <a href="/kontakty/">Напишите нам</a>.
-      </p>
-    </aside>
 
     {
       related.length > 0 && (

@@ -1384,6 +1384,50 @@ img {
   color: var(--text);
 }
 
+/* Однострочная оговорка под статьёй (VetDisclaimer) */
+.vet-disclaimer-line {
+  margin: var(--sp-6) 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.vet-disclaimer-line strong {
+  color: var(--text);
+}
+.vet-disclaimer-line a {
+  color: var(--link, inherit);
+  text-decoration: underline;
+}
+
+/* ─── Вводный текст рубрики / справочника пород ─── */
+.cat-intro,
+.cat-faq {
+  margin-top: var(--sp-6);
+}
+.cat-intro p {
+  max-width: 68ch;
+}
+.cat-featured {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.cat-featured li + li {
+  margin-top: 0.4em;
+}
+.cat-featured a {
+  color: var(--link, inherit);
+  text-decoration: underline;
+}
+.cat-faq {
+  margin-bottom: var(--sp-7);
+}
+.cat-faq h3 {
+  margin-top: var(--sp-5);
+}
+.cat-faq h3 + p {
+  max-width: 68ch;
+}
+
 /* ─── Подписка ─── */
 .subscribe {
   margin: var(--sp-7) 0 0;

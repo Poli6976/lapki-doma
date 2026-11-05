@@ -6,6 +6,7 @@ import { DOG_BREEDS } from '../../data/breeds-sobaki.mjs';
 import { PARROT_SPECIES } from '../../data/breeds-popugai.mjs';
 import breedPhotos from '../../data/breed-photos.json';
 import { articleUrl, categoryUrl } from '../../lib/urls.mjs';
+import { HUB_INTROS } from '../../data/category-intros.mjs';
 
 /**
  * Справочник пород: /porody/koshki и /porody/sobaki.
@@ -76,6 +77,23 @@ const items = breeds.map((b) => {
 
 const ready = items.filter((i) => i.href).length;
 
+// Вводный текст и главные статьи хаба (src/data/category-intros.mjs).
+const hub = HUB_INTROS[species];
+const featured = (hub?.featured ?? [])
+  .map((id) => articleById.get(id))
+  .filter(Boolean);
+
+// Подборки («Какие породы подходят для семьи», «Собака для квартиры») лежат в той же
+// вкладке «Породы» рубрики, но портретом породы не являются. Показываем их отдельно,
+// чтобы число на вкладке рубрики (портреты + подборки) сходилось с числом пород здесь.
+const portraitIds = new Set(breeds.map((b) => b.article).filter(Boolean));
+const roundups = published.filter(
+  (e) =>
+    e.data.category === category &&
+    ['porody', 'vidy'].includes(e.data.subcategory) &&
+    !portraitIds.has(e.id),
+);
+
 // CC BY / CC BY-SA требуют указать автора, public domain и CC0 — нет.
 const credits = items
   .map((i) => i.photo)
@@ -84,11 +102,12 @@ const credits = items
 const description = `${title}: как порода узнаётся, какой характер и что учесть перед тем, как взять питомца. ${breeds.length} пород, ${ready} с подробным разбором.`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={hub?.seoTitle ?? title} description={description}>
   <section class="hero">
     <div class="container">
       <h1>{title}</h1>
       <p class="lead">{lead}</p>
+      {hub?.extraIntro?.map((para) => <p class="lead">{para}</p>)}
       <nav class="situations" aria-label="Разделы">
         <a class="situation" href={categoryUrl(category)}>Все статьи про раздел «{categoryTitle}»</a>
       </nav>
@@ -120,6 +139,19 @@ const description = `${title}: как порода узнаётся, какой 
         ))
       }
     </ul>
+
+    {
+      (featured.length > 0 || roundups.length > 0) && (
+        <section class="cat-intro article-body" aria-label="С чего начать выбор">
+          <h2>С чего начать выбор</h2>
+          <ul class="cat-featured">
+            {[...roundups, ...featured.filter((f) => !roundups.includes(f))].map((e) => (
+              <li><a href={articleUrl(e)}>{e.data.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     {
       credits.length > 0 && (
