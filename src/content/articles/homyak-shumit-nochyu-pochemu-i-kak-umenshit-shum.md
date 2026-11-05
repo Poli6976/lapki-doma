@@ -3,7 +3,7 @@ title: 'Хомяк шумит ночью: почему и что делать, �
 description: 'Хомяк шумит ночью: бегает в колесе, грызёт и шуршит. Это норма для ночного зверька. Как успокоить хомяка ночью и какой шум — повод присмотреться.'
 category: gryzuny
 publishDate: 2026-07-27
-updatedDate: 2026-11-04
+updatedDate: 2026-11-06
 keywords: [хомяк шумит ночью, как успокоить хомяка ночью, хомяк не спит ночью, хомяк грохочет колесом, хомяк ночное животное, бесшумное колесо для хомяка, уход за хомяком, клетка для хомяка]
 reassurance: 'Если хомяк грохочет колесом и шуршит всю ночь — это не поломка и не признак стресса, а его нормальный ритм жизни, который просто не совпадает с вашим.'
 tldr:
@@ -17,6 +17,13 @@ redFlags:
   - тяжёлое, хриплое или свистящее дыхание;
   - залысины, расчёсы или шишки под кожей;
   - зубы мешают есть.
+sources:
+  - title: 'Understanding hamster behaviour'
+    publisher: 'RSPCA'
+    url: 'https://rspca.org.uk/adviceandwelfare/pets/rodents/hamsters/behaviour'
+  - title: 'Hamster Wheels'
+    publisher: 'PetMD (Melissa Witherell, DVM)'
+    url: 'https://petmd.com/exotic/evr_ex_hm_hamster-wheels'
 draft: false
 products:
   - name: Бесшумное беговое колесо для хомяка

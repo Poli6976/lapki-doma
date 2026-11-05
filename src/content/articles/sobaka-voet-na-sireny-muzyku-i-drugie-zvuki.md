@@ -4,6 +4,7 @@ description: 'Собака воет на сирену скорой, некото
 category: sobaki
 subcategory: dressirovka
 publishDate: 2026-08-03
+updatedDate: 2026-11-06
 keywords: [собака воет, собака воет на сирену, собака воет на музыку, вой собаки, почему собака воет, собака воет на звуки]
 reassurance: 'Если собака начинает выть, услышав сирену или определённую мелодию, — это не испорченный характер и не повод для тренировок с нуля, а древний коммуникационный рефлекс, доставшийся ей от волков.'
 tldr:
@@ -14,6 +15,10 @@ tldr:
 redFlags:
   - вой резко участился без видимой причины;
   - вой сопровождается вялостью, отказом от еды или явными признаками боли.
+sources:
+  - title: 'Why Do Dogs Howl at Sirens?'
+    publisher: 'PetMD'
+    url: 'https://www.petmd.com/dog/behavior/why-do-dogs-howl-at-sirens'
 draft: false
 products: []
 cover: /images/photos/sobaka-voet-na-sireny-muzyku-i-drugie-zvuki.jpg

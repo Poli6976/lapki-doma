@@ -3,6 +3,7 @@ title: 'Кошка громко мяукает по ночам: что дела�
 description: 'Кошка орёт и бегает по ночам, будит хозяев? Разбираем, почему это связано с природной активностью кошек в сумерках, а не с характером, и как с этим жить.'
 category: koshki
 publishDate: 2026-07-29
+updatedDate: 2026-11-06
 keywords: [кошка мяукает по ночам, кошка орет ночью, кошка не дает спать, кошка бегает ночью, кошка кричит ночью, активность кошки ночью, пожилая кошка кричит]
 reassurance: 'Если кошка будит вас криком и беготнёй по ночам — это почти всегда её природный ритм, а не вредность или попытка вам насолить.'
 tldr:
@@ -15,6 +16,10 @@ redFlags:
   - кошка кричит у лотка или прямо в лотке;
   - вместе с криком похудела, стала больше пить или изменилось поведение днём;
   - кричит и одновременно прячется от хозяев.
+sources:
+  - title: 'Why is my elderly cat yowling?'
+    publisher: 'Petplan'
+    url: 'https://www.petplan.co.uk/cat-insurance/cat-care-and-advice/older-cat-language.html'
 draft: false
 products: []
 cover: /images/photos/koshka-gromko-myaukaet-po-nocham-chto-delat.jpg
