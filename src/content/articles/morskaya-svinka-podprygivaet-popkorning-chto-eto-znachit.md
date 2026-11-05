@@ -3,6 +3,7 @@ title: 'Морская свинка подпрыгивает: попкорнин
 description: 'Морская свинка подпрыгивает и мотает головой: это попкорнинг, чаще всего знак хорошего настроения. Чем он отличается от судорог и когда нужен ветеринар.'
 category: gryzuny
 publishDate: 2026-11-06
+updatedDate: 2026-11-06
 keywords: [морская свинка подпрыгивает, попкорнинг у морских свинок, морская свинка прыгает, почему свинка подпрыгивает, попкорнинг или судороги, поведение морской свинки]
 reassurance: 'Когда морская свинка вдруг подпрыгивает вверх и мотает головой, пугаешься: не судороги ли? Чаще всего это обычный «попкорнинг», знак хорошего настроения, и отличить его от опасных состояний можно по нескольким признакам.'
 tldr:
@@ -16,6 +17,13 @@ redFlags:
   - обычно подвижная свинка резко перестала прыгать, играть и бегать
   - появились наклон головы, шатание или странная походка
   - рядом свист или хрипы при дыхании, выделения из глаз или носа, понос
+sources:
+  - title: 'Have You Ever Seen Your Pet Chinchilla or Guinea Pig Popcorning?'
+    publisher: 'PetMD'
+    url: 'https://www.petmd.com/exotic/behavior/have-you-ever-seen-your-pet-chinchilla-or-guinea-pig-popcorning'
+  - title: 'Why Does My Guinea Pig "Popcorn"?'
+    publisher: 'Toronto Humane Society'
+    url: 'https://www.torontohumanesociety.com/why-does-my-guinea-pig-popcorn/'
 draft: false
 products: []
 cover: /images/photos/morskaya-svinka-podprygivaet-popkorning-chto-eto-znachit.jpg

@@ -3,6 +3,7 @@ title: 'Попугай постоянно кричит: почему и как �
 description: 'Короткие крики на закате и рассвете — обычное поведение попугая. Но если крик почти не прекращается днём, это чаще сигнал скуки, недостатка внимания или недосыпа.'
 category: popugai
 publishDate: 2026-08-03
+updatedDate: 2026-11-06
 keywords: [попугай постоянно кричит, попугай кричит целый день, как отучить попугая кричать, скука у попугая, амазон, клетка для попугая]
 reassurance: 'Если попугай кричит почти весь день, дело не в том, что у него «такой характер» и с этим ничего не поделать. Чаще всего это скука, недостаток внимания или недосып — а это как раз то, что можно изменить.'
 tldr:
@@ -15,6 +16,13 @@ redFlags:
   - попугай нахохлился и сидит на дне клетки
   - дышит с усилием или с открытым клювом
   - перестал есть или почти не двигается
+sources:
+  - title: 'Why Is My Bird Screaming?'
+    publisher: 'Chewy'
+    url: 'https://www.chewy.com/education/bird/training-and-behavior/why-is-my-bird-screaming'
+  - title: 'Why is Your Parrot Screaming?'
+    publisher: 'DeWitt Animal Hospital'
+    url: 'https://dewittanimalhospital.blogspot.com/2016/07/why-is-your-parrot-screaming.html'
 draft: false
 products: []
 cover: /images/photos/popugay-postoyanno-krichit-pochemu-i-kak-uspokoit.jpg

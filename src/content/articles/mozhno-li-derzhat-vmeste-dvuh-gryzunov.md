@@ -3,6 +3,7 @@ title: 'Можно ли держать вместе двух хомяков, с�
 description: 'Можно ли поселить вместе двух хомяков, морских свинок или кроликов — ответ разный для каждого вида. Разбираем по отдельности, кому нужна компания, а кому нет.'
 category: gryzuny
 publishDate: 2026-08-02
+updatedDate: 2026-11-06
 keywords: [можно ли держать вместе двух хомяков, морская свинка одна или пара, декоративная крыса одна или пара, декоративный кролик уживаются ли, знакомство грызунов, домашний питомец для ребёнка]
 reassurance: 'Если вы думаете, подселить ли к питомцу второго зверька, — правильный ответ у каждого вида грызунов свой, и это не вопрос удачи, а вопрос вида.'
 tldr:
@@ -13,6 +14,16 @@ redFlags:
   - между зверьками появились укусы или вырванная шерсть;
   - один из зверьков постоянно прячется и не подходит к еде;
   - есть видимые раны — в этом случае нужен ветеринар как можно быстрее.
+sources:
+  - title: 'Keeping hamsters together'
+    publisher: 'RSPCA'
+    url: 'https://www.rspca.org.uk/adviceandwelfare/pets/rodents/hamsters/company'
+  - title: 'Keeping guinea pigs together'
+    publisher: 'RSPCA'
+    url: 'https://www.rspca.org.uk/adviceandwelfare/pets/rodents/guineapigs/company'
+  - title: 'Rabbit companionship and bonding advice'
+    publisher: 'RSPCA'
+    url: 'https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company'
 draft: false
 products: []
 cover: /images/photos/mozhno-li-derzhat-vmeste-dvuh-gryzunov.jpg

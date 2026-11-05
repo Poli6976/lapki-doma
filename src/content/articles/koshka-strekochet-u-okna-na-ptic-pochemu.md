@@ -3,6 +3,7 @@ title: 'Почему кошка стрекочет и щёлкает челюс�
 description: 'Кошка у окна щёлкает челюстью и стрекочет при виде птиц: что это за поведение, какие версии есть у специалистов и когда за ним может стоять боль во рту.'
 category: koshki
 publishDate: 2026-11-03
+updatedDate: 2026-11-06
 keywords: [кошка стрекочет, кошка стрекочет на птиц, кошка щёлкает челюстью, чаттеринг у кошек, почему кошка щебечет глядя на птиц, кошка издаёт трескучие звуки у окна]
 reassurance: 'Когда кошка у окна вдруг начинает дробно щёлкать челюстью и издавать странные звуки, это пугает и смешит одновременно. В большинстве случаев это нормальное поведение здорового охотника, а не болезнь и не просьба о еде.'
 tldr:
@@ -14,6 +15,13 @@ redFlags:
   - кошка роняет корм изо рта, жуёт на одну сторону или отказывается от еды
   - появилась сильная слюна или неприятный запах изо рта
   - кошка трогает морду лапой, вздрагивает или прячется, когда её касаются у рта
+sources:
+  - title: 'Why do cats chatter and chirp at birds?'
+    publisher: 'Cats Protection'
+    url: 'https://www.cats.org.uk/cats-blog/why-do-cats-chatter-and-chirp-at-birds'
+  - title: 'Why Does My Cat Keep Chattering at Birds Through the Window?'
+    publisher: 'Vetstreet'
+    url: 'https://www.vetstreet.com/our-pet-experts/why-does-my-cat-chatter-at-birds'
 draft: false
 products: []
 cover: /images/photos/koshka-strekochet-u-okna-na-ptic-pochemu.jpg

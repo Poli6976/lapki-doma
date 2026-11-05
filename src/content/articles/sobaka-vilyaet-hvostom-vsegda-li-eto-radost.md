@@ -3,6 +3,7 @@ title: 'Собака виляет хвостом: всегда ли это ра�
 description: 'Виляющий хвост ещё не значит «подходи, я добрая». Что показали исследования, как читать собаку целиком и когда лучше не тянуть руку.'
 category: sobaki
 publishDate: 2026-10-16
+updatedDate: 2026-11-06
 keywords: [собака виляет хвостом, что значит виляние хвостом у собаки, хвост вправо или влево, язык тела собаки, собака виляет хвостом но рычит]
 reassurance: 'Хвост — самый заметный сигнал собаки, поэтому его так легко принять за единственный. Привычка читать виляние как «радуется» знакома почти всем, и поправить её несложно.'
 tldr:
@@ -12,6 +13,13 @@ tldr:
 redFlags:
   - если собака виляет хвостом и при этом рычит, замирает, скалится или напрягает всё тело
   - если хвост вдруг повис, собака не даёт его трогать, грызёт или вылизывает его
+sources:
+  - title: 'Quaranta A., Siniscalchi M., Vallortigara G. Asymmetric tail-wagging responses by dogs to different emotive stimuli'
+    publisher: 'Current Biology, 2007'
+    url: 'https://doi.org/10.1016/j.cub.2007.02.008'
+  - title: 'Siniscalchi M. и др. Seeing left- or right-asymmetric tail wagging produces different emotional responses in dogs'
+    publisher: 'Current Biology, 2013'
+    url: 'https://doi.org/10.1016/j.cub.2013.09.027'
 draft: false
 products: []
 cover: /images/photos/sobaka-vilyaet-hvostom-vsegda-li-eto-radost.jpg

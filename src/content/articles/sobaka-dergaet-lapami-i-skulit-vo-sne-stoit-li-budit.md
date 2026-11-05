@@ -3,6 +3,7 @@ title: 'Собака дёргает лапами и скулит во сне: с
 description: 'Лапы «бегут», усы дрожат, слышно тихое скуление? Чаще это обычная фаза быстрого сна. Почему лучше не будить и когда показать собаку ветеринару.'
 category: sobaki
 publishDate: 2026-10-16
+updatedDate: 2026-11-06
 keywords: [собака дёргает лапами во сне, собака скулит во сне, собаке снятся сны, можно ли будить собаку, собака бежит во сне, быстрый сон у собак]
 reassurance: 'Когда собака во сне «бежит» и скулит, хочется её утешить и разбудить. Для большинства собак это нормальный сон, а не кошмар, и вы ничего не упустили.'
 tldr:
@@ -14,6 +15,13 @@ redFlags:
   - если тело каменеет, собака не реагирует на голос и не приходит в себя
   - если подобное случается днём, когда собака не спит
   - если собака стала хуже есть, пить или двигаться
+sources:
+  - title: 'Why Do Dogs Twitch in Their Sleep?'
+    publisher: 'American Kennel Club'
+    url: 'https://www.akc.org/expert-advice/lifestyle/why-dog-twitch-in-sleep'
+  - title: 'What Does It Mean When Dogs Twitch In Their Sleep?'
+    publisher: 'VCA Animal Hospitals'
+    url: 'https://vcahospitals.com/resources/behavior-dog/true-or-false-twitching-feet-while-sleeping-is-a-dream'
 draft: false
 products: []
 cover: /images/photos/sobaka-dergaet-lapami-i-skulit-vo-sne-stoit-li-budit.jpg
