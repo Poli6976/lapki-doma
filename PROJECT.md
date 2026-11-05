@@ -1433,6 +1433,34 @@
   (именной автор, собственный опыт, внешние ссылки) пока невозможны или ждут
   решения владельца.
 
+- **2026-11-06** — **Блок «Источники сведений»: вторая партия, 16 статей**
+  (коммит 06f4f51, build/deploy/indexnow success, все 16 страниц на живом
+  сайте отдают 200, блок и `citation` на месте; везде `updatedDate: 2026-11-06`).
+  Каждая ссылка открыта и сверена с текстом. Всего статей с источниками — 19.
+  Статьи → источники: `homyak-kusaetsya-…` (The Vet Desk); `koshka-chasto-zevaet-…`
+  (Great Pet Care); `koshka-perestala-zaprygivat-…` (VCA, артрит);
+  `sobaka-hodit-krugami-pered-tem-kak-lech-…` и `…-po-kvartire-…` (VCA, один источник);
+  `koshka-prinosit-igrushki-…` (PetMD); `mozhno-li-derzhat-vmeste-dvuh-gryzunov`
+  (три страницы RSPCA); `koshka-strekochet-u-okna-…` (Cats Protection, Vetstreet);
+  `morskaya-svinka-podprygivaet-popkorning-…` (PetMD, Toronto Humane Society);
+  `krolik-stuchit-zadney-lapoy-…` (Scottish SPCA); `koshka-dostaet-korm-lapoy-…`
+  (PetMD, whisker fatigue); `sobaka-tyazhelo-vzdyhaet-…` (AKC);
+  `sobaka-dergaet-lapami-i-skulit-vo-sne-…` (AKC, VCA); `sobaka-vilyaet-hvostom-…`
+  (Quaranta 2007 и Siniscalchi 2013, Current Biology); `popugay-postoyanno-krichit-…`
+  (Chewy, DeWitt Animal Hospital); `popugay-stoit-i-spit-na-odnoy-lape-…`
+  (Ryeland, Weston, Symonds 2019, J. Avian Biology, doi 10.1111/jav.02008).
+  **Что поправлено в тексте по источникам:** в статье про вздох собаки убрано
+  утверждение «вздох может быть реакцией на движение при боли» (AKC: вздох — не
+  типичный признак боли); в статье про попугая вместо «исследования разных видов
+  птиц» — «исследование девяти видов куликов, у шести связь с холодом», с
+  оговоркой, что про попугаев такого исследования нет.
+  **Не вошли:** `krolik-skripit-zubami` (надёжных источников не нашлось),
+  `koshka-napadaet-na-lodyzhki…`, `koshka-sosyot-i-zhuet-pled…` (источники не
+  проверены). Ловушка: DOI 10.1007/s00265-022-03280-9 оказался другой работой
+  (Playà-Montmany 2022) — научные DOI всегда сверять через Crossref по названию.
+  **Дальше:** третья партия (оставшиеся показываемые статьи, лодыжки/плед),
+  сверка показов Google 7–12.11, замеры 27.11 и 02.12.
+
 ## 8. Проектирование 27.07.2026 — что и почему сделано
 
 Основа — четыре материала владельца: дизайн-скилл `modern-design-2026`, гайд «10
