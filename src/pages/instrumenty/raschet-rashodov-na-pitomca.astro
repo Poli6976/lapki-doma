@@ -2,13 +2,13 @@
 import '../../styles/tools.css';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config.mjs';
-import { PROFILES, KINDS, FAQ } from '../../data/tool-costs.mjs';
+import { PROFILES, KINDS, FAQ, PRICES } from '../../data/tool-costs.mjs';
 
 const title = 'Калькулятор расходов на питомца: месяц, год и первый год';
 const description =
-  'Посчитайте, во сколько обойдётся кошка, собака, хомяк, крыса, морская свинка, кролик или попугай: разовые траты, каждый месяц, раз в год и запас на непредвиденное. Цены подставляете вы.';
+  'Посчитайте, во сколько обойдётся кошка, собака, хомяк, крыса, морская свинка, кролик или попугай: разовые траты, каждый месяц, раз в год и запас на непредвиденное. Есть ориентиры цен из магазина с датой сбора.';
 
-const dataJson = JSON.stringify({ profiles: PROFILES, kinds: KINDS });
+const dataJson = JSON.stringify({ profiles: PROFILES, kinds: KINDS, prices: PRICES });
 
 const jsonLd = [
   {
@@ -68,6 +68,11 @@ const jsonLd = [
       </div>
       <p class="tool-note">Расходы за год = регулярные в месяц × 12 + суммы «раз в год»; запас считается от этой суммы и показан отдельно, итоги «первый год» и «за весь срок» уже включают его.</p>
 
+      <p class="tool-note" data-bench-note hidden>
+        Ориентиры цен: каталог {PRICES.shop}, {PRICES.city}, данные на {PRICES.date}. Показан разброс цен первых 20 позиций
+        выдачи (от 10-го до 90-го процентиля) и середина, а не средняя цена по рынку. В вашем городе и магазине цены другие.
+      </p>
+
       <div data-form></div>
       <div style="display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-3);">
         <button type="button" class="tool-btn is-ghost" data-clear>Очистить</button>
@@ -108,7 +113,9 @@ const jsonLd = [
   const root = document.querySelector('[data-cost-tool]');
   const dataEl = document.getElementById('cost-data');
   if (root && dataEl) {
-    const { profiles, kinds } = JSON.parse(dataEl.textContent || '{}');
+    const { profiles, kinds, prices } = JSON.parse(dataEl.textContent || '{}');
+    const shopLabel = prices.shop + ', ' + prices.date;
+    const benchNote = root.querySelector('[data-bench-note]');
     const speciesSel = root.querySelector('#cost-species');
     const reserveIn = root.querySelector('#cost-reserve');
     const yearsIn = root.querySelector('#cost-years');
@@ -159,6 +166,12 @@ const jsonLd = [
             s.textContent = l.hint;
             lab.appendChild(s);
           }
+          if (l.bench) {
+            const s = document.createElement('span');
+            s.className = 'tool-note';
+            s.textContent = 'Ориентир: ' + l.bench + ' (' + shopLabel + ')';
+            lab.appendChild(s);
+          }
           const inp = document.createElement('input');
           inp.className = 'tool-input';
           inp.type = 'number';
@@ -181,6 +194,7 @@ const jsonLd = [
         form.appendChild(sec);
       }
       yearsHint.textContent = p.lifespanHint || '';
+      benchNote.hidden = !p.lines.some((l) => l.bench);
     }
 
     function calc() {
