@@ -33,11 +33,11 @@ faq:
 draft: false
 products: []
 cover: /images/photos/sobaka-sela-vinograd-ili-izyum-chto-delat.jpg
-coverAlt: 'Гроздь тёмного винограда на лозе среди листьев'
+coverAlt: 'Рыжая собака с высунутым языком смотрит на еду в руках человека'
 coverCredit:
-  author: 'Ian Schneider (Unsplash)'
-  license: 'CC0'
-  sourceUrl: 'https://commons.wikimedia.org/wiki/File:A_bunch_of_grapes_on_a_vine.jpg'
+  author: 'istolethetv'
+  license: 'CC BY 2.0'
+  sourceUrl: 'https://commons.wikimedia.org/wiki/File:Begging_(4882730182).jpg'
 ---
 
 Одна-две виноградины тоже не повод ждать. Для собак **нет известного безопасного количества винограда и изюма**: одни почти не реагируют, а у других почки страдают за пару дней, и заранее не угадать, к каким относится ваша.
