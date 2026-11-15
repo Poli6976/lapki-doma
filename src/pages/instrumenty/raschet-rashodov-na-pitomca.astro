@@ -2,13 +2,13 @@
 import '../../styles/tools.css';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config.mjs';
-import { PROFILES, KINDS, FAQ, PRICES } from '../../data/tool-costs.mjs';
+import { BENCH, PRICES, QUICK_ROWS, EXAMPLE, FAQ } from '../../data/tool-costs.mjs';
 
-const title = 'Калькулятор расходов на питомца: месяц, год и первый год';
+const title = 'Калькулятор расходов на питомца: сколько в месяц и в год';
 const description =
-  'Посчитайте, во сколько обойдётся кошка, собака, хомяк, крыса, морская свинка, кролик или попугай: разовые траты, каждый месяц, раз в год и запас на непредвиденное. Есть ориентиры цен из магазина с датой сбора.';
+  'Впишите цену упаковки корма и на сколько дней её хватает: посчитаем траты на любого питомца в месяц и в год. Работает для кошек, собак, грызунов и птиц.';
 
-const dataJson = JSON.stringify({ profiles: PROFILES, kinds: KINDS, prices: PRICES });
+const dataJson = JSON.stringify({ quick: QUICK_ROWS, example: EXAMPLE });
 
 const jsonLd = [
   {
@@ -35,67 +35,59 @@ const jsonLd = [
     </nav>
     <h1>Калькулятор расходов на питомца</h1>
     <p class="tool-lead">
-      Выберите питомца, впишите цены из своих магазинов и клиник: посчитаем расходы за месяц, за год и за
-      первый год. Заполняйте только то, что вам нужно.
+      Для любого питомца. Впишите цену упаковки корма и на сколько дней её хватает: посчитаем траты в месяц и в год.
     </p>
 
     <div class="tool-panel">
-      <div class="tool-grid">
-        <div class="tool-field">
-          <label for="cost-species">Питомец</label>
-          <select id="cost-species" class="tool-select">
-            {PROFILES.map((p) => <option value={p.id}>{p.title}</option>)}
-          </select>
-        </div>
-        <div class="tool-field">
-          <label for="cost-reserve">Запас на непредвиденное, %</label>
-          <input id="cost-reserve" class="tool-input" type="number" inputmode="decimal" min="0" max="200" step="1" value="10" />
-          <span class="tool-note">Деньги «про запас» на то, что нельзя спланировать: внеплановый визит к врачу, лекарства, испорченные вещи. Считается как процент от годовых расходов. Не нужен — поставьте 0.</span>
-        </div>
-        <div class="tool-field">
-          <label for="cost-years">Срок, лет (по желанию)</label>
-          <input id="cost-years" class="tool-input" type="number" inputmode="decimal" min="0" step="0.5" placeholder="например 10" />
-          <span class="tool-note">На сколько лет посчитать общий итог. Можно не заполнять.</span>
-          <span class="tool-note" data-years-hint></span>
-        </div>
+      <p class="tool-note" data-example-note>Сейчас подставлен пример. Замените числа своими, итог пересчитается сразу.</p>
+
+      <div class="cost-bar" aria-live="polite">
+        <div class="cost-total"><span class="tool-label">Каждый месяц</span><strong data-out="month">0 ₽</strong><span class="tool-note">Все регулярные покупки.</span></div>
+        <div class="cost-total"><span class="tool-label">За год</span><strong data-out="year">0 ₽</strong><span class="tool-note">Регулярные покупки плюс ветеринар.</span></div>
+        <div class="cost-total"><span class="tool-label">Первый год</span><strong data-out="first">0 ₽</strong><span class="tool-note">Год плюс покупки один раз.</span></div>
       </div>
 
-      <p><button type="button" class="tool-btn" data-show-result>Показать итог</button></p>
+      <h2 class="cost-h">1. Регулярные покупки</h2>
+      <p class="tool-note">Цена упаковки и на сколько дней её хватает. Например, упаковка раз в 3 дня — впишите 3.</p>
+      <div data-rows></div>
+      <div class="cost-quick" data-quick aria-label="Добавить покупку"></div>
 
-      <div class="cost-totals" aria-live="polite" data-totals tabindex="-1">
-        <div class="cost-total"><span class="tool-label">Каждый месяц (регулярно)</span><strong data-out="month">0 ₽</strong><span class="tool-note">Корм, наполнитель и всё, что вы покупаете каждый месяц.</span></div>
-        <div class="cost-total"><span class="tool-label">В среднем в месяц, с годовыми</span><strong data-out="avg">0 ₽</strong><span class="tool-note">Годовые траты (прививки и т. п.), поделённые на 12 месяцев, плюс ежемесячные.</span></div>
-        <div class="cost-total"><span class="tool-label">Расходы за год</span><strong data-out="year">0 ₽</strong><span class="tool-note">12 месяцев регулярных трат плюс годовые. Без разовых покупок и без запаса.</span></div>
-        <div class="cost-total"><span class="tool-label">Запас на непредвиденное в год</span><strong data-out="reserve">0 ₽</strong><span class="tool-note">Процент от расходов за год: сколько отложить на внеплановое.</span></div>
-        <div class="cost-total"><span class="tool-label">Первый год: всё вместе</span><strong data-out="first">0 ₽</strong><span class="tool-note">Покупки при появлении питомца плюс расходы за год и запас. Первый год обычно самый дорогой.</span></div>
-        <div class="cost-total" data-total-years hidden><span class="tool-label" data-years-label>За весь срок</span><strong data-out="all">0 ₽</strong><span class="tool-note">Разовые покупки один раз, дальше каждый год с запасом.</span></div>
+      <h2 class="cost-h">2. Покупки один раз</h2>
+      <p class="tool-note">Клетка или лоток, переноска, миски, лежанка, игрушки: общая сумма.</p>
+      <div class="cost-row">
+        <label for="cost-once">Сумма, ₽</label>
+        <input id="cost-once" class="tool-input" type="number" inputmode="decimal" min="0" step="1" placeholder="0" />
       </div>
 
-      <p class="tool-note" data-bench-note hidden>
-        Ориентиры цен: каталог {PRICES.shop}, {PRICES.city}, данные на {PRICES.date}. Показан разброс цен первых 20 позиций
-        выдачи (от 10-го до 90-го процентиля) и середина, а не средняя цена по рынку. В вашем городе и магазине цены другие.
-      </p>
+      <h2 class="cost-h">3. Ветеринар и лекарства</h2>
+      <p class="tool-note">Прививки и лекарства бывают по факту или по плану врача. Впишите, что знаете за год, или оставьте пустым.</p>
+      <div class="cost-row">
+        <label for="cost-vet">Сумма за год, ₽</label>
+        <input id="cost-vet" class="tool-input" type="number" inputmode="decimal" min="0" step="1" placeholder="0" />
+      </div>
 
-      <div data-form></div>
-      <div style="display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-3);">
+      <div style="margin-top: var(--sp-4);">
         <button type="button" class="tool-btn is-ghost" data-clear>Очистить</button>
-        <button type="button" class="tool-btn is-ghost" data-print>Распечатать</button>
       </div>
     </div>
 
-    <h2>Как пользоваться</h2>
-    <ol>
-      <li>Выберите питомца, список статей расходов подстроится под него.</li>
-      <li>Узнайте цены в своём городе и впишите их. Для строк «раз в год» вносите сумму за весь год.</li>
-      <li>Оставьте поле пустым, если статья вам не нужна. Лишние поля никого не смущают.</li>
-      <li>Посмотрите на первый год и на запас: первый год почти всегда дороже.</li>
-    </ol>
-    <p>
-      Если хотите понять, из чего складывается бюджет, прочитайте статьи
-      <a href="/sovety/skolko-stoit-soderzhanie-koshki-ili-sobaki-v-mesyac/">сколько стоит содержание кошки или собаки в месяц</a>
-      и <a href="/sovety/skolko-stoit-zavesti-pitomca-vpervye-razovye-traty-na-starte/">сколько стоит завести питомца впервые</a>.
-      О страховке: <a href="/sovety/nuzhna-li-strahovka-dlya-pitomca/">нужна ли страховка питомцу</a>.
-    </p>
+    <details class="tool-details">
+      <summary>Сколько стоят упаковки в магазине (кошки и собаки)</summary>
+      <p class="tool-note">
+        Каталог {PRICES.shop}, {PRICES.city}, данные на {PRICES.date}. Показан разброс цен первых 20 позиций выдачи
+        (от 10-го до 90-го процентиля) и середина, а не средняя цена по рынку. В вашем городе цены другие.
+      </p>
+      <div class="tool-table-wrap">
+        <table class="tool-table">
+          <thead><tr><th>Питомец</th><th>Что</th><th>Цена</th></tr></thead>
+          <tbody>
+            {BENCH.map((b) => (
+              <tr><td>{b.pet}</td><td>{b.item}</td><td>{b.text}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
 
     <h2>Частые вопросы</h2>
     <div class="tool-faq">
@@ -106,7 +98,13 @@ const jsonLd = [
         </details>
       ))}
     </div>
-    <p class="tool-note">Калькулятор помогает планировать бюджет и не заменяет консультацию специалиста. Сроки жизни из подсказок взяты из наших статей и зависят от условий содержания.</p>
+    <p>
+      Подробнее о том, из чего складываются расходы:
+      <a href="/sovety/skolko-stoit-soderzhanie-koshki-ili-sobaki-v-mesyac/">сколько стоит содержание кошки или собаки в месяц</a>,
+      <a href="/sovety/skolko-stoit-zavesti-pitomca-vpervye-razovye-traty-na-starte/">сколько стоит завести питомца впервые</a>,
+      <a href="/sovety/nuzhna-li-strahovka-dlya-pitomca/">нужна ли страховка питомцу</a>.
+    </p>
+    <p class="tool-note">Калькулятор помогает планировать бюджет и не заменяет консультацию ветеринарного врача.</p>
   </div>
 </BaseLayout>
 
@@ -116,141 +114,144 @@ const jsonLd = [
   const root = document.querySelector('[data-cost-tool]');
   const dataEl = document.getElementById('cost-data');
   if (root && dataEl) {
-    const { profiles, kinds, prices } = JSON.parse(dataEl.textContent || '{}');
-    const shopLabel = prices.shop + ', ' + prices.date;
-    const benchNote = root.querySelector('[data-bench-note]');
-    const speciesSel = root.querySelector('#cost-species');
-    const reserveIn = root.querySelector('#cost-reserve');
-    const yearsIn = root.querySelector('#cost-years');
-    const yearsHint = root.querySelector('[data-years-hint]');
-    const form = root.querySelector('[data-form]');
-    const KEY = 'lapki-cost-v1';
-    const outs = {};
-    root.querySelectorAll('[data-out]').forEach((el) => (outs[el.getAttribute('data-out')] = el));
-    const totalYears = root.querySelector('[data-total-years]');
-    const yearsLabel = root.querySelector('[data-years-label]');
+    const { quick, example } = JSON.parse(dataEl.textContent || '{}');
+    const KEY = 'lapki-cost-v2';
+    const rowsBox = root.querySelector('[data-rows]');
+    const quickBox = root.querySelector('[data-quick]');
+    const onceIn = root.querySelector('#cost-once');
+    const vetIn = root.querySelector('#cost-vet');
+    const exNote = root.querySelector('[data-example-note]');
+    const out = {};
+    root.querySelectorAll('[data-out]').forEach((el) => (out[el.getAttribute('data-out')] = el));
 
     const nf = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
     const money = (n) => nf.format(Math.round(n)) + ' ₽';
     const num = (v) => { const x = parseFloat(String(v).replace(',', '.')); return x > 0 && isFinite(x) ? x : 0; };
 
-    let store = {};
-    try { store = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { store = {}; }
-    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* без хранилища всё работает */ } };
+    let isExample = true;
 
-    const profile = () => profiles.find((p) => p.id === speciesSel.value) || profiles[0];
-    const bucket = () => (store[speciesSel.value] = store[speciesSel.value] || {});
+    function addRow(r) {
+      const row = document.createElement('div');
+      row.className = 'cost-line';
+      const name = document.createElement('input');
+      name.className = 'tool-input';
+      name.type = 'text';
+      name.maxLength = 40;
+      name.placeholder = 'Что покупаете';
+      name.setAttribute('aria-label', 'Название покупки');
+      name.value = r.n || '';
+      const price = document.createElement('input');
+      price.className = 'tool-input';
+      price.type = 'number';
+      price.inputMode = 'decimal';
+      price.min = '0';
+      price.step = '1';
+      price.placeholder = 'Цена упаковки, ₽';
+      price.setAttribute('aria-label', 'Цена одной упаковки, рублей');
+      if (r.p) price.value = r.p;
+      const days = document.createElement('input');
+      days.className = 'tool-input';
+      days.type = 'number';
+      days.inputMode = 'decimal';
+      days.min = '0';
+      days.step = '1';
+      days.placeholder = 'Хватает, дней';
+      days.setAttribute('aria-label', 'На сколько дней хватает упаковки');
+      if (r.d) days.value = r.d;
+      const sum = document.createElement('span');
+      sum.className = 'cost-line-sum';
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'cost-del';
+      del.setAttribute('aria-label', 'Убрать строку');
+      del.textContent = '×';
+      del.addEventListener('click', () => { row.remove(); touched(); });
+      [name, price, days].forEach((el) => el.addEventListener('input', touched));
+      row.append(name, price, days, sum, del);
+      rowsBox.appendChild(row);
+    }
 
-    function buildForm() {
-      const p = profile();
-      const b = bucket();
-      form.textContent = '';
-      for (const kind of ['once', 'monthly', 'yearly']) {
-        const lines = p.lines.filter((l) => l.kind === kind);
-        if (!lines.length) continue;
-        const sec = document.createElement('div');
-        sec.className = 'cost-section';
-        const h = document.createElement('h3');
-        h.textContent = kinds[kind].title;
-        const n = document.createElement('p');
-        n.className = 'tool-note';
-        n.textContent = kinds[kind].note;
-        sec.append(h, n);
-        for (const l of lines) {
-          const row = document.createElement('div');
-          row.className = 'cost-row';
-          const lab = document.createElement('label');
-          const id = 'cost-' + p.id + '-' + l.id;
-          lab.setAttribute('for', id);
-          lab.textContent = l.name;
-          if (l.hint) {
-            const s = document.createElement('span');
-            s.className = 'tool-note';
-            s.textContent = l.hint;
-            lab.appendChild(s);
-          }
-          if (l.bench) {
-            const s = document.createElement('span');
-            s.className = 'tool-note';
-            s.textContent = 'Ориентир: ' + l.bench + ' (' + shopLabel + ')';
-            lab.appendChild(s);
-          }
-          const inp = document.createElement('input');
-          inp.className = 'tool-input';
-          inp.type = 'number';
-          inp.inputMode = 'decimal';
-          inp.min = '0';
-          inp.step = '1';
-          inp.placeholder = '0 ₽';
-          inp.id = id;
-          inp.dataset.line = l.id;
-          inp.dataset.kind = l.kind;
-          if (b[l.id]) inp.value = b[l.id];
-          inp.addEventListener('input', () => {
-            if (inp.value) bucket()[l.id] = inp.value; else delete bucket()[l.id];
-            save();
-            calc();
-          });
-          row.append(lab, inp);
-          sec.appendChild(row);
-        }
-        form.appendChild(sec);
-      }
-      yearsHint.textContent = p.lifespanHint || '';
-      benchNote.hidden = !p.lines.some((l) => l.bench);
+    function readRows() {
+      return [...rowsBox.querySelectorAll('.cost-line')].map((row) => {
+        const [n, p, d] = row.querySelectorAll('input');
+        return { n: n.value, p: p.value, d: d.value, el: row };
+      });
     }
 
     function calc() {
-      let once = 0, monthly = 0, yearly = 0;
-      form.querySelectorAll('input[data-kind]').forEach((inp) => {
-        const v = num(inp.value);
-        if (inp.dataset.kind === 'once') once += v;
-        else if (inp.dataset.kind === 'monthly') monthly += v;
-        else yearly += v;
-      });
-      const reservePct = Math.min(200, num(reserveIn.value));
-      const yearBase = monthly * 12 + yearly;
-      const reserve = yearBase * reservePct / 100;
-      const year = yearBase;
-      outs.month.textContent = money(monthly);
-      outs.avg.textContent = money(yearBase / 12);
-      outs.year.textContent = money(year);
-      outs.reserve.textContent = money(reserve);
-      outs.first.textContent = money(once + yearBase + reserve);
-      const years = num(yearsIn.value);
-      if (years > 0) {
-        totalYears.hidden = false;
-        yearsLabel.textContent = 'За ' + nf.format(years) + ' лет с разовыми и запасом';
-        outs.all.textContent = money(once + (yearBase + reserve) * years);
-      } else {
-        totalYears.hidden = true;
+      let yearRegular = 0;
+      for (const r of readRows()) {
+        const p = num(r.p), d = num(r.d);
+        const sum = r.el.querySelector('.cost-line-sum');
+        if (p > 0 && d > 0) {
+          const y = (p * 365) / d;
+          yearRegular += y;
+          sum.textContent = '≈ ' + money(y / 12) + ' в месяц';
+        } else {
+          sum.textContent = '';
+        }
       }
+      const once = num(onceIn.value);
+      const vet = num(vetIn.value);
+      out.month.textContent = money(yearRegular / 12);
+      out.year.textContent = money(yearRegular + vet);
+      out.first.textContent = money(yearRegular + vet + once);
     }
 
-    function onChangeSpecies() { buildForm(); calc(); try { localStorage.setItem(KEY + '-last', speciesSel.value); } catch (e) { /* ok */ } }
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          rows: readRows().map(({ n, p, d }) => ({ n, p, d })),
+          once: onceIn.value, vet: vetIn.value,
+        }));
+      } catch (e) { /* без хранилища всё работает */ }
+    }
 
-    speciesSel.addEventListener('change', onChangeSpecies);
-    reserveIn.addEventListener('input', calc);
-    yearsIn.addEventListener('input', calc);
-    root.querySelector('[data-clear]').addEventListener('click', () => {
-      store[speciesSel.value] = {};
+    function touched() {
+      if (isExample) { isExample = false; exNote.hidden = true; }
+      calc();
       save();
-      buildForm();
+    }
+
+    function load(state) {
+      rowsBox.textContent = '';
+      (state.rows && state.rows.length ? state.rows : [{}]).forEach(addRow);
+      onceIn.value = state.once || '';
+      vetIn.value = state.vet || '';
       calc();
+    }
+
+    quick.forEach((name) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tool-tab';
+      b.textContent = '+ ' + name;
+      b.addEventListener('click', () => { addRow({ n: name }); touched(); });
+      quickBox.appendChild(b);
     });
-    root.querySelector('[data-print]').addEventListener('click', () => window.print());
-    root.querySelector('[data-show-result]').addEventListener('click', () => {
-      calc();
-      const t = root.querySelector('[data-totals]');
-      t.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      t.focus({ preventScroll: true });
+    const other = document.createElement('button');
+    other.type = 'button';
+    other.className = 'tool-tab';
+    other.textContent = '+ Другое';
+    other.addEventListener('click', () => { addRow({}); touched(); });
+    quickBox.appendChild(other);
+
+    [onceIn, vetIn].forEach((el) => el.addEventListener('input', touched));
+    root.querySelector('[data-clear]').addEventListener('click', () => {
+      isExample = false;
+      exNote.hidden = true;
+      load({});
+      save();
     });
 
-    try {
-      const last = localStorage.getItem(KEY + '-last');
-      if (last && profiles.some((p) => p.id === last)) speciesSel.value = last;
-    } catch (e) { /* ok */ }
-    buildForm();
-    calc();
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { stored = null; }
+    if (stored && typeof stored === 'object') {
+      isExample = false;
+      exNote.hidden = true;
+      load(stored);
+    } else {
+      load({ rows: example.rows, once: example.once, vet: example.vet || '' });
+    }
   }
 </script>
