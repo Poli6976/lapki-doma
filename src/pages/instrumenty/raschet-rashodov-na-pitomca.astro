@@ -6,9 +6,9 @@ import { BENCH, PRICES, QUICK_ROWS, EXAMPLE, FAQ } from '../../data/tool-costs.m
 
 const title = 'Калькулятор расходов на питомца: сколько в месяц и в год';
 const description =
-  'Впишите цену упаковки корма и на сколько дней её хватает: посчитаем траты на любого питомца в месяц и в год. Работает для кошек, собак, грызунов и птиц.';
+  'Впишите цену упаковки корма и на сколько дней её хватает: посчитаем траты на любого питомца в месяц и в год. Результат можно сохранить картинкой. Работает для кошек, собак, грызунов и птиц.';
 
-const dataJson = JSON.stringify({ quick: QUICK_ROWS, example: EXAMPLE });
+const dataJson = JSON.stringify({ quick: QUICK_ROWS, example: EXAMPLE, site: SITE.name, host: 'lapki-doma.ru/instrumenty/raschet-rashodov-na-pitomca/' });
 
 const jsonLd = [
   {
@@ -43,8 +43,8 @@ const jsonLd = [
 
       <div class="cost-bar" aria-live="polite">
         <div class="cost-total"><span class="tool-label">Каждый месяц</span><strong data-out="month">0 ₽</strong><span class="tool-note">Все регулярные покупки.</span></div>
-        <div class="cost-total"><span class="tool-label">За год</span><strong data-out="year">0 ₽</strong><span class="tool-note">Регулярные покупки плюс ветеринар.</span></div>
-        <div class="cost-total"><span class="tool-label">Первый год</span><strong data-out="first">0 ₽</strong><span class="tool-note">Год плюс покупки один раз.</span></div>
+        <div class="cost-total"><span class="tool-label">За год</span><strong data-out="year">0 ₽</strong><span class="tool-note">Регулярные покупки плюс ветеринар за год.</span></div>
+        <div class="cost-total"><span class="tool-label">Первый год</span><strong data-out="first">0 ₽</strong><span class="tool-note">Год плюс все разовые покупки и платежи врачу.</span></div>
       </div>
 
       <h2 class="cost-h">1. Регулярные покупки</h2>
@@ -60,15 +60,21 @@ const jsonLd = [
       </div>
 
       <h2 class="cost-h">3. Ветеринар и лекарства</h2>
-      <p class="tool-note">Прививки и лекарства бывают по факту или по плану врача. Впишите, что знаете за год, или оставьте пустым.</p>
+      <p class="tool-note">Прививки и лекарства бывают по факту или по плану врача. Впишите, что знаете, или оставьте пустым.</p>
       <div class="cost-row">
-        <label for="cost-vet">Сумма за год, ₽</label>
+        <label for="cost-vet-once">Разово, ₽<span class="tool-note">Первый осмотр, прививки, стерилизация или то, что уже назначено.</span></label>
+        <input id="cost-vet-once" class="tool-input" type="number" inputmode="decimal" min="0" step="1" placeholder="0" />
+      </div>
+      <div class="cost-row">
+        <label for="cost-vet">За год, ₽<span class="tool-note">То, что врач назначает постоянно или каждый год.</span></label>
         <input id="cost-vet" class="tool-input" type="number" inputmode="decimal" min="0" step="1" placeholder="0" />
       </div>
 
-      <div style="margin-top: var(--sp-4);">
+      <div class="cost-actions">
+        <button type="button" class="tool-btn" data-save>Сохранить картинкой</button>
         <button type="button" class="tool-btn is-ghost" data-clear>Очистить</button>
       </div>
+      <p class="tool-note">Картинка скачивается на ваше устройство, править её нельзя. Мы ничего не сохраняем: при следующем заходе всё начнётся заново.</p>
     </div>
 
     <details class="tool-details">
@@ -114,11 +120,11 @@ const jsonLd = [
   const root = document.querySelector('[data-cost-tool]');
   const dataEl = document.getElementById('cost-data');
   if (root && dataEl) {
-    const { quick, example } = JSON.parse(dataEl.textContent || '{}');
-    const KEY = 'lapki-cost-v2';
+    const { quick, example, site, host } = JSON.parse(dataEl.textContent || '{}');
     const rowsBox = root.querySelector('[data-rows]');
     const quickBox = root.querySelector('[data-quick]');
     const onceIn = root.querySelector('#cost-once');
+    const vetOnceIn = root.querySelector('#cost-vet-once');
     const vetIn = root.querySelector('#cost-vet');
     const exNote = root.querySelector('[data-example-note]');
     const out = {};
@@ -129,6 +135,8 @@ const jsonLd = [
     const num = (v) => { const x = parseFloat(String(v).replace(',', '.')); return x > 0 && isFinite(x) ? x : 0; };
 
     let isExample = true;
+    // Ничего не запоминаем ни на сайте, ни в браузере: каждый заход начинается заново.
+    let last = null;
 
     function addRow(r) {
       const row = document.createElement('div');
@@ -174,49 +182,46 @@ const jsonLd = [
     function readRows() {
       return [...rowsBox.querySelectorAll('.cost-line')].map((row) => {
         const [n, p, d] = row.querySelectorAll('input');
-        return { n: n.value, p: p.value, d: d.value, el: row };
+        return { n: n.value.trim(), p: num(p.value), d: num(d.value), el: row };
       });
     }
 
     function calc() {
       let yearRegular = 0;
+      const lines = [];
       for (const r of readRows()) {
-        const p = num(r.p), d = num(r.d);
         const sum = r.el.querySelector('.cost-line-sum');
-        if (p > 0 && d > 0) {
-          const y = (p * 365) / d;
+        if (r.p > 0 && r.d > 0) {
+          const y = (r.p * 365) / r.d;
           yearRegular += y;
           sum.textContent = '≈ ' + money(y / 12) + ' в месяц';
+          lines.push({ n: r.n || 'Покупка', p: r.p, d: r.d, m: y / 12 });
         } else {
           sum.textContent = '';
         }
       }
       const once = num(onceIn.value);
+      const vetOnce = num(vetOnceIn.value);
       const vet = num(vetIn.value);
-      out.month.textContent = money(yearRegular / 12);
-      out.year.textContent = money(yearRegular + vet);
-      out.first.textContent = money(yearRegular + vet + once);
-    }
-
-    function save() {
-      try {
-        localStorage.setItem(KEY, JSON.stringify({
-          rows: readRows().map(({ n, p, d }) => ({ n, p, d })),
-          once: onceIn.value, vet: vetIn.value,
-        }));
-      } catch (e) { /* без хранилища всё работает */ }
+      const month = yearRegular / 12;
+      const year = yearRegular + vet;
+      const first = year + once + vetOnce;
+      out.month.textContent = money(month);
+      out.year.textContent = money(year);
+      out.first.textContent = money(first);
+      last = { lines, once, vetOnce, vet, month, year, first };
     }
 
     function touched() {
       if (isExample) { isExample = false; exNote.hidden = true; }
       calc();
-      save();
     }
 
     function load(state) {
       rowsBox.textContent = '';
       (state.rows && state.rows.length ? state.rows : [{}]).forEach(addRow);
       onceIn.value = state.once || '';
+      vetOnceIn.value = state.vetOnce || '';
       vetIn.value = state.vet || '';
       calc();
     }
@@ -236,22 +241,130 @@ const jsonLd = [
     other.addEventListener('click', () => { addRow({}); touched(); });
     quickBox.appendChild(other);
 
-    [onceIn, vetIn].forEach((el) => el.addEventListener('input', touched));
+    [onceIn, vetOnceIn, vetIn].forEach((el) => el.addEventListener('input', touched));
     root.querySelector('[data-clear]').addEventListener('click', () => {
       isExample = false;
       exNote.hidden = true;
       load({});
-      save();
     });
 
-    let stored = null;
-    try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { stored = null; }
-    if (stored && typeof stored === 'object') {
-      isExample = false;
-      exNote.hidden = true;
-      load(stored);
-    } else {
-      load({ rows: example.rows, once: example.once, vet: example.vet || '' });
+    /* ── Сохранение картинкой: рисуем на canvas только текст из ваших чисел,
+          скачивается PNG: править нельзя, на сайте ничего не остаётся. ── */
+    function saveImage() {
+      calc();
+      const d = last;
+      const W = 1000, pad = 48, scale = 2;
+      const rowH = 44;
+      const hasLines = d.lines.length > 0;
+      const extra = [];
+      if (d.once > 0) extra.push(['Покупки один раз', money(d.once)]);
+      if (d.vetOnce > 0) extra.push(['Ветеринар разово', money(d.vetOnce)]);
+      if (d.vet > 0) extra.push(['Ветеринар за год', money(d.vet)]);
+      const H = pad + 70 + 40 + (hasLines ? (d.lines.length + 1) * rowH + 24 : 0) + (extra.length ? extra.length * rowH + 24 : 0) + 170 + 90;
+      const cv = document.createElement('canvas');
+      cv.width = W * scale;
+      cv.height = H * scale;
+      const c = cv.getContext('2d');
+      c.scale(scale, scale);
+      const text = '#33261d', soft = '#786052', brand = '#d85a2e', border = '#ecdccc';
+      c.fillStyle = '#fbf3ea';
+      c.fillRect(0, 0, W, H);
+      const sans = "'Inter', 'Segoe UI', Arial, sans-serif";
+      const serif = "'Vollkorn', Georgia, 'Times New Roman', serif";
+      let y = pad;
+      c.fillStyle = brand;
+      c.font = '600 26px ' + serif;
+      c.textBaseline = 'alphabetic';
+      c.fillText(site || 'Лапки Дома', pad, y + 24);
+      c.fillStyle = soft;
+      c.font = '400 18px ' + sans;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ru-RU');
+      c.textAlign = 'right';
+      c.fillText(dateStr, W - pad, y + 24);
+      c.textAlign = 'left';
+      y += 70;
+      c.fillStyle = text;
+      c.font = '600 34px ' + serif;
+      c.fillText('Расчёт расходов на питомца', pad, y);
+      y += 40;
+
+      const line = (yy) => { c.strokeStyle = border; c.lineWidth = 1; c.beginPath(); c.moveTo(pad, yy); c.lineTo(W - pad, yy); c.stroke(); };
+      const cols = [pad, 470, 640, 800];
+      if (hasLines) {
+        c.fillStyle = soft;
+        c.font = '600 16px ' + sans;
+        c.fillText('Регулярные покупки', cols[0], y + 24);
+        c.fillText('Упаковка', cols[1], y + 24);
+        c.fillText('Хватает', cols[2], y + 24);
+        c.fillText('В месяц', cols[3], y + 24);
+        y += rowH;
+        line(y - 8);
+        c.fillStyle = text;
+        c.font = '400 20px ' + sans;
+        for (const l of d.lines) {
+          let nm = l.n;
+          while (nm.length > 1 && c.measureText(nm).width > cols[1] - cols[0] - 16) nm = nm.slice(0, -1);
+          c.fillText(nm, cols[0], y + 24);
+          c.fillText(money(l.p), cols[1], y + 24);
+          c.fillText(nf.format(l.d) + ' дн.', cols[2], y + 24);
+          c.fillText(money(l.m), cols[3], y + 24);
+          y += rowH;
+        }
+        y += 24;
+      }
+      if (extra.length) {
+        c.font = '400 20px ' + sans;
+        for (const [a, b] of extra) {
+          c.fillStyle = text;
+          c.textAlign = 'left';
+          c.fillText(a, cols[0], y + 24);
+          c.textAlign = 'right';
+          c.fillText(b, W - pad, y + 24);
+          c.textAlign = 'left';
+          y += rowH;
+        }
+        y += 24;
+      }
+      // Итоги
+      const boxes = [['Каждый месяц', d.month], ['За год', d.year], ['Первый год', d.first]];
+      const bw = (W - pad * 2 - 40) / 3;
+      boxes.forEach(([label, val], i) => {
+        const x = pad + i * (bw + 20);
+        c.fillStyle = '#f5e9dc';
+        c.strokeStyle = border;
+        c.lineWidth = 1;
+        c.beginPath();
+        c.roundRect(x, y, bw, 120, 14);
+        c.fill();
+        c.stroke();
+        c.fillStyle = soft;
+        c.font = '600 17px ' + sans;
+        c.fillText(label, x + 20, y + 36);
+        c.fillStyle = text;
+        c.font = '600 32px ' + serif;
+        c.fillText(money(val), x + 20, y + 84);
+      });
+      y += 120 + 40;
+      c.fillStyle = soft;
+      c.font = '400 15px ' + sans;
+      c.fillText('Расчёт справочный, по числам, которые ввёл посетитель. Не заменяет консультацию ветеринара.', pad, y);
+      c.fillText(host || '', pad, y + 24);
+
+      cv.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'raschet-rashodov-lapki-doma.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }, 'image/png');
     }
+    root.querySelector('[data-save]').addEventListener('click', saveImage);
+
+    load({ rows: example.rows, once: example.once, vet: example.vet || '', vetOnce: example.vetOnce || '' });
   }
 </script>

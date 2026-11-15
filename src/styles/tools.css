@@ -159,6 +159,8 @@
   background: transparent; color: var(--text-soft); cursor: pointer;
 }
 .cost-del:hover { color: var(--alert); border-color: var(--alert); }
+.cost-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
+.cost-row label .tool-note { display: block; font-weight: 400; }
 .cost-quick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-2); }
 .cost-quick .tool-tab { padding: 6px 14px; min-height: 40px; font-weight: 500; }
 
