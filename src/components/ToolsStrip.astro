@@ -1,0 +1,118 @@
+---
+/**
+ * Полоса «Инструменты» под шапкой, по центру, на каждой странице.
+ *
+ * Стоит ПОД липкой шапкой, в обычном потоке, а не внутри неё: шапка и так
+ * занимает полэкрана телефона (см. комментарий к .nav в global.css), вторая строка
+ * в липкой части съела бы ещё. Прокрутил — полоса уехала вместе со страницей.
+ * Калькулятор расходов — главная кнопка (акцент), два других — спокойные.
+ */
+const path = Astro.url.pathname;
+const TOOLS = [
+  { href: '/instrumenty/raschet-rashodov-na-pitomca/', label: 'Калькулятор расходов', primary: true },
+  { href: '/instrumenty/chto-mozhno-esti-pitomcu/', label: 'Что можно есть питомцу' },
+  { href: '/instrumenty/podbor-kletki/', label: 'Подбор клетки' },
+];
+---
+
+<nav class="tools-strip" aria-label="Инструменты">
+  <div class="tools-strip-row">
+    {
+      TOOLS.map((t) => (
+        <a
+          class:list={['tools-pill', { 'is-primary': t.primary }]}
+          href={t.href}
+          aria-current={path === t.href ? 'page' : undefined}
+        >
+          {t.primary && <span class="tools-pill-mark" aria-hidden="true">₽</span>}
+          {t.label}
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  .tools-strip {
+    padding: 10px 0 2px;
+  }
+  .tools-strip-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 20px;
+    scrollbar-width: none;
+  }
+  .tools-strip-row::-webkit-scrollbar {
+    display: none;
+  }
+  .tools-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    padding: 8px 16px;
+    min-height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tools-pill:hover {
+    text-decoration: none;
+    border-color: var(--brand);
+    color: var(--brand-dark);
+  }
+  .tools-pill.is-primary {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+    box-shadow: 0 3px 10px color-mix(in srgb, var(--brand) 35%, transparent);
+  }
+  .tools-pill.is-primary:hover {
+    background: var(--brand-dark);
+    border-color: var(--brand-dark);
+    color: #fff;
+  }
+  .tools-pill[aria-current='page'] {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  .tools-pill-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .tools-pill:focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tools-pill.is-primary {
+      color: #211710;
+    }
+    .tools-pill.is-primary:hover {
+      color: #211710;
+    }
+    .tools-pill-mark {
+      background: rgba(33, 23, 16, 0.2);
+    }
+  }
+  @media (max-width: 640px) {
+    .tools-strip-row {
+      justify-content: flex-start;
+      padding-inline: 16px;
+    }
+  }
+</style>

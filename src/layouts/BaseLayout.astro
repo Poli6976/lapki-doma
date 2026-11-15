@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import ToolsStrip from '../components/ToolsStrip.astro';
 import Footer from '../components/Footer.astro';
 import CookieNotice from '../components/CookieNotice.astro';
 import SiteSearch from '../components/SiteSearch.astro';
@@ -134,6 +135,7 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   </head>
   <body>
     <Header />
+    <ToolsStrip />
 
     <!--
       Поиск на каждой странице, а не только на главной. Больше половины
