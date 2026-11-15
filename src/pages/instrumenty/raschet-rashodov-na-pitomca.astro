@@ -50,23 +50,26 @@ const jsonLd = [
         <div class="tool-field">
           <label for="cost-reserve">Запас на непредвиденное, %</label>
           <input id="cost-reserve" class="tool-input" type="number" inputmode="decimal" min="0" max="200" step="1" value="10" />
+          <span class="tool-note">Деньги «про запас» на то, что нельзя спланировать: внеплановый визит к врачу, лекарства, испорченные вещи. Считается как процент от годовых расходов. Не нужен — поставьте 0.</span>
         </div>
         <div class="tool-field">
           <label for="cost-years">Срок, лет (по желанию)</label>
           <input id="cost-years" class="tool-input" type="number" inputmode="decimal" min="0" step="0.5" placeholder="например 10" />
+          <span class="tool-note">На сколько лет посчитать общий итог. Можно не заполнять.</span>
           <span class="tool-note" data-years-hint></span>
         </div>
       </div>
 
-      <div class="cost-totals" aria-live="polite">
-        <div class="cost-total"><span class="tool-label">Каждый месяц (регулярно)</span><strong data-out="month">0 ₽</strong></div>
-        <div class="cost-total"><span class="tool-label">В среднем в месяц, с годовыми</span><strong data-out="avg">0 ₽</strong></div>
-        <div class="cost-total"><span class="tool-label">Расходы за год</span><strong data-out="year">0 ₽</strong></div>
-        <div class="cost-total"><span class="tool-label">Запас на непредвиденное в год</span><strong data-out="reserve">0 ₽</strong></div>
-        <div class="cost-total"><span class="tool-label">Первый год с разовыми</span><strong data-out="first">0 ₽</strong></div>
-        <div class="cost-total" data-total-years hidden><span class="tool-label" data-years-label>За весь срок</span><strong data-out="all">0 ₽</strong></div>
+      <p><button type="button" class="tool-btn" data-show-result>Показать итог</button></p>
+
+      <div class="cost-totals" aria-live="polite" data-totals tabindex="-1">
+        <div class="cost-total"><span class="tool-label">Каждый месяц (регулярно)</span><strong data-out="month">0 ₽</strong><span class="tool-note">Корм, наполнитель и всё, что вы покупаете каждый месяц.</span></div>
+        <div class="cost-total"><span class="tool-label">В среднем в месяц, с годовыми</span><strong data-out="avg">0 ₽</strong><span class="tool-note">Годовые траты (прививки и т. п.), поделённые на 12 месяцев, плюс ежемесячные.</span></div>
+        <div class="cost-total"><span class="tool-label">Расходы за год</span><strong data-out="year">0 ₽</strong><span class="tool-note">12 месяцев регулярных трат плюс годовые. Без разовых покупок и без запаса.</span></div>
+        <div class="cost-total"><span class="tool-label">Запас на непредвиденное в год</span><strong data-out="reserve">0 ₽</strong><span class="tool-note">Процент от расходов за год: сколько отложить на внеплановое.</span></div>
+        <div class="cost-total"><span class="tool-label">Первый год: всё вместе</span><strong data-out="first">0 ₽</strong><span class="tool-note">Покупки при появлении питомца плюс расходы за год и запас. Первый год обычно самый дорогой.</span></div>
+        <div class="cost-total" data-total-years hidden><span class="tool-label" data-years-label>За весь срок</span><strong data-out="all">0 ₽</strong><span class="tool-note">Разовые покупки один раз, дальше каждый год с запасом.</span></div>
       </div>
-      <p class="tool-note">Расходы за год = регулярные в месяц × 12 + суммы «раз в год»; запас считается от этой суммы и показан отдельно, итоги «первый год» и «за весь срок» уже включают его.</p>
 
       <p class="tool-note" data-bench-note hidden>
         Ориентиры цен: каталог {PRICES.shop}, {PRICES.city}, данные на {PRICES.date}. Показан разброс цен первых 20 позиций
@@ -236,6 +239,12 @@ const jsonLd = [
       calc();
     });
     root.querySelector('[data-print]').addEventListener('click', () => window.print());
+    root.querySelector('[data-show-result]').addEventListener('click', () => {
+      calc();
+      const t = root.querySelector('[data-totals]');
+      t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      t.focus({ preventScroll: true });
+    });
 
     try {
       const last = localStorage.getItem(KEY + '-last');

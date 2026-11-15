@@ -148,7 +148,10 @@
 .cost-totals { display: grid; gap: var(--sp-3); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: var(--sp-4); }
 .cost-total { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-4); }
 .cost-total .tool-label { display: block; }
-.cost-total strong { font-size: 1.5rem; font-family: var(--font-heading); }
+.cost-total strong { font-size: 1.5rem; font-family: var(--font-heading); display: block; margin-top: 2px; }
+.cost-total .tool-note { display: block; margin-top: 6px; line-height: 1.35; }
+.tool-field .tool-note { display: block; line-height: 1.35; }
+.tool-btn { margin-top: 0; }
 
 @media (max-width: 560px) {
   .tool-page { padding-block: 24px 40px; }
