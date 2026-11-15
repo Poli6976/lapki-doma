@@ -1,0 +1,68 @@
+---
+import '../../styles/tools.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../site.config.mjs';
+
+const title = 'Инструменты для хозяев питомцев';
+const description =
+  'Справочник «что можно и нельзя есть питомцу», подбор клетки по размеру и калькулятор расходов: проверенные данные и ваши цифры, без лишнего.';
+
+const TOOLS = [
+  {
+    href: '/instrumenty/chto-mozhno-esti-pitomcu/',
+    name: 'Что можно и нельзя есть питомцу',
+    text: 'Кошка, собака, попугай, хомяк, морская свинка, кролик: опасен ли продукт и откуда мы это знаем.',
+  },
+  {
+    href: '/instrumenty/podbor-kletki/',
+    name: 'Подбор клетки по размеру',
+    text: 'Введите размеры своей клетки: проверим, хватает ли места хомяку, кролику, крысе, шиншилле или попугаю.',
+  },
+  {
+    href: '/instrumenty/raschet-rashodov-na-pitomca/',
+    name: 'Калькулятор расходов на питомца',
+    text: 'Разовые траты, каждый месяц, раз в год и запас на непредвиденное. Цены подставляете вы.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', SITE.url).href },
+    { '@type': 'ListItem', position: 2, name: 'Инструменты', item: new URL('/instrumenty/', SITE.url).href },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="container container-wide tool-page">
+    <nav class="tool-crumbs" aria-label="Навигация"><a href="/">Главная</a> / Инструменты</nav>
+    <h1>Инструменты для хозяев питомцев</h1>
+    <p class="tool-lead">
+      Три небольших помощника, которые дают ответ сразу: что можно есть, хватит ли места в клетке и во сколько
+      обойдётся питомец.
+    </p>
+
+    <div class="tool-cards">
+      {TOOLS.map((t) => (
+        <a class="tool-card" href={t.href}>
+          <h2>{t.name}</h2>
+          <p>{t.text}</p>
+        </a>
+      ))}
+    </div>
+
+    <h2>Откуда данные</h2>
+    <p>
+      Справочник и размеры клеток составлены только по источникам, которые мы открыли и сверили:
+      ветеринарные и зоозащитные организации (ASPCA, VCA, PDSA, Wood Green, RSPCA, Rabbit Welfare Association)
+      и статьи врачей-ветеринаров. Под каждым пунктом указано, откуда он. Калькулятор расходов не подставляет
+      «средние цены»: они быстро устаревают, поэтому считает по вашим числам.
+    </p>
+    <p class="tool-note">
+      Инструменты справочные и не заменяют осмотр ветеринарного врача. <a href="/o-saite/">Как мы работаем</a>.
+      Нашли неточность? <a href="/kontakty/">Напишите нам</a>.
+    </p>
+  </div>
+</BaseLayout>

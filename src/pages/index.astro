@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../styles/tools.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import SiteSearch from '../components/SiteSearch.astro';
@@ -144,6 +145,26 @@ const plural = (n) => {
             );
           })
         }
+      </div>
+    </section>
+
+    <section aria-labelledby="tools-title" data-reveal>
+      <div class="section-title">
+        <h2 id="tools-title">Инструменты</h2>
+      </div>
+      <div class="tool-cards">
+        <a class="tool-card" href="/instrumenty/chto-mozhno-esti-pitomcu/">
+          <h3>Что можно и нельзя есть питомцу</h3>
+          <p>Проверьте продукт по виду питомца. Под каждым пунктом источник.</p>
+        </a>
+        <a class="tool-card" href="/instrumenty/podbor-kletki/">
+          <h3>Подбор клетки по размеру</h3>
+          <p>Хватает ли места хомяку, кролику, крысе или попугаю.</p>
+        </a>
+        <a class="tool-card" href="/instrumenty/raschet-rashodov-na-pitomca/">
+          <h3>Калькулятор расходов</h3>
+          <p>Месяц, год и первый год. Цены подставляете вы.</p>
+        </a>
       </div>
     </section>
 

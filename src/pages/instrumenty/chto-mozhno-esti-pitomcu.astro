@@ -1,0 +1,181 @@
+---
+import '../../styles/tools.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VetDisclaimer from '../../components/VetDisclaimer.astro';
+import { SITE } from '../../site.config.mjs';
+import { SPECIES, GENERAL, LEVELS, SOURCES, FAQ } from '../../data/tool-foods.mjs';
+
+const title = 'Что нельзя и что можно есть питомцу: справочник по видам';
+const description =
+  'Проверьте продукт для кошки, собаки, попугая, хомяка, морской свинки или кролика: опасно, осторожно или допустимо. Под каждым пунктом указан источник.';
+
+// Только источники, которые реально использованы в таблицах.
+const used = new Set();
+[...GENERAL, ...SPECIES.flatMap((s) => s.foods)].forEach((f) => used.add(f.source));
+const sourceList = [...used].map((id) => SOURCES[id]);
+
+const url = new URL('/instrumenty/chto-mozhno-esti-pitomcu/', SITE.url).href;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', SITE.url).href },
+      { '@type': 'ListItem', position: 2, name: 'Инструменты', item: new URL('/instrumenty/', SITE.url).href },
+      { '@type': 'ListItem', position: 3, name: 'Что можно есть питомцу', item: url },
+    ],
+  },
+];
+const rowText = (f) => `${f.food} ${f.note}`.toLowerCase();
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="container container-wide tool-page" data-food-tool>
+    <nav class="tool-crumbs" aria-label="Навигация">
+      <a href="/">Главная</a> / <a href="/instrumenty/">Инструменты</a> / Что можно есть питомцу
+    </nav>
+    <h1>Что нельзя и что можно есть питомцу</h1>
+    <p class="tool-lead">
+      Выберите питомца или начните вводить продукт: покажем, опасен ли он, и откуда мы это взяли.
+      Если продукта в списке нет, это не значит, что он безопасен.
+    </p>
+
+    <div class="tool-panel">
+      <div class="tool-label" id="food-species-label">Питомец</div>
+      <div class="tool-tabs" role="group" aria-labelledby="food-species-label" data-tabs>
+        <button type="button" class="tool-tab" data-species="all" aria-pressed="true">Все</button>
+        {SPECIES.map((s) => (
+          <button type="button" class="tool-tab" data-species={s.id} aria-pressed="false">{s.title}</button>
+        ))}
+      </div>
+      <div class="tool-field">
+        <label for="food-search">Найти продукт</label>
+        <input id="food-search" class="tool-input" type="search" placeholder="Например: виноград, лук, шоколад" autocomplete="off" />
+      </div>
+      <p class="tool-result" data-empty hidden role="status">
+        <strong>Ничего не нашли.</strong>
+        <span>Это не значит, что продукт безопасен: в списке только то, что подтверждено источником. Сомневаетесь, не давайте или спросите ветеринара.</span>
+      </p>
+    </div>
+
+    <section class="food-section" data-section="all" aria-labelledby="h-all">
+      <h2 id="h-all">Опасно для домашних животных вообще</h2>
+      <p class="tool-note">ASPCA относит эти продукты к опасным для питомцев в целом; вид животного источник не уточняет.</p>
+      <div class="tool-table-wrap">
+        <table class="tool-table">
+          <thead><tr><th>Продукт</th><th>Статус</th><th>Что известно</th></tr></thead>
+          <tbody>
+            {GENERAL.map((f) => (
+              <tr data-row={rowText(f)}>
+                <td>{f.food}</td>
+                <td><span class="level-badge" data-level={f.level}>{LEVELS[f.level].label}</span></td>
+                <td>{f.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {SPECIES.map((s) => (
+      <section class="food-section" data-section={s.id} aria-labelledby={`h-${s.id}`}>
+        <h2 id={`h-${s.id}`}>{s.title}</h2>
+        <p>{s.lead}</p>
+        <div class="tool-table-wrap">
+          <table class="tool-table">
+            <thead><tr><th>Продукт</th><th>Статус</th><th>Что известно</th></tr></thead>
+            <tbody>
+              {s.foods.map((f) => (
+                <tr data-row={rowText(f)}>
+                  <td>{f.food}</td>
+                  <td><span class="level-badge" data-level={f.level}>{LEVELS[f.level].label}</span></td>
+                  <td>{f.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+
+    <h2>Если питомец съел что-то опасное</h2>
+    <p>
+      Не ждите симптомов и не вызывайте рвоту сами. Позвоните ветеринару или в круглосуточную клинику и назовите,
+      что съел питомец, сколько и когда. Если у кошки началась рвота, читайте <a href="/zdorovie-i-povedenie/rvota-u-koshki-kogda-ponablyudat-a-kogda-k-vrachu/">когда понаблюдать, а когда сразу к врачу</a>.
+    </p>
+
+    <h2>Частые вопросы</h2>
+    <div class="tool-faq">
+      {FAQ.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2>Источники</h2>
+    <ul class="tool-sources">
+      {sourceList.map((s) => (
+        <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a>, {s.publisher}</li>
+      ))}
+    </ul>
+    <p class="tool-note">
+      Мы не даём дозировок и не ставим диагнозов. О безопасном количестве и о том, что делать при отравлении,
+      скажет только врач, который осмотрит животное. См. также статьи
+      <a href="/gryzuny/chem-kormit-homyaka-chto-mozhno-i-chto-nelzya/">чем кормить хомяка</a>,
+      <a href="/gryzuny/chem-kormit-morskuyu-svinku-seno-vitamin-c-i-zaprety/">чем кормить морскую свинку</a>,
+      <a href="/popugai/chem-kormit-volnistogo-popugaya/">чем кормить волнистого попугая</a>.
+    </p>
+    <VetDisclaimer />
+  </div>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector('[data-food-tool]');
+  if (root) {
+    const tabs = [...root.querySelectorAll('[data-tabs] .tool-tab')];
+    const search = root.querySelector('#food-search');
+    const empty = root.querySelector('[data-empty]');
+    const sections = [...root.querySelectorAll('.food-section')];
+    let species = 'all';
+
+    function apply() {
+      const q = (search.value || '').trim().toLowerCase();
+      let shown = 0;
+      for (const sec of sections) {
+        const id = sec.getAttribute('data-section');
+        // Общий блок виден всегда, пока выбран «Все» или любой вид.
+        const visibleBySpecies = species === 'all' || id === 'all' || id === species;
+        let rowsShown = 0;
+        for (const row of sec.querySelectorAll('tbody tr')) {
+          const hit = !q || (row.getAttribute('data-row') || '').includes(q);
+          row.hidden = !hit;
+          if (hit) rowsShown++;
+        }
+        sec.hidden = !visibleBySpecies || rowsShown === 0;
+        if (!sec.hidden) shown += rowsShown;
+      }
+      empty.hidden = shown !== 0;
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        species = tab.getAttribute('data-species') || 'all';
+        tabs.forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
+        apply();
+      });
+    });
+    search.addEventListener('input', apply);
+    apply();
+  }
+</script>

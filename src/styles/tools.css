@@ -1,0 +1,160 @@
+/* Страницы-инструменты: справочник «что можно есть», подбор клетки, расчёт расходов.
+   Подключается только на них. Цвета — токены из global.css; два оттенка для статусов
+   (зелёный «допустимо») заведены тут, потому что в палитре сайта зелёного нет. */
+
+.tool-page {
+  --tool-ok: #2f7a4d;
+  --tool-ok-soft: #e4f2e9;
+  --tool-care: #9a6a00;
+  --tool-care-soft: #fbf0d4;
+}
+@media (prefers-color-scheme: dark) {
+  .tool-page {
+    --tool-ok: #7fcf9c;
+    --tool-ok-soft: #1f3327;
+    --tool-care: #e8c26a;
+    --tool-care-soft: #3a2f16;
+  }
+}
+
+.tool-page { padding-block: 40px 56px; }
+.tool-crumbs { font-size: 0.9rem; color: var(--text-soft); margin-bottom: var(--sp-4); }
+.tool-crumbs a { color: var(--text-soft); }
+.tool-lead { font-size: 1.12rem; color: var(--text-soft); max-width: 62ch; }
+.tool-page h2 { margin-top: 1.6em; }
+.tool-page p { max-width: 70ch; }
+
+/* ── Панель ввода ── */
+.tool-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--sp-5);
+  margin: var(--sp-5) 0;
+}
+.tool-grid { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.tool-field { display: flex; flex-direction: column; gap: 6px; }
+.tool-field label, .tool-label { font-size: 0.88rem; font-weight: 600; color: var(--text-soft); }
+.tool-input, .tool-select {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  width: 100%;
+  min-height: 44px;
+}
+.tool-input:focus-visible, .tool-select:focus-visible, .tool-tab:focus-visible, .tool-btn:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.tool-btn {
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 22px;
+  min-height: 44px;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+}
+.tool-btn:hover { background: var(--brand-dark); }
+.tool-btn.is-ghost { background: transparent; color: var(--brand-dark); border: 1px solid var(--border); }
+@media (prefers-color-scheme: dark) { .tool-btn.is-ghost { color: var(--brand); } }
+
+/* ── Результат ── */
+.tool-result {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.tool-result[data-state='ok'] { background: var(--tool-ok-soft); border-color: var(--tool-ok); }
+.tool-result[data-state='bad'] { background: var(--alert-soft); border-color: var(--alert); }
+.tool-result strong { font-size: 1.1rem; }
+.tool-result p { margin: 0.4em 0 0; }
+
+/* ── Вкладки видов ── */
+.tool-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: var(--sp-4) 0; }
+.tool-tab {
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.tool-tab[aria-pressed='true'] { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+/* ── Таблицы данных ── */
+.tool-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.tool-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+.tool-table th, .tool-table td { padding: 11px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+.tool-table th { background: var(--bg-soft); font-size: 0.85rem; letter-spacing: 0.02em; }
+.tool-table tr:last-child td { border-bottom: 0; }
+.tool-table td:first-child { font-weight: 600; min-width: 150px; }
+.tool-table .num { white-space: nowrap; }
+
+.level-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.level-badge[data-level='no'] { background: var(--alert-soft); color: var(--alert); }
+.level-badge[data-level='care'] { background: var(--tool-care-soft); color: var(--tool-care); }
+.level-badge[data-level='ok'] { background: var(--tool-ok-soft); color: var(--tool-ok); }
+
+.tool-note { font-size: 0.92rem; color: var(--text-soft); }
+.tool-empty { padding: var(--sp-4); color: var(--text-soft); }
+
+/* ── Источники и FAQ ── */
+.tool-sources { padding-left: 1.2em; }
+.tool-sources li { margin: 0.5em 0; }
+.tool-faq details { border-bottom: 1px solid var(--border); padding: 12px 0; }
+.tool-faq summary { cursor: pointer; font-weight: 600; }
+.tool-faq details p { margin: 0.6em 0 0; }
+
+/* ── Карточки на странице «Инструменты» ── */
+.tool-cards { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: var(--sp-5) 0; }
+.tool-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--sp-5);
+  color: var(--text);
+}
+.tool-card:hover { box-shadow: var(--shadow-lift); text-decoration: none; }
+.tool-card h2 { margin: 0 0 0.3em; font-size: 1.3rem; }
+.tool-card p { margin: 0; color: var(--text-soft); }
+
+/* ── Расчёт расходов ── */
+.cost-section { margin-top: var(--sp-5); }
+.cost-row { display: grid; grid-template-columns: 1fr minmax(120px, 160px); gap: var(--sp-3); align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.cost-row:last-child { border-bottom: 0; }
+.cost-row label { font-weight: 500; }
+.cost-row .tool-note { display: block; }
+.cost-totals { display: grid; gap: var(--sp-3); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: var(--sp-4); }
+.cost-total { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-4); }
+.cost-total .tool-label { display: block; }
+.cost-total strong { font-size: 1.5rem; font-family: var(--font-heading); }
+
+@media (max-width: 560px) {
+  .tool-page { padding-block: 24px 40px; }
+  .tool-panel { padding: var(--sp-4); }
+  .cost-row { grid-template-columns: 1fr; gap: 6px; }
+}
+@media print {
+  .tool-panel button, .tool-tabs { display: none; }
+}

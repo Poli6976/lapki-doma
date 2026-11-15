@@ -1,0 +1,229 @@
+---
+import '../../styles/tools.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VetDisclaimer from '../../components/VetDisclaimer.astro';
+import { SITE } from '../../site.config.mjs';
+import { PROFILES, SOURCES, FAQ } from '../../data/tool-cages.mjs';
+
+const title = 'Подбор клетки по размеру: минимумы для хомяка, свинки, кролика, попугая';
+const description =
+  'Введите размеры своей клетки и вид питомца: проверим, достаточно ли места по минимумам ветеринарных и зоозащитных организаций. Хомяк, морская свинка, кролик, крыса, шиншилла, попугаи.';
+
+const groups = [...new Set(PROFILES.map((p) => p.group))];
+const fmt = (m) => `${m[0]} × ${m[1]}${m[2] ? ` × ${m[2]}` : ''}`;
+
+const used = new Set();
+PROFILES.forEach((p) => {
+  used.add(p.source);
+  (p.extra ?? []).forEach((e) => used.add(e));
+});
+const sourceList = [...used].map((id) => SOURCES[id]);
+
+const dataJson = JSON.stringify(
+  PROFILES.map((p) => ({ id: p.id, title: p.title, variants: p.variants, note: p.note, source: SOURCES[p.source] })),
+);
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', SITE.url).href },
+      { '@type': 'ListItem', position: 2, name: 'Инструменты', item: new URL('/instrumenty/', SITE.url).href },
+      { '@type': 'ListItem', position: 3, name: 'Подбор клетки', item: new URL('/instrumenty/podbor-kletki/', SITE.url).href },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="container container-wide tool-page" data-cage-tool>
+    <nav class="tool-crumbs" aria-label="Навигация">
+      <a href="/">Главная</a> / <a href="/instrumenty/">Инструменты</a> / Подбор клетки
+    </nav>
+    <h1>Подбор клетки по размеру</h1>
+    <p class="tool-lead">
+      Выберите питомца и введите размеры клетки в сантиметрах: проверим, хватает ли места по минимумам
+      ветеринарных и зоозащитных организаций. Минимум не идеал: чем просторнее, тем лучше.
+    </p>
+
+    <div class="tool-panel">
+      <div class="tool-grid">
+        <div class="tool-field">
+          <label for="cage-species">Питомец</label>
+          <select id="cage-species" class="tool-select">
+            {groups.map((g) => (
+              <optgroup label={g}>
+                {PROFILES.filter((p) => p.group === g).map((p) => (
+                  <option value={p.id}>{p.title}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+        <div class="tool-field" data-variant-field hidden>
+          <label for="cage-variant">Сколько животных</label>
+          <select id="cage-variant" class="tool-select"></select>
+        </div>
+      </div>
+
+      <div class="tool-grid" style="margin-top: var(--sp-4);">
+        <div class="tool-field">
+          <label for="cage-l">Длина дна, см</label>
+          <input id="cage-l" class="tool-input" type="number" inputmode="decimal" min="1" step="1" placeholder="например 100" />
+        </div>
+        <div class="tool-field">
+          <label for="cage-w">Ширина дна, см</label>
+          <input id="cage-w" class="tool-input" type="number" inputmode="decimal" min="1" step="1" placeholder="например 50" />
+        </div>
+        <div class="tool-field">
+          <label for="cage-h">Высота, см</label>
+          <input id="cage-h" class="tool-input" type="number" inputmode="decimal" min="1" step="1" placeholder="например 40" />
+        </div>
+      </div>
+      <p class="tool-note">Мерьте свободное пространство внутри, высоту от пола до потолка. Какая сторона «длина», а какая «ширина», неважно.</p>
+
+      <div class="tool-result" data-result role="status" aria-live="polite">
+        <strong data-result-title>Введите размеры клетки</strong>
+        <p data-result-text>Мы сравним их с минимумом для выбранного питомца.</p>
+      </div>
+      <p class="tool-note" data-spec></p>
+    </div>
+
+    <h2>Минимальные размеры по видам</h2>
+    <p class="tool-note">Длина × ширина × высота, см. Источники расходятся на несколько сантиметров; единых государственных нормативов для домашних питомцев нет.</p>
+    <div class="tool-table-wrap">
+      <table class="tool-table">
+        <thead><tr><th>Питомец</th><th>Минимум, см</th><th>Что важно</th><th>Источник</th></tr></thead>
+        <tbody>
+          {PROFILES.map((p) => (
+            <tr>
+              <td>{p.title}</td>
+              <td class="num">
+                {p.variants.map((v) => (
+                  <div>{fmt(v.min)} <span class="tool-note">({v.label})</span></div>
+                ))}
+              </td>
+              <td>{p.note}</td>
+              <td><a href={SOURCES[p.source].url} rel="noopener" target={SOURCES[p.source].url.startsWith('http') ? '_blank' : undefined}>{SOURCES[p.source].publisher}</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Как читать результат</h2>
+    <ul>
+      <li><strong>«Подходит по минимуму»</strong> значит только, что клетка не меньше нижней границы. Для постоянной жизни питомца берите просторнее.</li>
+      <li><strong>«Меньше минимума»</strong> значит, что по этому источнику клетка тесна. Не торопитесь выбрасывать: часть вольеров можно расширить или соединить.</li>
+      <li>Кролику и птице клетка нужна как «дом», а не как единственное пространство: им нужно время вне клетки под присмотром. Подробнее: <a href="/popugai/kakaya-kletka-nuzhna-popugayu/">какая клетка нужна попугаю</a>, <a href="/gryzuny/kakaya-kletka-nuzhna-homyaku-razmer-napolnitel-chto-vnutri/">какая клетка нужна хомяку</a>.</li>
+    </ul>
+
+    <h2>Частые вопросы</h2>
+    <div class="tool-faq">
+      {FAQ.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2>Источники</h2>
+    <ul class="tool-sources">
+      {sourceList.map((s) => (
+        <li><a href={s.url} rel="noopener" target={s.url.startsWith('http') ? '_blank' : undefined}>{s.title}</a>, {s.publisher}</li>
+      ))}
+    </ul>
+    <VetDisclaimer />
+  </div>
+</BaseLayout>
+
+<script is:inline type="application/json" id="cage-data" set:html={dataJson}></script>
+
+<script>
+  const root = document.querySelector('[data-cage-tool]');
+  const dataEl = document.getElementById('cage-data');
+  if (root && dataEl) {
+    const profiles = JSON.parse(dataEl.textContent || '[]');
+    const speciesSel = root.querySelector('#cage-species');
+    const variantSel = root.querySelector('#cage-variant');
+    const variantField = root.querySelector('[data-variant-field]');
+    const inL = root.querySelector('#cage-l');
+    const inW = root.querySelector('#cage-w');
+    const inH = root.querySelector('#cage-h');
+    const result = root.querySelector('[data-result]');
+    const rTitle = root.querySelector('[data-result-title]');
+    const rText = root.querySelector('[data-result-text]');
+    const spec = root.querySelector('[data-spec]');
+
+    const current = () => profiles.find((p) => p.id === speciesSel.value) || profiles[0];
+
+    function fillVariants() {
+      const p = current();
+      variantSel.textContent = '';
+      p.variants.forEach((v, i) => {
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = v.label;
+        variantSel.appendChild(o);
+      });
+      variantField.hidden = p.variants.length < 2;
+    }
+
+    function fmtMin(m) {
+      return m[0] + ' × ' + m[1] + (m[2] ? ' × ' + m[2] : '') + ' см';
+    }
+
+    function setResult(state, title, text) {
+      if (state) result.setAttribute('data-state', state);
+      else result.removeAttribute('data-state');
+      rTitle.textContent = title;
+      rText.textContent = text;
+    }
+
+    function check() {
+      const p = current();
+      const v = p.variants[Number(variantSel.value) || 0] || p.variants[0];
+      const min = v.min;
+      spec.textContent = 'Минимум для «' + p.title + '», ' + v.label + ': ' + fmtMin(min) + '. ' + p.note + ' Источник: ' + p.source.publisher + '.';
+
+      const l = parseFloat(inL.value);
+      const w = parseFloat(inW.value);
+      const h = parseFloat(inH.value);
+      const haveFloor = l > 0 && w > 0;
+      if (!haveFloor) {
+        setResult('', 'Введите размеры клетки', 'Достаточно длины и ширины дна; если для вида важна высота, добавьте и её.');
+        return;
+      }
+      const floor = [l, w].sort((a, b) => b - a);
+      const need = [min[0], min[1]].sort((a, b) => b - a);
+      const problems = [];
+      if (floor[0] < need[0]) problems.push('длинная сторона дна — ещё ' + Math.ceil(need[0] - floor[0]) + ' см');
+      if (floor[1] < need[1]) problems.push('короткая сторона дна — ещё ' + Math.ceil(need[1] - floor[1]) + ' см');
+      let heightKnown = true;
+      if (min[2]) {
+        if (!(h > 0)) heightKnown = false;
+        else if (h < min[2]) problems.push('высота — ещё ' + Math.ceil(min[2] - h) + ' см');
+      }
+      if (problems.length) {
+        setResult('bad', 'Меньше минимума', 'Нужно: ' + fmtMin(min) + '. Не хватает: ' + problems.join('; ') + '.');
+      } else if (!heightKnown) {
+        setResult('', 'Дно подходит', 'Для этого вида нормируется и высота: введите её, чтобы закончить проверку.');
+      } else {
+        setResult('ok', 'Подходит по минимуму', 'Это нижняя граница: для постоянной жизни питомца лучше больше. Рекомендуемый минимум: ' + fmtMin(min) + '.');
+      }
+    }
+
+    speciesSel.addEventListener('change', () => { fillVariants(); check(); });
+    variantSel.addEventListener('change', check);
+    [inL, inW, inH].forEach((el) => el.addEventListener('input', check));
+    fillVariants();
+    check();
+  }
+</script>
