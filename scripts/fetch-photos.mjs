@@ -1086,6 +1086,14 @@ const BREED_PHOTOS = {
       query: 'Jack Russell Terrier',
       article: 'dzhek-rassel-terer-harakter-uhod-osobennosti',
     },
+    // Подобрано вручную 25.11.2026 (File:Sunray_vom_Crown_Hill.jpeg, чёрный, на траве); автопоиск
+    // отдаёт выставочные кадры с чужими ногами и рекламой. Файл и запись в breed-photos.json готовы.
+    {
+      key: 'tayskiy-ridzhbek',
+      caption: 'Тайский риджбек',
+      query: 'Sunray vom Crown Hill',
+      article: 'tayskiy-ridzhbek-harakter-uhod-i-osobennosti-porody',
+    },
   ],
   // ⚠️ Справочник попугаев в BREED_PHOTOS пока содержит только два новых вида
   // (lori, kaik) — остальные 12 карточек в /porody/popugai были опубликованы

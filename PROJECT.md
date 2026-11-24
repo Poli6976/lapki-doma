@@ -1752,7 +1752,10 @@
   `zdorovie-i-povedenie/koshka-lizhet-i-zhuyot-plastikovye-pakety-pochemu-i-kogda-opasno` (Adopt a Pet, VCA Pica, PDSA) —
   **`draft: true`, обложки нет**: на Commons нет кошки с полиэтиленовым пакетом, владельцу выдан промпт для Gemini; после картинки
   — jpg 1280×853, `cover`/`coverAlt`/`coverCredit`, `draft: false`, пуш. Файл метаданных `posts-2026-11-25-pyat-statey.md`.
-  Тайский риджбек пока не добавлен в справочник `/porody/sobaki` (предложено владельцу).
+  **Тайский риджбек добавлен в справочник `/porody/sobaki`** (по согласию владельца, 25.11): запись в `breeds-sobaki.mjs`,
+  карточка-фото `sobaki-tayskiy-ridzhbek.jpg` (Commons: Sunray_vom_Crown_Hill.jpeg, SvennoFischer, CC BY-SA 3.0 — подпись
+  автора выводится внизу страницы; кадр отличается от обложки статьи), запись в `breed-photos.json` и в `BREED_PHOTOS`
+  скрипта `fetch-photos.mjs`, чтобы запуск `--breeds` её не стёр. Справочник: 13 пород, 13 с разбором.
   **Индексация в Google запрошена для всех четырёх** (25.11, подтверждено «Отправлен запрос на индексирование»).
   Посты в Дзен/VK/TG выданы владельцу текстом; статус публикации — ждём «опубликовано».
 
